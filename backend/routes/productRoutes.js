@@ -26,3 +26,5 @@ router
     authControllers.restrictTo("admin"),
     productControllers.deleteProduct
   );
+
+module.exports = router;
