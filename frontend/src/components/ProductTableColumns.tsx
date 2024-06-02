@@ -1,25 +1,29 @@
 'use client';
 import { ColumnDef } from "@tanstack/react-table";
-import {Button} from "./ui/button"
+import { Button } from "./ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { 
     DropdownMenu, 
     DropdownMenuContent, 
     DropdownMenuItem, 
-    DropdownMenuTrigger , 
+    DropdownMenuTrigger, 
     DropdownMenuSeparator,
     DropdownMenuLabel
-        } from "./ui/dropdown-menu";
+} from "./ui/dropdown-menu";
 import axios from 'axios';
+
 export interface Product {
-    id:number;
-    name:string;
-    description:string;
-    price:number;
-    images:string[];
-    coverImage:string;
-    createdAt:Date;
+    _id: {
+        $oid: string;
+    };
+    name: string;
+    description: string;
+    price: number;
+    images: string[];
+    coverImage: string;
+    createdAt: Date;
 }
+
 export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: 'name',
@@ -36,33 +40,37 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: 'createdAt',
         header: 'Created At',
-    },{
+    },
+    {
         id: 'actions',
-        cell:({row})=>{
+        cell: ({ row, table }) => {
             const product = row.original;
-            
-            
-            const handleView = ()=>{
-                window.open(`/products/${product.name}`,`_blank`);
+
+            const handleView = () => {
+                console.log(product._id);
+                window.open(`/products/${product._id.$oid}`, '_blank');
             };
 
-            const handleEdit = ()=>{
-               //
+            const handleEdit = () => {
+                if (table.options.meta && typeof table.options.meta.onEdit === 'function') {
+                    table.options.meta.onEdit(product);
+                } else {
+                    console.error('Edit function is not defined');
+                }
             };
 
-            const handleDelete = async ()=>{
-                try{
-                    await axios.delete(`http://localhost:8000/api/v1/products/${product.id}`);
+            const handleDelete = async () => {
+                try {
+                    await axios.delete(`http://localhost:8000/api/v1/products/${product._id.$oid}`);
                     window.location.reload();
-                }catch(error){
-                    console.error('error deleting product',error)
+                } catch (error) {
+                    console.error('Error deleting product:', error);
                 }
             };
 
             const handleDisable = async () => {
                 try {
-                    await axios.patch(`/api/products/${product.name}`, { status: 'disabled' });
-                    // refresh the table data after disabling
+                    await axios.patch(`/api/products/${product._id.$oid}`, { status: 'disabled' });
                     window.location.reload();
                 } catch (error) {
                     console.error('Error disabling product:', error);
@@ -77,18 +85,18 @@ export const columns: ColumnDef<Product>[] = [
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-16 h-30 bg-slate-50 rounded-sm flex flex-col items-center justify-around border border-slate-300">
+                    <DropdownMenuContent align="end" className="w-48 bg-slate-50 rounded-sm border border-slate-300">
                         <DropdownMenuLabel className="bg-slate-300 w-full text-center">Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={()=>handleView}>View</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleView}>View</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={()=>handleEdit}>Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={()=>handleDisable}>Disable</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleDisable}>Disable</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            )
+            );
         }
     }
-]
+];

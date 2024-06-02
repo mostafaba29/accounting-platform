@@ -1,5 +1,5 @@
 import {useState,useEffect} from 'react';
-import {Blog} from '@/components/BlogTableCoulmns';
+import {Blog} from '@/components/BlogTableColumns';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
 const Blogs = () => {

@@ -1,5 +1,5 @@
 'use client';
-import { Product } from '@/components/ProductTableCoulmns';
+import { Product } from '@/components/ProductTableColumns';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import NavigationBar from '@/components/NavigationBar';
