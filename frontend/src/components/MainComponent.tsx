@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { fetchData } from './api';
 import { DataTable } from './DataTable';
 import EditForm from './EditForm';
 import AddItemButton from './AddItemButton';
@@ -18,16 +17,24 @@ const MainComponent = () => {
   const [selectedType, setSelectedType] = useState('product');
 
   useEffect(() => {
-    const loadData = async () => {
-      const fetchedData = await fetchData(selectedType);
-      setData(fetchedData);
-    };
+    if (['product', 'user', 'blog'].includes(selectedType)) {
+      const loadData = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8000/api/v1/${selectedType}`);
+          setData(response.data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
 
-    loadData();
+      loadData();
+    }
   }, [selectedType]);
 
   const handleSave = async (updatedItem) => {
-    setData((prevData) => prevData.map((item) => (item._id === updatedItem._id ? updatedItem : item)));
+    setData((prevData) =>
+      prevData.map((item) => (item._id === updatedItem._id ? updatedItem : item))
+    );
     setEditingItem(null);
   };
 
@@ -42,6 +49,7 @@ const MainComponent = () => {
 
   const handleClose = () => {
     setEditingItem(null);
+    setIsAddingItem(false); 
   };
 
   const handleIconClick = (icon) => {
@@ -70,17 +78,25 @@ const MainComponent = () => {
     }
   };
 
+  const shouldShowTable = ['product', 'user', 'blog'].includes(selectedType);
+
   return (
     <div className="flex">
       <SideBar onIconClick={handleIconClick} />
       <div className="p-6 flex-grow">
-        <h1 className="text-2xl font-bold mb-4">{getTypeName()} Management</h1>
-        {(selectedType === 'product' || selectedType === 'user' || selectedType === 'blog') && (
-          <div className="mb-4">
-            <AddItemButton type={selectedType} onClick={() => setIsAddingItem(true)} />
-          </div>
+        {shouldShowTable ? (
+          <>
+            <h1 className="text-2xl font-bold mb-4">{getTypeName()} Management</h1>
+            <div className="mb-4">
+              <AddItemButton type={selectedType} onClick={() => setIsAddingItem(true)} />
+            </div>
+            <div className="overflow-x-auto mb-8">
+              <DataTable columns={getColumns()} data={data} onEdit={handleEdit} />
+            </div>
+          </>
+        ) : (
+          <div className="h-96 mb-8"></div>
         )}
-        <DataTable columns={getColumns()} data={data} onEdit={handleEdit} />
         {editingItem && (
           <Modal isOpen={true} onClose={handleClose}>
             <EditForm item={editingItem} onClose={handleClose} onSave={handleSave} type={selectedType} />
@@ -90,6 +106,24 @@ const MainComponent = () => {
           <Modal isOpen={true} onClose={handleClose}>
             <AddForm type={selectedType} onClose={handleClose} onSave={handleAdd} />
           </Modal>
+        )}
+        {selectedType === 'home' && (
+          <div>
+            <h1 className="text-2xl font-bold mb-4">Welcome to the Admin Dashboard</h1>
+            <p>This is the home section.</p>
+          </div>
+        )}
+        {selectedType === 'settings' && (
+          <div>
+            <h1 className="text-2xl font-bold mb-4">Settings</h1>
+            <p>This is the settings section.</p>
+          </div>
+        )}
+        {selectedType === 'statistics' && (
+          <div>
+            <h1 className="text-2xl font-bold mb-4">Statistics</h1>
+            <p>This is the statistics section.</p>
+          </div>
         )}
       </div>
     </div>
