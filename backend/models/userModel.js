@@ -4,6 +4,10 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
+  googleId: {
+    type: String,
+    unique: true
+  },
   name: {
     type: String,
     required: [true, "Please tell us your name!"]
@@ -14,10 +18,6 @@ const userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
     validate: [validator.isEmail, "Please provide a valid email"]
-  },
-  photo: {
-    type: String,
-    default: "default.jpg"
   },
   role: {
     type: String,

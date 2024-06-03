@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 
-const blogPostSchema = new mongoose.Schema(
+const BlogPostSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -30,11 +30,11 @@ const blogPostSchema = new mongoose.Schema(
   }
 );
 
-blogPostSchema.pre("save", function(next) {
+BlogPostSchema.pre("save", function(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-const blogPost = mongoose.model("Post", blogPostSchema);
+const BlogPost = mongoose.model("Blog_Post", BlogPostSchema);
 
-module.exports = blogPost;
+module.exports = BlogPost;

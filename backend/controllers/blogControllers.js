@@ -1,9 +1,9 @@
-const blogPost = require("./../models/blogModel");
+const BlogPost = require("../models/blogPostModel");
 const factory = require("./FactoryHandlers");
 
-exports.getAllPosts = factory.getAll(blogPost);
-exports.createPost = factory.createOne(blogPost);
+exports.getAllPosts = factory.getAll(BlogPost);
+exports.createPost = factory.createOne(BlogPost);
 
-exports.getOnePost = factory.getOne(blogPost);
-exports.updatePost = factory.updateOne(blogPost);
-exports.deletePost = factory.deleteOne(blogPost);
+exports.getOnePost = factory.getOne(BlogPost);
+exports.updatePost = factory.updateOne(BlogPost);
+exports.deletePost = factory.deleteOne(BlogPost);
