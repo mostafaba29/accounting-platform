@@ -6,6 +6,7 @@ const xss = require("xss-clean");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const morgan = require("morgan");
 const cookieSession = require("cookie-session");
 const passport = require("./controllers/passport");
 
@@ -17,6 +18,8 @@ const productRoutes = require("./routes/productRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 
 const app = express();
+
+app.use(morgan("dev"));
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -63,6 +66,6 @@ app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
-app.use(globalErrorHandler);
+//app.use(globalErrorHandler);
 
 module.exports = app;
