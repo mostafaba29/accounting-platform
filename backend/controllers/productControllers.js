@@ -1,3 +1,4 @@
+const path = require("path");
 const multer = require("multer");
 const sharp = require("sharp");
 const catchAsync = require("./../utils/catchAsync");
@@ -63,6 +64,21 @@ const storage = multer.diskStorage({
   filename: function(req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
   }
+});
+
+exports.downloadFile = catchAsync(async (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(
+    __dirname,
+    "./../../frontend/public/files/products/",
+    filename
+  );
+  res.download(filePath, err => {
+    if (err) {
+      return res.status(500).send("Error occurred while downloading the file");
+    }
+    res.status(200).json("file downloaded");
+  });
 });
 
 exports.fileUpload = multer({ storage: storage });

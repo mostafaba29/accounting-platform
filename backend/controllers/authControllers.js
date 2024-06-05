@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
-//const Email = require("./../utils/email");
+const Email = require("./../utils/email");
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -21,7 +21,7 @@ const createSendToken = (user, statusCode, req, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    secure: req.secure || req.headers["x-forwarded-proto"] === "https"
+    secure: false //req.secure || req.headers["x-forwarded-proto"] === "https"
   });
 
   // Remove password from output
@@ -121,37 +121,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-// Only for rendered pages, no errors!
-exports.isLoggedIn = async (req, res, next) => {
-  if (req.cookies.jwt) {
-    try {
-      // 1) verify token
-      const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
-        process.env.JWT_SECRET
-      );
-
-      // 2) Check if user still exists
-      const currentUser = await User.findById(decoded.id);
-      if (!currentUser) {
-        return next();
-      }
-
-      // 3) Check if user changed password after the token was issued
-      if (currentUser.changedPasswordAfter(decoded.iat)) {
-        return next();
-      }
-
-      // THERE IS A LOGGED IN USER
-      res.locals.user = currentUser;
-      return next();
-    } catch (err) {
-      return next();
-    }
-  }
-  next();
-};
-
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -180,7 +149,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     const resetURL = `${req.protocol}://${req.get(
       "host"
     )}/api/v1/users/resetPassword/${resetToken}`;
-    //await new Email(user, resetURL).sendPasswordReset();
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: "success",
@@ -218,7 +187,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
-  user.passwordChangedAt = Date.now();
   await user.save();
 
   // 3) Update changedPasswordAt property for the user
