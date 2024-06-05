@@ -12,6 +12,7 @@ import {
         } from "@radix-ui/react-dropdown-menu";
 
 export interface Blog {
+    _id: { $oid: string; };
     name:string;
     description:string;
     author:string;

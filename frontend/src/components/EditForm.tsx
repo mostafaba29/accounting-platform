@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import {Button} from './ui/button';
 
 interface EditFormProps {
   item: any;
@@ -48,7 +49,7 @@ export default function EditForm({ item, type, onClose, onSave }: EditFormProps)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8000/api/v1/${type}s/${formData._id}`, formData);
+      await axios.patch(`http://localhost:8000/api/v1/${type}s/${formData._id}`, formData,{withCredentials: true});
       onSave(formData);
     } catch (error) {
       console.error(`Error updating ${type}`, error);
@@ -58,12 +59,12 @@ export default function EditForm({ item, type, onClose, onSave }: EditFormProps)
   const fields = fieldConfigurations[type];
 
   return (
-    <div>
-      <h2>Edit {type.charAt(0).toUpperCase() + type.slice(1)}</h2>
+    <div className="flex flex-col items-center justify-center">
+      <h2 className="text-xl">Edit {type.charAt(0).toUpperCase() + type.slice(1)}</h2>
       <form onSubmit={handleSubmit}>
         {fieldConfigurations[type].map((field) => (
           <div key={field.name}>
-            <label>{field.label}</label>
+            <label className="mt-2 text-lg">{field.label}:</label>
             {field.type === 'file' ? (
               <input type={field.type} name={field.name} onChange={handleFileChange} />
             ) : field.type === 'textarea' ? (
@@ -73,8 +74,10 @@ export default function EditForm({ item, type, onClose, onSave }: EditFormProps)
             )}
           </div>
         ))}
-        <button type="submit">Save</button>
-        <button type="button" onClick={onClose}>Cancel</button>
+        <div className="flex flex-row justify-around w-full mt-2">
+          <Button type="submit">Save</Button>
+          <Button type="button" onClick={onClose}>Cancel</Button>
+        </div>
       </form>
     </div>
   );

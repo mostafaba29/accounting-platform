@@ -12,6 +12,7 @@ const fieldConfigurations: Record<string, { label: string; type: string; name: s
     { label: 'Name', type: 'text', name: 'name' },
     { label: 'Description', type: 'text', name: 'description' },
     { label: 'Price', type: 'number', name: 'price' },
+    { label: 'coverImage', type: 'file', name: 'coverImage'},
     { label: 'Images', type: 'file', name: 'images' },
   ],
   user: [
@@ -43,7 +44,7 @@ export default function AddForm({ type, onClose, onSave }: FormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:8000/api/v1/${type}`, formData);
+      await axios.post(`http://localhost:8000/api/v1/${type}s`, formData,{withCredentials: true});
       onSave();
     } catch (error) {
       console.error(`Error adding ${type}`, error);

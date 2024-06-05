@@ -15,7 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Input } from "./ui/input";
 
 const fromSchema = z.object({
-    username: z.string().min(1, { message: 'Please enter your username' }),
+    email: z.string().min(1, { message: 'Please enter your email' }),
     password: z.string().min(1, { message: 'Please enter your password' }),
 });
 
@@ -27,7 +27,7 @@ export default function AdminLoginForm({isLoggedIn, onLoginSuccess}: AdminLoginF
     const form = useForm<z.infer<typeof fromSchema>>({
         resolver: zodResolver(fromSchema),
         defaultValues: {
-            username: '',
+            email: '',
             password: '',
         },
     });
@@ -35,7 +35,8 @@ export default function AdminLoginForm({isLoggedIn, onLoginSuccess}: AdminLoginF
     const onSubmit = async (data: z.infer<typeof fromSchema>) => {
         try {
             const response = await axios.post('http://localhost:8000/api/v1/users/login', data);
-            if (response.status === 200 && response.data.role == 'admin') {
+            console.log(response.data.data.user);
+            if (response.status === 200 && response.data.data.user.role == 'admin') {
                 console.log('response', response.data);
                 onLoginSuccess();
             } else {
@@ -60,12 +61,12 @@ export default function AdminLoginForm({isLoggedIn, onLoginSuccess}: AdminLoginF
                         <div className="space-y-4 py-6">
                             <FormField
                                 control={form.control}
-                                name="username"
+                                name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Username</FormLabel>
+                                        <FormLabel>Email</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Username" {...field} />
+                                            <Input placeholder="Email" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -89,8 +90,8 @@ export default function AdminLoginForm({isLoggedIn, onLoginSuccess}: AdminLoginF
                             <button type="submit" className="w-full">
                                 Login
                             </button>
-                            {form.formState.errors.username && (
-                                <p className="text-red-500">{form.formState.errors.username.message}</p>
+                            {form.formState.errors.email && (
+                                <p className="text-red-500">{form.formState.errors.email.message}</p>
                             )}
                             {form.formState.errors.password && (
                                 <p className="text-red-500">{form.formState.errors.password.message}</p>

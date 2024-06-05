@@ -13,9 +13,7 @@ import {
 import axios from 'axios';
 
 export interface Product {
-    _id: {
-        $oid: string;
-    };
+    _id: string;
     name: string;
     description: string;
     price: number;
@@ -48,7 +46,7 @@ export const columns: ColumnDef<Product>[] = [
 
             const handleView = () => {
                 console.log(product._id);
-                window.open(`/products/${product._id.$oid}`, '_blank');
+                window.open(`/products/${product._id}`, '_blank');
             };
 
             const handleEdit = () => {
@@ -61,7 +59,7 @@ export const columns: ColumnDef<Product>[] = [
 
             const handleDelete = async () => {
                 try {
-                    await axios.delete(`http://localhost:8000/api/v1/products/${product._id.$oid}`);
+                    await axios.delete(`http://localhost:8000/api/v1/products/${product._id}`, {withCredentials: true});
                     window.location.reload();
                 } catch (error) {
                     console.error('Error deleting product:', error);
@@ -70,7 +68,7 @@ export const columns: ColumnDef<Product>[] = [
 
             const handleDisable = async () => {
                 try {
-                    await axios.patch(`/api/products/${product._id.$oid}`, { status: 'disabled' });
+                    await axios.patch(`/api/products/${product._id}`, { status: 'disabled' });
                     window.location.reload();
                 } catch (error) {
                     console.error('Error disabling product:', error);

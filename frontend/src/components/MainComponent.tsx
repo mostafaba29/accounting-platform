@@ -20,8 +20,9 @@ const MainComponent = () => {
     if (['product', 'user', 'blog'].includes(selectedType)) {
       const loadData = async () => {
         try {
-          const response = await axios.get(`http://localhost:8000/api/v1/${selectedType}`);
-          setData(response.data);
+          const response = await axios.get(`http://localhost:8000/api/v1/${selectedType}s`);
+          console.log(response.data.data.data);
+          setData(response.data.data.data);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
