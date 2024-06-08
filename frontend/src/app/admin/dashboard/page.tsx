@@ -10,7 +10,7 @@ export default function Dashboard() {
         setIsLoggedIn(true);
     }
     return (
-        <div className="flex flex-row items-center p-24 rounded border">
+        <div >
             {isLoggedIn ? <MainComponent  />
              : 
              <AdminLoginForm isLoggedIn={isLoggedIn} onLoginSuccess={handleSuccessfulLogin} />
