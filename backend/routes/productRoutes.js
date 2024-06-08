@@ -19,6 +19,12 @@ router.post(
   }
 );
 
+router.post(
+  "/image",
+  productControllers.uploadProductImages,
+  productControllers.resizeProductImages
+);
+
 router
   .route("/")
   .get(productControllers.getAllProducts)

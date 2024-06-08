@@ -22,20 +22,20 @@ const upload = multer({
 });
 
 exports.uploadProductImages = upload.fields([
-  { name: "imageCover", maxCount: 1 },
+  { name: "coverImage", maxCount: 1 },
   { name: "images", maxCount: 3 }
 ]);
 
 exports.resizeProductImages = catchAsync(async (req, res, next) => {
-  if (!req.files.imageCover || !req.files.images) return next();
+  if (!req.files.coverImage || !req.files.images) return next();
 
   // 1) Cover image
-  req.body.imageCover = `product-${req.params.id}-${Date.now()}-cover.jpeg`;
-  await sharp(req.files.imageCover[0].buffer)
+  req.body.coverImage = `product-${req.params.id}-${Date.now()}-cover.jpeg`;
+  await sharp(req.files.coverImage[0].buffer)
     .resize(2000, 1333)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(`./../../frontend/public/img/products/${req.body.imageCover}`);
+    .toFile(`./../../frontend/public/img/products/${req.body.coverImage}`);
 
   // 2) Images
   req.body.images = [];
