@@ -13,6 +13,7 @@ const fieldConfigurations: Record<string, { label: string; type: string; name: s
     { label: 'Description', type: 'text', name: 'description' },
     { label: 'Price', type: 'number', name: 'price' },
     { label: 'coverImage', type: 'file', name: 'coverImage'},
+    { label:'file_name', type: 'string', name: 'file_name'},
     { label: 'Images', type: 'file', name: 'images' },
   ],
   user: [
@@ -24,6 +25,8 @@ const fieldConfigurations: Record<string, { label: string; type: string; name: s
     { label: 'Title', type: 'text', name: 'title' },
     { label: 'Content', type: 'textarea', name: 'content' },
     { label: 'Cover Image', type: 'file', name: 'coverImage' },
+    {label:'author', type: 'string', name: 'author'},
+    {label:'images', type:'file', name:'images'},
   ],
 };
 

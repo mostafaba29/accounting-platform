@@ -14,11 +14,12 @@ const MainComponent = () => {
   const [data, setData] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
   const [isAddingItem, setIsAddingItem] = useState(false);
-  const [selectedType, setSelectedType] = useState('product');
+  const [selectedType, setSelectedType] = useState('home');
 
   useEffect(() => {
     if (['product', 'user', 'blog'].includes(selectedType)) {
       const loadData = async () => {
+        setData([]);
         try {
           const response = await axios.get(`http://localhost:8000/api/v1/${selectedType}s`);
           console.log(response.data.data.data);
@@ -27,7 +28,7 @@ const MainComponent = () => {
           console.error('Error fetching data:', error);
         }
       };
-
+  
       loadData();
     }
   }, [selectedType]);
@@ -82,19 +83,19 @@ const MainComponent = () => {
   const shouldShowTable = ['product', 'user', 'blog'].includes(selectedType);
 
   return (
-    <div className="flex">
+    <div className="flex h-screen justify-between">
       <SideBar onIconClick={handleIconClick} />
-      <div className="p-6 flex-grow">
+      <div >
         {shouldShowTable ? (
-          <>
-            <h1 className="text-2xl font-bold mb-4">{getTypeName()} Management</h1>
-            <div className="mb-4">
+          <div className="flex flex-col items-center mx-8">
+            <div className="flex flex-row justify-between items-center w-full my-2 ">
+              <h1 className="text-2xl font-bold">{getTypeName()} Management</h1>
               <AddItemButton type={selectedType} onClick={() => setIsAddingItem(true)} />
             </div>
             <div className="overflow-x-auto mb-8">
               <DataTable columns={getColumns()} data={data} onEdit={handleEdit} />
             </div>
-          </>
+          </div>
         ) : (
           <div className="h-96 mb-8"></div>
         )}

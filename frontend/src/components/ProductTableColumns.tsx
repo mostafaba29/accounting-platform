@@ -45,7 +45,6 @@ export const columns: ColumnDef<Product>[] = [
             const product = row.original;
 
             const handleView = () => {
-                console.log(product._id);
                 window.open(`/products/${product._id}`, '_blank');
             };
 
