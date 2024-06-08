@@ -23,7 +23,7 @@ app.use(morgan("dev"));
 
 const corsOptions = {
   origin: "http://localhost:3000",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204
 };
@@ -59,7 +59,7 @@ app.use(hpp()); // prevent parameter pollution
 
 app.use("/auth", googleAuthRoutes);
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/blog", blogRoutes);
+app.use("/api/v1/blogs", blogRoutes);
 app.use("/api/v1/products", productRoutes);
 
 app.all("*", (req, res, next) => {

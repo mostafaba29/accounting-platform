@@ -15,8 +15,14 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "a file must have a name"]
   },
-  price: Number,
-  images: [String],
+  price: {
+    type: Number,
+    required: [true, "a product must have a price"]
+  },
+  images: {
+    type: [String],
+    default: []
+  },
   coverImage: {
     type: String,
     required: [true, "a product must have a cover image"]
