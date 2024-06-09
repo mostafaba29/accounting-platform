@@ -7,14 +7,21 @@ interface FormProps {
   onSave: () => void;
 }
 
-const fieldConfigurations: Record<string, { label: string; type: string; name: string }[]> = {
+interface FieldConfig {
+  label: string;
+  type: string;
+  name: string;
+  accept?: string;
+  multiple?: boolean;
+}
+const fieldConfigurations: Record<string, FieldConfig[]> = {
   product: [
     { label: 'Name', type: 'text', name: 'name' },
     { label: 'Description', type: 'text', name: 'description' },
     { label: 'Price', type: 'number', name: 'price' },
-    { label: 'coverImage', type: 'file', name: 'coverImage'},
+    { label: 'Cover Image', type: 'file', name: 'coverImage', accept: 'image/*'},
     { label:'file_name', type: 'string', name: 'file_name'},
-    { label: 'Images', type: 'file', name: 'images' },
+    { label: 'Images', type: 'file', name: 'images', accept: 'image/*', multiple: true },
   ],
   user: [
     { label: 'First Name', type: 'text', name: 'firstName' },
@@ -40,14 +47,25 @@ export default function AddForm({ type, onClose, onSave }: FormProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+      const {name} = e.target;
+      const files = Array.from(e.target.files);
+      setFormData({ ...formData, [name]: files });
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const data = new FormData();
+    Object.keys(formData).forEach(key => {
+      if(Array.isArray(formData[key])){
+        formData[key].forEach(file => data.append(key,file));
+      }else{
+        data.append(key, formData[key]);
+      }
+    });
     try {
-      await axios.post(`http://localhost:8000/api/v1/${type}s`, formData,{withCredentials: true});
+      console.log(data);
+      await axios.post(`http://localhost:8000/api/v1/${type}s`, data,{withCredentials: true});
       onSave();
     } catch (error) {
       console.error(`Error adding ${type}`, error);
@@ -80,6 +98,8 @@ export default function AddForm({ type, onClose, onSave }: FormProps) {
               name={field.name}
               onChange={field.type === 'file' ? handleFileChange : handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
+              accept={field.accept}
+              multiple={field.multiple}
             />
           )}
         </div>
