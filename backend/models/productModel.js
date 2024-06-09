@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
     trim: true,
     required: [true, "a product must have a description"]
   },
-  file_name: {
+  document: {
     type: String,
     required: [true, "a file must have a name"]
   },
@@ -19,10 +19,7 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: [true, "a product must have a price"]
   },
-  images: {
-    type: [String],
-    default: []
-  },
+  images: [String],
   coverImage: {
     type: String,
     required: [true, "a product must have a cover image"]

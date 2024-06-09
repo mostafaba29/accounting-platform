@@ -7,23 +7,7 @@ const router = express.Router();
 
 router.use("/:productId/reviews", reviewRouter);
 
-router.post(
-  "/upload-file",
-  productControllers.fileUpload.single("file"),
-  (req, res) => {
-    try {
-      res.send("File uploaded successfully.");
-    } catch (err) {
-      res.status(400).send("Error uploading file.");
-    }
-  }
-);
-
-router.post(
-  "/image",
-  productControllers.uploadProductImages,
-  productControllers.resizeProductImages
-);
+//router.post("/upload-file", productControllers.uploadProductFile);
 
 router
   .route("/")
@@ -31,8 +15,7 @@ router
   .post(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    productControllers.uploadProductImages,
-    productControllers.resizeProductImages,
+    productControllers.uploadFileAndImages,
     productControllers.createProduct
   );
 
@@ -42,8 +25,7 @@ router
   .patch(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    productControllers.uploadProductImages,
-    productControllers.resizeProductImages,
+    productControllers.uploadFileAndImages,
     productControllers.updateProduct
   )
   .delete(

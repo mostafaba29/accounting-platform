@@ -6,71 +6,98 @@ const AppError = require("./../utils/appError");
 const Product = require("./../models/productModel");
 const factory = require("./FactoryHandlers");
 
-const multerStorage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, "./../frontend/public/imgs/products");
+    } else if (file.mimetype === "application/pdf") {
+      cb(null, "./../frontend/public/files/products");
+    } else {
+      cb(
+        new AppError(
+          "Unsupported file type! Please upload only images or PDFs.",
+          400
+        ),
+        false
+      );
+    }
+  },
+  filename: function(req, file, cb) {
+    cb(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
+  }
+});
 
 const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image")) {
+  if (
+    file.mimetype.startsWith("image") ||
+    file.mimetype === "application/pdf" ||
+    file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+    file.mimetype === "application/vnd.ms-excel" ||
+    file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+    file.mimetype === "application/msword"
+  ) {
     cb(null, true);
   } else {
-    cb(new AppError("Not an image! Please upload only images.", 400), false);
+    cb(
+      new AppError(
+        "Unsupported file type! Please upload only images or PDFs.",
+        400
+      ),
+      false
+    );
   }
 };
 
-const upload = multer({
-  storage: multerStorage,
+exports.uploadFileAndImages = multer({
+  storage,
   fileFilter: multerFilter
-});
-
-exports.uploadProductImages = upload.fields([
+}).fields([
   { name: "coverImage", maxCount: 1 },
-  { name: "images", maxCount: 3 }
+  { name: "images", maxCount: 3 },
+  { name: "document", maxCount: 1 }
 ]);
 
-exports.resizeProductImages = catchAsync(async (req, res, next) => {
-  if (!req.files.coverImage || !req.files.images) return next();
+exports.createProduct = catchAsync(async (req, res) => {
+  const { name, description, price } = req.body;
 
-  // 1) Cover image
-  req.body.coverImage = `product-${req.params.id}-${Date.now()}-cover.jpeg`;
-  await sharp(req.files.coverImage[0].buffer)
-    .resize(2000, 1333)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`./../../frontend/public/img/products/${req.body.coverImage}`);
-
-  // 2) Images
-  req.body.images = [];
-
-  await Promise.all(
-    req.files.images.map(async (file, i) => {
-      const filename = `product-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
-
-      await sharp(file.buffer)
-        .resize(2000, 1333)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`./../../frontend/public/img/products/${filename}`);
-
-      req.body.images.push(filename);
-    })
-  );
-
-  next();
-});
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "./../../frontend/public/files/products/");
-  },
-  filename: function(req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
+  if (!name || !description || !price) {
+    AppError("All required fields must be provided.");
   }
+
+  const coverImage = req.files.coverImage[0].path;
+  const document = req.files.document[0].path;
+  const images = req.files.images.map(file => file.path);
+
+  const product = await Product.create({
+    name,
+    description,
+    document,
+    price,
+    coverImage,
+    images
+  });
+
+  res.status(201).json({
+    status: "success",
+    data: {
+      product
+    }
+  });
 });
+
+exports.getAllProducts = factory.getAll(Product);
+exports.getOneProduct = factory.getOne(Product);
+
+exports.updateProduct = factory.updateOne(Product);
+exports.deleteProduct = factory.deleteOne(Product);
 
 exports.downloadFile = catchAsync(async (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(
     __dirname,
-    "./../../frontend/public/files/products/",
+    "./../frontend/public/files/products/",
     filename
   );
   res.download(filePath, err => {
@@ -80,12 +107,3 @@ exports.downloadFile = catchAsync(async (req, res) => {
     res.status(200).json("file downloaded");
   });
 });
-
-exports.fileUpload = multer({ storage: storage });
-
-exports.getAllProducts = factory.getAll(Product);
-exports.getOneProduct = factory.getOne(Product);
-
-exports.createProduct = factory.createOne(Product);
-exports.updateProduct = factory.updateOne(Product);
-exports.deleteProduct = factory.deleteOne(Product);
