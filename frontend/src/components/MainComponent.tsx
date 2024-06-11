@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { DataTable } from './DataTable';
+import { DataTable } from './Dashboard/DataTable';
 import EditForm from './EditForm';
 import AddItemButton from './AddItemButton';
 import Modal from './Modal';
 import AddForm from './AddForm';
 import SideBar from './Sidebar';
-import { columns as productColumns } from '@/components/ProductTableColumns';
-import { columns as userColumns } from '@/components/UserTableColumns';
-import { columns as blogColumns } from '@/components/BlogTableColumns';
+import { columns as productColumns } from '@/components/types/ProductTableColumns';
+import { columns as userColumns } from '@/components/types/UserTableColumns';
+import { columns as blogColumns } from '@/components/types/BlogTableColumns';
 
 const MainComponent = () => {
   const [data, setData] = useState([]);
@@ -84,7 +84,7 @@ const MainComponent = () => {
 
   return (
     <div className="flex h-screen justify-between">
-      <SideBar onIconClick={handleIconClick} />
+      {/* <SideBar onIconClick={handleIconClick} /> */}
       <div >
         {shouldShowTable ? (
           <div className="flex flex-col items-center mx-8">

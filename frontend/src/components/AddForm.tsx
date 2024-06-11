@@ -20,7 +20,7 @@ const fieldConfigurations: Record<string, FieldConfig[]> = {
     { label: 'Description', type: 'text', name: 'description' },
     { label: 'Price', type: 'number', name: 'price' },
     { label: 'Cover Image', type: 'file', name: 'coverImage', accept: 'image/*'},
-    { label:'file_name', type: 'string', name: 'file_name'},
+    { label:'Document', type: 'file', name: 'document'},
     { label: 'Images', type: 'file', name: 'images', accept: 'image/*', multiple: true },
   ],
   user: [

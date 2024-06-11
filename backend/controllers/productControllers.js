@@ -74,9 +74,9 @@ exports.createProduct = catchAsync(async (req, res) => {
     AppError("All required fields must be provided.");
   }
 
-  const coverImage = req.files.coverImage[0].path;
-  const document = req.files.document[0].path;
-  const images = req.files.images.map(file => file.path);
+  const coverImage = req.files.coverImage[0].filename;
+  const document = req.files.document[0].filename;
+  const images = req.files.images.map(file => file.filename);
 
   const product = await Product.create({
     name,
