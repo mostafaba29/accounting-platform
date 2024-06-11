@@ -7,8 +7,6 @@ const router = express.Router();
 
 router.use("/:productId/reviews", reviewRouter);
 
-//router.post("/upload-file", productControllers.uploadProductFile);
-
 router
   .route("/")
   .get(productControllers.getAllProducts)
@@ -31,6 +29,7 @@ router
   .delete(
     authControllers.protect,
     authControllers.restrictTo("admin"),
+    productControllers.deleteProductFile,
     productControllers.deleteProduct
   );
 
