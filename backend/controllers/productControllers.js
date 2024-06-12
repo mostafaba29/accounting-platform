@@ -95,6 +95,25 @@ exports.createProduct = catchAsync(async (req, res) => {
   });
 });
 
+exports.updateFilesAndImages = catchAsync(async (req, res, next) => {
+  const productFile = await Product.findById(req.params.id);
+  if (!productFile) {
+    return res.status(404).json({ message: "Product not found" });
+  }
+
+  const coverImage = req.files.coverImage[0].filename;
+  const document = req.files.document[0].filename;
+  const images = req.files.images.map(file => file.filename);
+
+  const updatedFiles = await Product.findByIdAndUpdate(req.params.id, {
+    images: images,
+    coverImage: coverImage,
+    document: document
+  });
+
+  next();
+});
+
 exports.getAllProducts = factory.getAll(Product);
 exports.getOneProduct = factory.getOne(Product);
 
@@ -102,12 +121,13 @@ exports.updateProduct = factory.updateOne(Product);
 exports.deleteProduct = factory.deleteOne(Product);
 
 exports.downloadFile = catchAsync(async (req, res) => {
-  const { filename } = req.params;
-  const filePath = path.join(
-    __dirname,
-    "./../frontend/public/files/products/",
-    filename
-  );
+  const productFile = await Product.findById(req.params.productId);
+  console.log(productFile);
+  if (!productFile) {
+    return res.status(404).json({ message: "Product not found" });
+  }
+  const { document } = productFile;
+  const filePath = `./../frontend/public/files/products/${document}`;
   res.download(filePath, err => {
     if (err) {
       return res.status(500).send("Error occurred while downloading the file");
@@ -124,7 +144,7 @@ const deleteFile = filePath => {
   });
 };
 
-exports.deleteProductFile = catchAsync(async (req, res) => {
+exports.deleteProductFiles = catchAsync(async (req, res, next) => {
   // Find the product by ID
   const productFile = await Product.findById(req.params.id);
   if (!productFile) {
@@ -132,27 +152,32 @@ exports.deleteProductFile = catchAsync(async (req, res) => {
   }
 
   // Get the file paths
-  const filePath = productFile.document;
-  const imagesPaths = productFile.images;
-  const coverImagePath = productFile.coverImage;
+  const { document } = productFile;
+  const { images } = productFile;
+  const { coverImage } = productFile;
 
   // Delete document
-  if (filePath) {
-    deleteFile(filePath);
+  if (document) {
+    deleteFile(`./../frontend/public/files/products/${document}`);
   }
 
   // Delete images
-  if (imagesPaths && imagesPaths.length > 0) {
-    imagesPaths.forEach(image => {
-      deleteFile(image);
+  if (images && images.length > 0) {
+    images.forEach(image => {
+      const imagePath = path.join("./../frontend/public/imgs/products/", image);
+      fs.unlink(imagePath, err => {
+        if (err) {
+          console.error(`Error deleting file ${imagePath}:`, err);
+        }
+      });
     });
   }
 
   // Delete cover image
-  if (coverImagePath) {
-    deleteFile(coverImagePath);
+  if (coverImage) {
+    deleteFile(`./../frontend/public/imgs/products/${coverImage}`);
   }
 
   // Send response
-  res.status(200).json({ message: "Files deleted successfully" });
+  next();
 });

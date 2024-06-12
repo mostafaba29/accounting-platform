@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.use("/:productId/reviews", reviewRouter);
 
+router.get("/download/:productId", productControllers.downloadFile);
+
 router
   .route("/")
   .get(productControllers.getAllProducts)
@@ -23,13 +25,15 @@ router
   .patch(
     authControllers.protect,
     authControllers.restrictTo("admin"),
+    productControllers.deleteProductFiles,
     productControllers.uploadFileAndImages,
+    productControllers.updateFilesAndImages,
     productControllers.updateProduct
   )
   .delete(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    productControllers.deleteProductFile,
+    productControllers.deleteProductFiles,
     productControllers.deleteProduct
   );
 
