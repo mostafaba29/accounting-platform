@@ -20,43 +20,41 @@ import Image from "next/image";
 import Link from "next/link";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Product name is required").max(100),
+  name: z.string().min(1, "blog name is required").max(100),
   description: z.string(),
-  price: z
-    .preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
-  coverImage: z.instanceof(File).optional(),
+  author: z.string(),
+  imageCover: z.instanceof(File).optional(),
   file: z.instanceof(File).optional(),
   images: z.array(z.instanceof(File)).optional(),
 });
 
-export default function EditProduct() {
+export default function EditBlog() {
   const pathname = usePathname();
   let id = pathname?.split("/").pop();
-  const [productData, setProductData] = useState(null);
+  const [blogData, setBlogData] = useState(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
-      price: 0,
     },
   });
 
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:8000/api/v1/products/${id}`)
+      axios.get(`http://localhost:8000/api/v1/blogs/${id}`)
         .then(response => {
           const data = response.data.data.data;
-          setProductData(data);
+          setBlogData(data);
           console.log(data);
           form.reset({
             name: data.name,
             description: data.description,
-            price: data.price,
+            author: data.author,
           });
         })
-        .catch(error => console.error("Error fetching product data", error));
+        .catch(error => console.error("Error fetching blog data", error));
     }
   }, [id]);
 
@@ -64,8 +62,8 @@ export default function EditProduct() {
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
-    formData.append("price", values.price.toString());
-    if (values.coverImage) formData.append("coverImage", values.coverImage);
+    formData.append("price", values.author);
+    if (values.imageCover) formData.append("imageCover", values.imageCover);
     if (values.file) formData.append("file", values.file);
     if (values.images) {
       values.images.forEach((image, index) => {
@@ -74,7 +72,7 @@ export default function EditProduct() {
     }
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/v1/products/${id}`,
+        `http://localhost:8000/api/v1/blogs/${id}`,
         formData,
         {
           withCredentials: true,
@@ -85,15 +83,15 @@ export default function EditProduct() {
       );
       console.log(response.data);
     } catch (error) {
-      console.log("Error updating product", error);
+      console.log("Error updating blog", error);
     }
   };
 
   return (
     <div>
-      <BackButton text={'Go Back'} link={'/admin/dashboard/products'} />
+      <BackButton text={'Go Back'} link={'/admin/dashboard/blogs'} />
       <div className="w-full h-screen flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold">Edit Product</h1>
+        <h1 className="text-3xl font-bold">Edit Blog</h1>
         <div className="flex flex-row items-center justify-between gap-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full">
@@ -117,17 +115,17 @@ export default function EditProduct() {
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="price" render={({ field }) => (
+            <FormField control={form.control} name="author" render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Author</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" />
+                  <Input {...field} type="text" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="coverImage" render={({ field }) => (
+            <FormField control={form.control} name="imageCover" render={({ field }) => (
               <FormItem>
                 <FormLabel>Cover Image</FormLabel>
                 <FormControl>
@@ -170,21 +168,21 @@ export default function EditProduct() {
             <Button type="submit" className="mt-1 w-full">Save</Button>
           </form>
         </Form>
-        {productData && (
+        {blogData && (
           <div className="mt-5">
             <h2 className="text-xl font-bold">Current Images</h2>
             <div className="flex space-x-4">
-              {productData.images.length > 0? (
-                productData.images.map((image, index) => (
-                  <Image key={index} src={`/imgs/products/${image}`} alt={`Product image ${index + 1}`} width={200} height={200} className="object-cover" />
+              {blogData.images.length > 0? (
+                blogData.images.map((image, index) => (
+                  <Image key={index} src={`/imgs/blogs/${image}`} alt={`blog image ${index + 1}`} width={200} height={200} className="object-cover" />
                 ))
               ) : (
                 <p>No images found.</p>
               )}
             </div>
             <h2 className="text-xl font-bold mt-5">Cover Image</h2>
-            <Image src={`/imgs/products/${productData.coverImage}`} alt="Product cover image" width={200} height={200} className="object-cover" />
-            <Link href={`/files/products/${productData.file}`} download className="text-blue-500 underline">Download current file</Link> 
+            <Image src={`/imgs/products/${blogData.imageCover}`} alt="Product cover image" width={200} height={200} className="object-cover" />
+            <Link href={`/files/products/${blogData.file}`} download className="text-blue-500 underline">Download current file</Link> 
           </div>
         )}
         </div>

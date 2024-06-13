@@ -2,38 +2,37 @@
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import { DataTable } from '@/components/Dashboard/DataTable';
-import {Blog,columns as BlogCoulmns} from '@/components/types/BlogTableColumns';
+import {User,columns as UserCoulmns} from '@/components/types/UserTableColumns';
 import { Button } from '@/components/ui/button';
 import {Plus} from "lucide-react";
 import { useRouter } from 'next/navigation';
 import BackButton from "@/components/BackButton";
 
-export default function AdminBlogsView (){
-    const [Blogs,setBlogs]= useState<Blog[]>([]);
+export default function AdminUsersView (){
+    const [users,setUsers]= useState<User[]>([]);
     const router = useRouter();
-    const fetchBlogs = async ()=>{
+    const fetchUsers = async ()=>{
         try {
-            const response = await axios.get('http://localhost:8000/api/v1/blogs');
-            setBlogs(response.data.data.data);
+            const response = await axios.get('http://localhost:8000/api/v1/users');
+            setUsers(response.data.data.data);
         }catch(error){
-            console.log('error fetching blogs',error);
+            console.log('error fetching userss',error);
         }
     }
     const handleAddClick = ()=>{
-        router.push('/admin/dashboard/blogs/add')
+        router.push('/admin/dashboard/users/add')
     }
 
     useEffect(()=>{
-        fetchBlogs();
+        fetchUsers();
     },[]);
-
     return (
         <div>
             <div className='flex flex-row justify-between items-center'>
                 <BackButton text={'Go Back'} link={'/admin/dashboard'}/>
-                <Button className='m-1 mr-[95px]' onClick={handleAddClick}><Plus/> Add Blog</Button>
+                <Button className='m-1 mr-[95px]' onClick={handleAddClick}><Plus/> Add User</Button>
             </div>
-            <DataTable columns={BlogCoulmns} data={Blogs} />
+            <DataTable columns={UserCoulmns} data={users} />
         </div>
-    );
+    )
 }

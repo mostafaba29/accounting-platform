@@ -17,6 +17,7 @@ import {
     Home,
     Settings,
     LineChart,
+    Wrench,
   } from "lucide-react";
   import Link from "next/link";
 export default function CommandSidebar (){
@@ -31,7 +32,14 @@ export default function CommandSidebar (){
                         <Home className="mr-2 h-5 w-5" /> 
                         <span className="font-semibold">Dashboard</span>
                     </Link>
-                    <CommandShortcut>⌘H</CommandShortcut>
+                    <CommandShortcut>⌘M</CommandShortcut>
+                </CommandItem>
+                <CommandItem className="flex flex-row">
+                    <Link className="flex flex-row" href="/admin/dashboard/services">
+                        <Wrench className="mr-2 h-5 w-5" /> 
+                        <span className="font-semibold">Services</span>
+                    </Link>
+                    <CommandShortcut>⌘P</CommandShortcut>
                 </CommandItem>
                 <CommandItem className="flex flex-row">
                     <Link className="flex flex-row" href="/admin/dashboard/products">
@@ -48,14 +56,14 @@ export default function CommandSidebar (){
                     <CommandShortcut>⌘B</CommandShortcut>
                 </CommandItem>
                 <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row" href="/admin/users">
+                    <Link className="flex flex-row" href="/admin/dashboard/users">
                         <Users className="mr-2 h-5 w-5" />
                         <span className="font-semibold">Users</span>
                     </Link>
                     <CommandShortcut>⌘U</CommandShortcut>
                 </CommandItem>
                 <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row" href="/admin/analytics">
+                    <Link className="flex flex-row" href="/admin/dashboard/analytics">
                         <LineChart className="mr-2 h-5 w-5" /> 
                         <span className="font-semibold">Analytics</span>
                     </Link>
@@ -65,7 +73,7 @@ export default function CommandSidebar (){
                 <CommandSeparator />
                 <CommandGroup heading="Settings">
                 <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row" href="/admin/settings">
+                    <Link className="flex flex-row" href="/admin/dashboard/settings">
                         <Settings className="mr-2 h-5 w-5" /> 
                         <span className="font-semibold">Settings</span>
                     </Link>

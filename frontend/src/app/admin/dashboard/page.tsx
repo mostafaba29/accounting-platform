@@ -12,6 +12,9 @@ export default function Dashboard() {
     const handleSuccessfulLogin = () => {
         setIsLoggedIn(true);
     }
+    if(!isLoggedIn){
+        return (<AdminLoginForm isLoggedIn={isLoggedIn} onLoginSuccess={handleSuccessfulLogin} />)
+    }
     return (
         <>
         <div className="flex flex-row justify-between gap-5 m-2">

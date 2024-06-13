@@ -1,6 +1,6 @@
 "use client";
 import {useState,useEffect} from 'react';
-import {Blog} from '@/components/BlogTableColumns';
+import {Blog} from '@/components/types/BlogTableColumns';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
 import BlogCard from '@/components/BlogCard';
@@ -10,7 +10,7 @@ export default function Blogs ()  {
     const [blogs, setBlogs] = useState<Blog[]>([]);
 
     const fetchBlogs = async () => {
-        const response = await axios.get('http://localhost:8000/api/v1/blog');
+        const response = await axios.get('http://localhost:8000/api/v1/blogs');
         if (response.data.status === "success" && response.data.data && Array.isArray(response.data.data.data)) {
             setBlogs(response.data.data.data);
         } else {
