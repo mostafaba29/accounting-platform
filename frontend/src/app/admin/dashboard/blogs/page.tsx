@@ -13,7 +13,7 @@ export default function AdminBlogsView (){
     const router = useRouter();
     const fetchBlogs = async ()=>{
         try {
-            const response = await axios.get('http://localhost:8000/api/v1/blog');
+            const response = await axios.get('http://localhost:8000/api/v1/blogs');
             setBlogs(response.data.data.data);
         }catch(error){
             console.log('error fetching blogs',error);

@@ -1,15 +1,5 @@
 'use client';
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "../ui/button";
-import { MoreHorizontal } from "lucide-react";
-import { 
-    DropdownMenu, 
-    DropdownMenuContent, 
-    DropdownMenuItem, 
-    DropdownMenuTrigger, 
-    DropdownMenuSeparator,
-    DropdownMenuLabel
-} from "../ui/dropdown-menu";
 import {Pencil,Trash,Eye,Ban} from "lucide-react";
 import axios from 'axios';
 import Link from 'next/link';
