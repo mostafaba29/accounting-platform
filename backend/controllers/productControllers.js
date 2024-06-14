@@ -35,32 +35,32 @@ const storage = multer.diskStorage({
   }
 });
 
-const multerFilter = (req, file, cb) => {
-  if (
-    file.mimetype.startsWith("image") ||
-    file.mimetype === "application/pdf" ||
-    file.mimetype ===
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-    file.mimetype === "application/vnd.ms-excel" ||
-    file.mimetype ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-    file.mimetype === "application/msword"
-  ) {
-    cb(null, true);
-  } else {
-    cb(
-      new AppError(
-        "Unsupported file type! Please upload only images or excel and word files.",
-        400
-      ),
-      false
-    );
-  }
-};
+// const multerFilter = (req, file, cb) => {
+//   if (
+//     file.mimetype.startsWith("image") ||
+//     file.mimetype === "application/pdf" ||
+//     file.mimetype ===
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+//     file.mimetype === "application/vnd.ms-excel" ||
+//     file.mimetype ===
+//       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+//     file.mimetype === "application/msword"
+//   ) {
+//     cb(null, true);
+//   } else {
+//     cb(
+//       new AppError(
+//         "Unsupported file type! Please upload only images or excel and word files.",
+//         400
+//       ),
+//       false
+//     );
+//   }
+// };
 
 exports.uploadFileAndImages = multer({
-  storage,
-  fileFilter: multerFilter
+  storage
+  // fileFilter: multerFilter
 }).fields([
   { name: "coverImage", maxCount: 1 },
   { name: "images", maxCount: 3 },

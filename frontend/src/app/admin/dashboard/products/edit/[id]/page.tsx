@@ -25,7 +25,7 @@ const formSchema = z.object({
   price: z
     .preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
   coverImage: z.instanceof(File).optional(),
-  file: z.instanceof(File).optional(),
+  document: z.instanceof(File).optional(),
   images: z.array(z.instanceof(File)).optional(),
 });
 
@@ -66,7 +66,7 @@ export default function EditProduct() {
     formData.append("description", values.description);
     formData.append("price", values.price.toString());
     if (values.coverImage) formData.append("coverImage", values.coverImage);
-    if (values.file) formData.append("file", values.file);
+    if (values.document) formData.append("document", values.document);
     if (values.images) {
       values.images.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
@@ -140,9 +140,9 @@ export default function EditProduct() {
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="file" render={({ field }) => (
+            <FormField control={form.control} name="document" render={({ field }) => (
               <FormItem>
-                <FormLabel>File</FormLabel>
+                <FormLabel>document</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
@@ -184,7 +184,7 @@ export default function EditProduct() {
             </div>
             <h2 className="text-xl font-bold mt-5">Cover Image</h2>
             <Image src={`/imgs/products/${productData.coverImage}`} alt="Product cover image" width={200} height={200} className="object-cover" />
-            <Link href={`/files/products/${productData.file}`} download className="text-blue-500 underline">Download current file</Link> 
+            <Link href={`/files/products/${productData.document}`} download className="text-blue-500 underline">Download current file</Link> 
           </div>
         )}
         </div>

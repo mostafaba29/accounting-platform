@@ -20,11 +20,11 @@ const formSchema = z.object({
   description: z.string(),
   price: z
     .preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
-  coverImage: z.instanceof(File).refine(file => file.size > 0, {
-    message: "Cover image is required",
-  }),
-  file: z.instanceof(File).refine(file => file.size > 0, {
-    message: "File is required",
+  coverImage:z.instanceof(File).refine(file => file.size > 0, {
+   message: "Cover image is required",
+   }),
+  document: z.instanceof(File).refine(file => file.size > 0, {
+    message: "doucment is required",
   }),
   images: z.array(z.instanceof(File)).optional(),
 });
@@ -40,21 +40,22 @@ export default function AddProduct() {
     formData.append("description", values.description);
     formData.append("price", values.price.toString());
     formData.append("coverImage", values.coverImage);
-    formData.append("file", values.file);
+    formData.append("document", values.document);
     if (values.images) {
       values.images.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
       });
     }
     try {
+      console.log(formData);
       const response = await axios.post(
         "http://localhost:8000/api/v1/products",
         formData,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          // headers: {
+          //   "Content-Type": "multipart/form-data",
+          // },
         }
       );
       console.log(response.data);
@@ -114,9 +115,9 @@ export default function AddProduct() {
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="file" render={({ field }) => (
+            <FormField control={form.control} name="document" render={({ field }) => (
               <FormItem>
-                <FormLabel>File</FormLabel>
+                <FormLabel>Document</FormLabel>
                 <FormControl>
                   <Input
                     type="file"

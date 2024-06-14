@@ -9,7 +9,7 @@ import Link from "next/link";
   }
   export default function BlogCard ({blog}: BlogCardProps) {
     return (
-        <Card className="w-full max-w-[600px] h-[400px] flex flex-col justify-between">
+        <Card className="w-full max-w-[1200px] h-[300px] flex flex-col justify-between my-1">
         <CardHeader>
           <Link href={`/blogs/${blog._id}`}>
           <CardTitle className="hover:text-sky-700">{blog.name}</CardTitle>

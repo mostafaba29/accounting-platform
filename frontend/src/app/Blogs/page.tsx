@@ -27,7 +27,7 @@ export default function Blogs ()  {
         <div className='w-full'>
         <NavigationBar />
          <div className="container mx-auto py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex flex-col ">
                 {blogs.map((blog,id) => (
                     <BlogCard key={id} blog={blog} />
                 ))}
