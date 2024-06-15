@@ -16,7 +16,7 @@ const userRoutes = require("./routes/userRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 const productRoutes = require("./routes/productRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
-const articleRoutes = require("./routes/articleRoutes");
+const serviceRoutes = require("./routes/serviceRoutes");
 
 const app = express();
 
@@ -62,7 +62,7 @@ app.use("/auth", googleAuthRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/blogs", blogRoutes);
 app.use("/api/v1/products", productRoutes);
-app.use("/api/v1/articles", articleRoutes);
+app.use("/api/v1/services", serviceRoutes);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

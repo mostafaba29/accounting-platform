@@ -12,11 +12,11 @@ const BlogPostSchema = new mongoose.Schema(
       type: String,
       required: [true, "a post must have a description"]
     },
+    views: Number,
     author: String,
     slug: String,
     imageCover: {
-      type: String,
-      required: [true, "a post must have an image"]
+      type: String
     },
     images: [String],
     createdAt: {

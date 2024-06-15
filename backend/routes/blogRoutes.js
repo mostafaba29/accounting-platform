@@ -10,6 +10,7 @@ router
   .post(
     authController.protect,
     authController.restrictTo("admin"),
+    blogController.uploadFileAndImages,
     blogController.createPost
   );
 
@@ -19,11 +20,13 @@ router
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
+    blogController.updateImages,
     blogController.updatePost
   )
   .delete(
     authController.protect,
     authController.restrictTo("admin"),
+    blogController.deletePostImages,
     blogController.deletePost
   );
 

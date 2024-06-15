@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const AppError = require("./../utils/appError");
 const catchAsync = require("./../utils/catchAsync");
-const BlogPost = require("../models/blogPostModel");
+const Service = require("../models/serviceModel");
 const factory = require("./FactoryHandlers");
 
 const now = new Date();
@@ -13,7 +13,7 @@ const formattedDate = `${now.getDate()}-${now.getMonth() +
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     if (file.mimetype.startsWith("image")) {
-      cb(null, "./../frontend/public/imgs/blogs");
+      cb(null, "./../frontend/public/imgs/services");
     } else {
       cb(
         new AppError("Unsupported file type! Please upload only images.", 400),
@@ -51,22 +51,17 @@ exports.uploadFileAndImages = multer({
   { name: "images", maxCount: 3 }
 ]);
 
-exports.createPost = catchAsync(async (req, res) => {
-  const { name, description, author } = req.body;
-
-  if (!name || !description) {
-    AppError("All required fields must be provided.");
-  }
+exports.createService = catchAsync(async (req, res) => {
+  const { title, body } = req.body;
 
   const coverImage = req.files.coverImage[0].filename;
   const images = req.files.images
     ? req.files.images.map(file => file.filename)
     : [];
 
-  const post = await BlogPost.create({
-    name,
-    description,
-    author,
+  const post = await Service.create({
+    title,
+    body,
     coverImage,
     images
   });
@@ -80,9 +75,9 @@ exports.createPost = catchAsync(async (req, res) => {
 });
 
 exports.updateImages = catchAsync(async (req, res, next) => {
-  const post = await BlogPost.findById(req.params.id);
-  if (!post) {
-    return res.status(404).json({ message: "Product not found" });
+  const services = await Service.findById(req.params.id);
+  if (!services) {
+    return res.status(404).json({ message: "Service not found" });
   }
 
   const coverImage = req.files.coverImage[0].filename;
@@ -90,7 +85,7 @@ exports.updateImages = catchAsync(async (req, res, next) => {
     ? req.files.images.map(file => file.filename)
     : [];
 
-  const updatedFiles = await BlogPost.findByIdAndUpdate(req.params.id, {
+  const updatedFiles = await Service.findByIdAndUpdate(req.params.id, {
     images: images,
     coverImage: coverImage
   });
@@ -106,19 +101,19 @@ const deleteFile = filePath => {
   });
 };
 
-exports.deletePostImages = catchAsync(async (req, res, next) => {
-  const post = await BlogPost.findById(req.params.id);
-  if (!post) {
-    return res.status(404).json({ message: "Post not found" });
+exports.deleteServiceImages = catchAsync(async (req, res, next) => {
+  const service = await Service.findById(req.params.id);
+  if (!service) {
+    return res.status(404).json({ message: "Service not found" });
   }
 
-  const { images } = post;
-  const { coverImage } = post;
+  const { images } = service;
+  const { coverImage } = service;
 
   // Delete images
   if (images && images.length > 0) {
     images.forEach(image => {
-      const imagePath = path.join("./../frontend/public/imgs/blogs/", image);
+      const imagePath = path.join("./../frontend/public/imgs/services/", image);
       fs.unlink(imagePath, err => {
         if (err) {
           console.error(`Error deleting file ${imagePath}:`, err);
@@ -129,14 +124,14 @@ exports.deletePostImages = catchAsync(async (req, res, next) => {
 
   // Delete cover image
   if (coverImage) {
-    deleteFile(`./../frontend/public/imgs/blogs/${coverImage}`);
+    deleteFile(`./../frontend/public/imgs/services/${coverImage}`);
   }
 
   // Send response
   next();
 });
 
-exports.getAllPosts = factory.getAll(BlogPost);
-exports.getOnePost = factory.getOne(BlogPost);
-exports.updatePost = factory.updateOne(BlogPost);
-exports.deletePost = factory.deleteOne(BlogPost);
+exports.getAllServices = factory.getAll(Service);
+exports.getOneService = factory.getOne(Service);
+exports.updateService = factory.updateOne(Service);
+exports.deleteService = factory.deleteOne(Service);

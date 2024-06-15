@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 
-const ArticleSchema = new mongoose.Schema(
+const ServiceSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -13,6 +13,7 @@ const ArticleSchema = new mongoose.Schema(
       required: [true, "an article must have a body"]
     },
     slug: String,
+    views: Number,
     imageCover: {
       type: String,
       required: [true, "a post must have an image"]
@@ -29,11 +30,11 @@ const ArticleSchema = new mongoose.Schema(
   }
 );
 
-ArticleSchema.pre("save", function(next) {
+ServiceSchema.pre("save", function(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-const Article = mongoose.model("Article", ArticleSchema);
+const Service = mongoose.model("Service", ServiceSchema);
 
-module.exports = Article;
+module.exports = Service;

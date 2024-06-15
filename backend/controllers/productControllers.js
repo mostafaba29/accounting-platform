@@ -6,6 +6,10 @@ const AppError = require("./../utils/appError");
 const Product = require("./../models/productModel");
 const factory = require("./FactoryHandlers");
 
+const now = new Date();
+const formattedDate = `${now.getDate()}-${now.getMonth() +
+  1}-${now.getFullYear()}`;
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     if (file.mimetype.startsWith("image")) {
@@ -31,36 +35,36 @@ const storage = multer.diskStorage({
     }
   },
   filename: function(req, file, cb) {
-    cb(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
+    cb(null, `${file.fieldname}-${formattedDate}-${file.originalname}`);
   }
 });
 
-// const multerFilter = (req, file, cb) => {
-//   if (
-//     file.mimetype.startsWith("image") ||
-//     file.mimetype === "application/pdf" ||
-//     file.mimetype ===
-//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-//     file.mimetype === "application/vnd.ms-excel" ||
-//     file.mimetype ===
-//       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-//     file.mimetype === "application/msword"
-//   ) {
-//     cb(null, true);
-//   } else {
-//     cb(
-//       new AppError(
-//         "Unsupported file type! Please upload only images or excel and word files.",
-//         400
-//       ),
-//       false
-//     );
-//   }
-// };
+const multerFilter = (req, file, cb) => {
+  if (
+    file.mimetype.startsWith("image") ||
+    file.mimetype === "application/pdf" ||
+    file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+    file.mimetype === "application/vnd.ms-excel" ||
+    file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+    file.mimetype === "application/msword"
+  ) {
+    cb(null, true);
+  } else {
+    cb(
+      new AppError(
+        "Unsupported file type! Please upload only images or excel and word files.",
+        400
+      ),
+      false
+    );
+  }
+};
 
 exports.uploadFileAndImages = multer({
-  storage
-  // fileFilter: multerFilter
+  storage,
+  fileFilter: multerFilter
 }).fields([
   { name: "coverImage", maxCount: 1 },
   { name: "images", maxCount: 3 },
@@ -76,7 +80,9 @@ exports.createProduct = catchAsync(async (req, res) => {
 
   const coverImage = req.files.coverImage[0].filename;
   const document = req.files.document[0].filename;
-  const images = req.files.images.map(file => file.filename);
+  const images = req.files.images
+    ? req.files.images.map(file => file.filename)
+    : [];
 
   const product = await Product.create({
     name,
@@ -103,7 +109,9 @@ exports.updateFilesAndImages = catchAsync(async (req, res, next) => {
 
   const coverImage = req.files.coverImage[0].filename;
   const document = req.files.document[0].filename;
-  const images = req.files.images.map(file => file.filename);
+  const images = req.files.images
+    ? req.files.images.map(file => file.filename)
+    : [];
 
   const updatedFiles = await Product.findByIdAndUpdate(req.params.id, {
     images: images,
