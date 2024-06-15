@@ -10,7 +10,7 @@ export default function AnalyticsChart() {
 
     return (
         <>
-        <Card>
+        <Card className='m-2'>
             <CardHeader>
                 <CardTitle>Analytics</CardTitle>
                 <CardDescription>View analytics</CardDescription>

@@ -14,6 +14,7 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { ShoppingBasket,Phone,User,Search} from 'lucide-react';
 
 const accAndFinancialServices:{title:string; href:string}[] =[
   {
@@ -170,58 +171,93 @@ const HrServices:{title:string; href:string}[] =[
 export default function NavigationBar(){
     return(
     <>
-      <div className="h-16 bg-sky-800 sticky top-0 flex justify-between align-center ">
-        <div className="mr-4 mt-3 flex flex-row">
-        <NavigationMenu>
+      <div className="h-32 bg-sky-800 sticky top-0 flex flex-col ">
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center ml-4 ">
+              <Button variant="ghost" className="text-white font-bold rounded-full ">AR</Button>
+              <Link href="/prducts">
+              <ShoppingBasket size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
+              </Link>
+              <Link href="/contact-us">
+              <Phone size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
+              </Link>
+              <Link href="/profile">
+              <User size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
+              </Link>
+              <Link href="/search">
+              <Search size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
+              </Link>
+            </div>
+            <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>
+          </div>
+          <div className="flex flex-row w-full justify-center">
+            <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white ">Platform</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    <Link href='/about-us'><ListItem>About us</ListItem></Link>
+                    <Link href='/vision'><ListItem> Vision</ListItem></Link>
+                    <Link href='/team'><ListItem> Team</ListItem></Link>
+                    <Link href='/contact-us'><ListItem> Contact</ListItem></Link>
+                    <Link href='/careers'><ListItem> Careers</ListItem></Link>
+                    <Link href='/terms-and-conditions'><ListItem> Terms and conditions</ListItem></Link>
+                    <Link href='/privacy-policy'><ListItem> Privacy policy</ListItem></Link>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white ">Accounting and financial services</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    {accAndFinancialServices.map((item) => (
+                      <Link href={item.href} key={item.title}>
+                        <ListItem key={item.title} title={item.title} />
+                      </Link>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent text-white ">Accounting and financial services</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
-                  {accAndFinancialServices.map((item) => (
-                    <Link href={item.href} key={item.title}>
-                      <ListItem key={item.title} title={item.title} />
-                    </Link>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent text-white  ">Financial consultants</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
-                  {FinancialConsultants.map((item) => (
-                    <Link href={item.href} key={item.title}>
-                      <ListItem key={item.title} title={item.title} />
-                    </Link>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent text-white  ">Hr services</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-3 p-4 md:w-[300px] lg:w-[450px] sm:w-[300] grid-cols-2 ">
-                  {HrServices.map((item) => (
-                    <Link href={item.href} key={item.title}>
-                      <ListItem key={item.title} title={item.title} />
-                    </Link>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        </div>
-        <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80} className=" px-3"/></Link>
+                <NavigationMenuTrigger className="bg-transparent text-white  ">Financial consultants</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    {FinancialConsultants.map((item) => (
+                      <Link href={item.href} key={item.title}>
+                        <ListItem key={item.title} title={item.title} />
+                      </Link>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white  ">Hr services</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[300px] lg:w-[450px] sm:w-[300] grid-cols-2 ">
+                    {HrServices.map((item) => (
+                      <Link href={item.href} key={item.title}>
+                        <ListItem key={item.title} title={item.title} />
+                      </Link>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>  
+          </div>
       </div>
     </>
   );

@@ -1,3 +1,5 @@
+
+import {useState} from 'react';
 import {
     Command,
     CommandDialog,
@@ -20,15 +22,17 @@ import {
     Wrench,
   } from "lucide-react";
   import Link from "next/link";
+
 export default function CommandSidebar (){
+
     return (
         <Command className="bg-neutral-100 h-[100vh] w-[300px] rounded-none ">
             <CommandInput placeholder="Type a command or search..." />
             <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup heading="Dashboard Commands">
-                <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row" href="/admin/dashboard">
+                <CommandItem className= 'flex flex-row'>
+                    <Link className='flex flex-row' href="/admin/dashboard">
                         <Home className="mr-2 h-5 w-5" /> 
                         <span className="font-semibold">Dashboard</span>
                     </Link>

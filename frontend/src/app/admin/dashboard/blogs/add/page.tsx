@@ -37,8 +37,8 @@ export default function AddBlog() {
     formData.append("author", values.author);
     formData.append("imageCover", values.imageCover);
     if (values.images) {
-      values.images.forEach((image, index) => {
-        formData.append(`images[${index}]`, image);
+      values.images.forEach((image) => {
+        formData.append('images', image);
       });
     }
     try {

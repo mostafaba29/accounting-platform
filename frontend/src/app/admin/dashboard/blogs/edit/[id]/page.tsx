@@ -66,8 +66,8 @@ export default function EditBlog() {
     if (values.imageCover) formData.append("imageCover", values.imageCover);
     if (values.file) formData.append("file", values.file);
     if (values.images) {
-      values.images.forEach((image, index) => {
-        formData.append(`images[${index}]`, image);
+      values.images.forEach((image) => {
+        formData.append('images', image);
       });
     }
     try {

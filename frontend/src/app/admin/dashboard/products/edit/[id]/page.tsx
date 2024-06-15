@@ -69,7 +69,7 @@ export default function EditProduct() {
     if (values.document) formData.append("document", values.document);
     if (values.images) {
       values.images.forEach((image, index) => {
-        formData.append(`images[${index}]`, image);
+        formData.append('images', image);
       });
     }
     try {

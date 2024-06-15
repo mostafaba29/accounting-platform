@@ -31,7 +31,7 @@ export const columns: ColumnDef<User>[] = [
             const user = row.original 
 
             const handleView = ()=>{
-                window.open(`/users/${user._id}`, '_blank');
+                window.open(`/admin/dashboard/users/${user._id}`, '_blank');
             }
             
             return (

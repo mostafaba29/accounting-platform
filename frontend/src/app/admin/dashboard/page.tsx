@@ -17,13 +17,16 @@ export default function Dashboard() {
     }
     return (
         <>
+        <h1 className="text-3xl font-bold text-center m-2 w-full">Admin Dashboard</h1>
         <div className="flex flex-row justify-between gap-5 m-2">
             <DashboardCard title={'posts'} value={10} icon={<Newspaper size="48" className="text-slate-400" />}/>
             <DashboardCard title={'posts'} value={10} icon={<Newspaper size="48" className="text-slate-400" />}/>
             <DashboardCard title={'posts'} value={10} icon={<Newspaper size="48" className="text-slate-400" />}/>
             <DashboardCard title={'posts'} value={10} icon={<Newspaper size="48" className="text-slate-400" />}/>
+            <DashboardCard title={'posts'} value={10} icon={<Newspaper size="48" className="text-slate-400" />}/>
+            <DashboardCard title={'posts'} value={10} icon={<Newspaper size="48" className="text-slate-400" />}/>
         </div>
-        <AnalyticsChart/>
+        <AnalyticsChart />
         <PostsTable title={'posts'}/>
             {/* <div >
                 {true ? <MainComponent  />

@@ -41,9 +41,10 @@ export default function AddProduct() {
     formData.append("price", values.price.toString());
     formData.append("coverImage", values.coverImage);
     formData.append("document", values.document);
+    console.log(values.images);
     if (values.images) {
-      values.images.forEach((image, index) => {
-        formData.append(`images[${index}]`, image);
+      values.images.forEach((image) => {
+        formData.append('images', image);
       });
     }
     try {
@@ -53,9 +54,9 @@ export default function AddProduct() {
         formData,
         {
           withCredentials: true,
-          // headers: {
-          //   "Content-Type": "multipart/form-data",
-          // },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       console.log(response.data);
