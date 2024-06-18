@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import Link from "next/link";
@@ -14,7 +15,8 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { ShoppingBasket,Phone,User,Search} from 'lucide-react';
+import { ShoppingBasket,Phone,User,Search,LogIn} from 'lucide-react';
+import axios from 'axios';
 
 const accAndFinancialServices:{title:string; href:string}[] =[
   {
@@ -169,29 +171,52 @@ const HrServices:{title:string; href:string}[] =[
   }
 ]
 export default function NavigationBar(){
+    const [userLoggedIn,setUserLoggedIn] = React.useState(false);
+
+    const checkUser = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/v1/user');
+        if (response.data.data.status === 200) {
+          setUserLoggedIn(true);
+        }
+      }catch (error) {
+        console.log(error);
+      }
+    }
+    React.useEffect(() => {
+      checkUser();
+    }, []);
     return(
     <>
-      <div className="h-32 bg-sky-800 sticky top-0 flex flex-col ">
+      <div className="h-32 bg-sky-800 sticky top-0 flex flex-col z-50">
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center ml-4 ">
-              <Button variant="ghost" className="text-white font-bold rounded-full ">AR</Button>
-              <Link href="/prducts">
+              {!userLoggedIn ? 
+              (
+                <Link href='auth/login'>
+                  <LogIn size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
+                </Link>
+              ) 
+              : (
+                <Link href="/profile">
+                  <User size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
+                </Link>
+              )}
+              <Link href="/products">
               <ShoppingBasket size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
               </Link>
               <Link href="/contact-us">
               <Phone size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
               </Link>
-              <Link href="/profile">
-              <User size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
-              </Link>
               <Link href="/search">
               <Search size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
               </Link>
+              <Button variant="ghost" className="text-white font-bold rounded-full ">AR</Button>
             </div>
             <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>
           </div>
           <div className="flex flex-row w-full justify-center">
-            <NavigationMenu>
+          <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent text-white ">Platform</NavigationMenuTrigger>
