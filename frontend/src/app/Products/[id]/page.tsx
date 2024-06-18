@@ -8,8 +8,23 @@ import BackButton from "@/components/BackButton";
 import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
+import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";
+import ReviewSection from "@/components/ReviewSection";
 
+const reviews = [
+  { text: "Great product! Really enjoyed using it.", score: 5 },
+  { text: "Pretty good, but could be improved.", score: 4 },
+  { text: "Not what I expected.", score: 2 },
+  { text: "Excellent quality!", score: 5 },
+  { text: "Worth the money.", score: 4 },
+  { score: 3 },
+  { text: "Amazing! Highly recommend.", score: 5 },
+  { text: "Okay product, not the best.", score: 3 },
+  { text: "Would buy again.", score: 4 },
+  { score: 2 },
+  { text: "Not satisfied.", score: 1 },
+];
 export default function ProductPage() {
     const pathname = usePathname();
     let id = pathname?.split("/").pop();
@@ -40,48 +55,24 @@ export default function ProductPage() {
         )
     }
     return (
-        <div>
-            <NavigationBar />
-            <BackButton text={'Go Back'} link={'/products'}/>
-        <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row">
-        <div className="flex-shrink-0 mb-4 md:mb-0 md:w-1/2">
-          <Image
-            src={`/imgs/products/${productData.coverImage}`}
-            alt={productData.name}
-            width={500}
-            height={500}
-            className="object-cover w-full h-full"
-          />
-        </div>
-        <div className="md:ml-8 md:w-1/2">
-          <h1 className="text-3xl font-bold mb-4">{productData.name}</h1>
-          <p className="text-gray-700 mb-6">{productData.description}</p>
-          <p className="text-2xl font-semibold mb-6">${productData.price}</p>
-          <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-            Buy Now
-          </button>
-          {productData.images && productData.images.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-semibold mb-4">More Images</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {productData.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={`/imgs/products/${image}`}
-                    alt={`${productData.name} image ${index + 1}`}
-                    width={200}
-                    height={200}
-                    className="object-cover w-full h-full"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-    <Footer />
+      <div>
+        <NavigationBar />
+        <BackButton text={'Go Back'} link={'/products'}/>
+        <div className="flex flex-row items-start justify-around my-3">
+          <ImageGallery coverImage={productData.coverImage} images={productData.images} type="products"/>
+          <div className="flex flex-col items-start">
+              <h1 className="text-3xl font-bold mb-4">{productData.name}</h1>
+              <p className="text-sky-800 mb-6">{productData.description}</p>
+              <p className="text-2xl font-semibold mb-6">$ {productData.price}</p>
+              <Link href={`/products/${productData._id}/checkout`}>
+              <Button className="bg-sky-600 text-white py-2 px-4 rounded font-semibold hover:bg-sky-500">
+                Buy Now
+              </Button>
+              </Link>
+          </div>
+        </div>  
+        <ReviewSection reviews={reviews} />
+      <Footer />
     </div>
     )
 }
