@@ -16,15 +16,10 @@ const reviewSchema = new mongoose.Schema(
       type: Date,
       default: Date.now
     },
-    product: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Product",
-      required: [true, "Review must belong to a product"]
-    },
-    post: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Blog_Post",
-      required: [true, "a review must belong to a blog post"]
+    item: { type: mongoose.Schema.ObjectId, required: true },
+    itemType: {
+      type: String,
+      enum: ["Blog_Post", "Product", "Service"]
     },
     user: {
       type: mongoose.Schema.ObjectId,
@@ -37,8 +32,6 @@ const reviewSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
-
-reviewSchema.index({ post: 1, product: 1, user: 1 }, { unique: true });
 
 reviewSchema.pre(/^find/, function(next) {
   this.populate({

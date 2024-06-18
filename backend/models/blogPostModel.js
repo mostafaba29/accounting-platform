@@ -12,9 +12,10 @@ const BlogPostSchema = new mongoose.Schema(
       type: String,
       required: [true, "a post must have a description"]
     },
-    views: Number,
+    views: { type: Number, default: 0 },
     author: String,
     slug: String,
+    reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
     imageCover: {
       type: String
     },
@@ -32,6 +33,11 @@ const BlogPostSchema = new mongoose.Schema(
 
 BlogPostSchema.pre("save", function(next) {
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+BlogPostSchema.pre(/^find/, async function(next) {
+  await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
   next();
 });
 

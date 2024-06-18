@@ -1,9 +1,9 @@
 const Review = require("./../models/reviewModel");
 const factory = require("./FactoryHandlers");
 
-exports.setProductUserIds = (req, res, next) => {
+exports.setItemUserIds = (req, res, next) => {
   // Allow nested routes
-  if (!req.body.product) req.body.product = req.params.productId;
+  if (!req.body.item) req.body.item = req.params.id;
   if (!req.body.user) req.body.user = req.user.id;
   next();
 };
