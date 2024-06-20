@@ -14,6 +14,7 @@ const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorConrollers");
 const userRoutes = require("./routes/userRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
 const productRoutes = require("./routes/productRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
@@ -61,6 +62,7 @@ app.use(hpp()); // prevent parameter pollution
 app.use("/auth", googleAuthRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/blogs", blogRoutes);
+app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/services", serviceRoutes);
 

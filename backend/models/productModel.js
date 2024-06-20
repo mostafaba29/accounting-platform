@@ -20,7 +20,8 @@ const productSchema = new mongoose.Schema({
     required: [true, "a product must have a price"]
   },
   Sucessful_Purchases: Number,
-  views: Number,
+  views: { type: Number, default: 0 },
+  reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
   images: [String],
   category: {
     type: String,
@@ -34,6 +35,11 @@ const productSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   }
+});
+
+productSchema.pre(/^find/, async function(next) {
+  await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
+  next();
 });
 
 const Product = mongoose.model("Product", productSchema);
