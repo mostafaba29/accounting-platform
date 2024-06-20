@@ -27,8 +27,8 @@ import { useState } from "react";
 
 const formSchema = z.object({
     review: z.string().optional(),
-    score: z
-    .preprocess((val) => Number(val), z.number().min(0).max(5).positive("review score must be a positive number between 0 and 5")),
+    rating: z
+    .preprocess((val) => Number(val), z.number().min(0).max(5).positive("review rating must be a positive number between 0 and 5")),
 });
 
 interface ReviewDialogProps {
@@ -48,7 +48,7 @@ export default function ReviewDialog({ Id, type, isOpen, onClose }: ReviewDialog
         if(data.review){
             formData.append("review", data.review);
         }
-        formData.append("score", data.score.toString());
+        formData.append("rating", data.rating.toString());
         try {
             const response = await axios.post(
                 `http://localhost:8000/api/v1/reviews/${Id}`,
@@ -71,7 +71,7 @@ export default function ReviewDialog({ Id, type, isOpen, onClose }: ReviewDialog
                 <DialogHeader>
                     <DialogTitle>Add your review</DialogTitle>
                     <DialogDescription>
-                        Give your score and optionally write a review for this {type}.
+                        Give your rating and optionally write a review for this {type}.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -79,14 +79,14 @@ export default function ReviewDialog({ Id, type, isOpen, onClose }: ReviewDialog
 
                         <FormField 
                             control={form.control}
-                            name="score"
+                            name="rating"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Score</FormLabel>
+                                    <FormLabel>rating</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="number"
-                                            placeholder="Score"
+                                            placeholder="rating"
                                             {...field}
                                         />
                                     </FormControl>

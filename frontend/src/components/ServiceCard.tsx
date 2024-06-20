@@ -10,25 +10,26 @@ import Image from "next/image";
 import {Button} from "./ui/button";
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link";
-import { Product } from "./types/ProductTableColumns"
+import { Service } from "./types/ServicesTableColumns"
 
-interface ProductCardProps {
-    product: Product;
+interface ServiceCardProps {
+    service: Service;
 }
-export default function ProductCard({product}: ProductCardProps) {
-    return(
+
+export default function ServiceCard( {service}: ServiceCardProps) {
+
+    return (
         <Card className="w-80 flex flex-col items-center justify-between ">
             <CardHeader className="w-full flex flex-col items-center text-center">
-                <CardTitle>{product.name}</CardTitle>
-                <Image src={`/imgs/products/${product.coverImage}`} alt={product.name} width={200} height={200}/> 
+                <CardTitle>{service.name}</CardTitle>
+                <Image src={`/imgs/services/${service.imageCover}`} alt={service.name} width={200} height={200}/> 
             </CardHeader>
             <CardContent>
-                <CardDescription>{product.description}</CardDescription>
+                <CardDescription>{service.description}</CardDescription>
             </CardContent>
             <CardFooter className="w-full flex flex-row justify-between items-end bg-slate-200 ">
-                <Link href={`/products/${product._id}`}><Button >View Details</Button></Link>
-                <Badge>Price: ${product.price}</Badge>
+                <Link href={`/services/${service._id}`}><Button >View Details</Button></Link>
             </CardFooter>
         </Card>
-        );
-};
+    );
+}   

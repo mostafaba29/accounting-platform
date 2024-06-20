@@ -11,36 +11,38 @@ import Image from "next/image";
 import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";
 import ReviewSection from "@/components/ReviewSection";
+import {Review} from "@/components/types/Review"; 
 
-const reviews = [
-  { text: "Great product! Really enjoyed using it.", score: 5 },
-  { text: "Pretty good, but could be improved.", score: 4 },
-  { text: "Not what I expected.", score: 2 },
-  { text: "Excellent quality!", score: 5 },
-  { text: "Worth the money.", score: 4 },
-  { score: 3 },
-  { text: "Amazing! Highly recommend.", score: 5 },
-  { text: "Okay product, not the best.", score: 3 },
-  { text: "Would buy again.", score: 4 },
-  { score: 2 },
-  { text: "Not satisfied.", score: 1 },
-];
+
 export default function ProductPage() {
     const pathname = usePathname();
     let id = pathname?.split("/").pop();
     const [productData, setProductData] = useState<Product | null>(null );
+    const [reviews, setReviews] = useState<Review[]>([]);
 
+    
     useEffect(() => {
-        if (id) {
-          axios.get(`http://localhost:8000/api/v1/products/${id}`)
-            .then(response => {
-              const data = response.data.data.data;
-              setProductData(data);
-              console.log(data);
-            })
-            .catch(error => console.error("Error fetching product data", error));
+      const fetchReviews = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8000/api/v1/reviews/${id}`);
+          setReviews(response.data.data.data);
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
         }
-      }, [id]);
+    }
+    const fetchProductData = async () => {
+      if(id) {
+        try {
+          const response = await axios.get(`http://localhost:8000/api/v1/products/${id}`);
+          setProductData(response.data.data.data);
+        } catch (error) {
+          console.error("Error fetching product data:", error);
+        }
+      }
+    }
+        fetchProductData();
+        fetchReviews();
+      }, [ id ]);
     
     if(!id || !productData) {
         return (
@@ -71,7 +73,7 @@ export default function ProductPage() {
               </Link>
           </div>
         </div>  
-        <ReviewSection reviews={reviews} />
+        <ReviewSection reviews={reviews} id={productData._id}/>
       <Footer />
     </div>
     )

@@ -175,8 +175,8 @@ export default function NavigationBar(){
 
     const checkUser = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/v1/user');
-        if (response.data.data.status === 200) {
+        const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
+        if (response.data.status === "success") {
           setUserLoggedIn(true);
         }
       }catch (error) {

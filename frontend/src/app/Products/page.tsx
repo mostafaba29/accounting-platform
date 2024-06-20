@@ -40,8 +40,6 @@ export default function ProductsPage(){
                     <ProductCard key={id} product={product} />
                 ))} 
             </div>
-            {/* <div className="mt-4 flex justify-center">
-            </div> */}
         </div>
         <Footer /> 
         </div>
