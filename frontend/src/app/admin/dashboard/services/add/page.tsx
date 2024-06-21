@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Service name is required").max(100),
+  title: z.string().min(1, "Service title is required").max(100),
   body: z.string(),
   imageCover:z.instanceof(File).refine(file => file.size > 0, {
    message: "Cover image is required",
@@ -31,7 +31,7 @@ export default function AddService() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
-    formData.append("name", values.name);
+    formData.append("name", values.title);
     formData.append("body", values.body);
     formData.append("imageCover", values.imageCover);
     console.log(values.images);
@@ -65,9 +65,9 @@ export default function AddService() {
       <h1 className="text-3xl font-bold">Add Service</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full">
-            <FormField control={form.control} name="name" render={({ field }) => (
+            <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>
