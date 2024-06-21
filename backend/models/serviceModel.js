@@ -15,7 +15,7 @@ const ServiceSchema = new mongoose.Schema(
     slug: String,
     views: { type: Number, default: 0 },
     reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
-    imageCover: {
+    coverImage: {
       type: String,
       required: [true, "a post must have an image"]
     },
@@ -32,7 +32,7 @@ const ServiceSchema = new mongoose.Schema(
 );
 
 ServiceSchema.pre("save", function(next) {
-  this.slug = slugify(this.name, { lower: true });
+  this.slug = slugify(this.title, { lower: true });
   next();
 });
 

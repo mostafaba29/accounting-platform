@@ -18,9 +18,9 @@ import BackButton from "@/components/BackButton";
 const formSchema = z.object({
   title: z.string().min(1, "Service title is required").max(100),
   body: z.string(),
-  imageCover:z.instanceof(File).refine(file => file.size > 0, {
-   message: "Cover image is required",
-   }),
+  coverImage: z.instanceof(File).refine((file) => file.size > 0, {
+    message: "Cover image is required",
+  }),
   images: z.array(z.instanceof(File)).optional(),
 });
 
@@ -31,13 +31,13 @@ export default function AddService() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
-    formData.append("name", values.title);
+    formData.append("title", values.title);
     formData.append("body", values.body);
-    formData.append("imageCover", values.imageCover);
+    formData.append("coverImage", values.coverImage);
     console.log(values.images);
     if (values.images) {
       values.images.forEach((image) => {
-        formData.append('images', image);
+        formData.append("images", image);
       });
     }
     try {
@@ -60,64 +60,88 @@ export default function AddService() {
 
   return (
     <div>
-      <BackButton text={'Go Back'} link={'/admin/dashboard/services'}/>
+      <BackButton text={"Go Back"} link={"/admin/dashboard/services"} />
       <div className="w-full h-screen flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold">Add Service</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full">
-            <FormField control={form.control} name="title" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input {...field} type="text" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        <h1 className="text-3xl font-bold">Add Service</h1>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="max-w-[1200px] w-full"
+          >
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="text" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <FormField control={form.control} name="body" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Body</FormLabel>
-                <FormControl>
-                  <Input {...field} type="text" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            <FormField
+              control={form.control}
+              name="body"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Body</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="text" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          
-            <FormField control={form.control} name="imageCover" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cover Image</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+
+            <FormField
+              control={form.control}
+              name="coverImage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cover Image</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.files ? e.target.files[0] : null
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <FormField control={form.control} name="images" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    multiple
-                    onChange={(e) => field.onChange(e.target.files ? Array.from(e.target.files) : [])}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Images</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      multiple
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.files ? Array.from(e.target.files) : []
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          <Button type="submit" className=" mt-1 w-full ">Save</Button>
-        </form>
-      </Form>
+            <Button type="submit" className=" mt-1 w-full ">
+              Save
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
-    </div>
-    
   );
 }

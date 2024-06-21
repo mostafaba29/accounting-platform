@@ -27,10 +27,7 @@ const storage = multer.diskStorage({
 });
 
 const multerFilter = (req, file, cb) => {
-  if (
-    file.mimetype.startsWith("image") ||
-    file.mimetype === "application/pdf"
-  ) {
+  if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
     cb(
@@ -59,7 +56,7 @@ exports.createService = catchAsync(async (req, res) => {
     ? req.files.images.map(file => file.filename)
     : [];
 
-  const post = await Service.create({
+  const service = await Service.create({
     title,
     body,
     coverImage,
@@ -69,7 +66,7 @@ exports.createService = catchAsync(async (req, res) => {
   res.status(201).json({
     status: "success",
     data: {
-      post
+      service
     }
   });
 });
