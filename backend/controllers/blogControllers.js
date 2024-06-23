@@ -140,3 +140,15 @@ exports.getAllPosts = factory.getAll(BlogPost);
 exports.getOnePost = factory.getOne(BlogPost);
 exports.updatePost = factory.updateOne(BlogPost);
 exports.deletePost = factory.deleteOne(BlogPost);
+
+exports.findByCategory = catchAsync(async (req, res) => {
+  const posts = await BlogPost.find({ category: req.params.category });
+  if (!posts) {
+    res.status(404).json("no products found in this category");
+  }
+  res.status(200).json({
+    status: "success",
+    results: posts.length,
+    posts
+  });
+});

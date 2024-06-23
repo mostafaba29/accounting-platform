@@ -132,3 +132,15 @@ exports.getAllServices = factory.getAll(Service);
 exports.getOneService = factory.getOne(Service);
 exports.updateService = factory.updateOne(Service);
 exports.deleteService = factory.deleteOne(Service);
+
+exports.findByCategory = catchAsync(async (req, res) => {
+  const services = await Service.find({ category: req.params.category });
+  if (!services) {
+    res.status(404).json("no products found in this category");
+  }
+  res.status(200).json({
+    status: "success",
+    results: services.length,
+    services
+  });
+});

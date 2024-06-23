@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema({
   images: [String],
   category: {
     type: String,
-    enum: ["c1", "c2"]
+    required: true
   },
   coverImage: {
     type: String,

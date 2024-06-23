@@ -9,6 +9,8 @@ router.use("/:productId/reviews", reviewRouter);
 
 router.get("/download/:productId", productControllers.downloadFile);
 
+router.get("/:category", productControllers.findByCategory);
+
 router
   .route("/")
   .get(productControllers.getAllProducts)

@@ -13,6 +13,10 @@ const ServiceSchema = new mongoose.Schema(
       required: [true, "an article must have a body"]
     },
     slug: String,
+    category: {
+      type: String,
+      required: true
+    },
     views: { type: Number, default: 0 },
     reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
     coverImage: {

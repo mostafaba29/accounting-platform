@@ -189,3 +189,15 @@ exports.deleteProductFiles = catchAsync(async (req, res, next) => {
   // Send response
   next();
 });
+
+exports.findByCategory = catchAsync(async (req, res) => {
+  const products = await Product.find({ category: req.params.category });
+  if (!products) {
+    res.status(404).json("no products found in this category");
+  }
+  res.status(200).json({
+    status: "success",
+    results: products.length,
+    products
+  });
+});

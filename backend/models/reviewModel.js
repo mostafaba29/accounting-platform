@@ -16,10 +16,10 @@ const reviewSchema = new mongoose.Schema(
       type: Date,
       default: Date.now
     },
-    item: { type: mongoose.Schema.ObjectId, required: true },
-    itemType: {
-      type: String,
-      enum: ["Blog_Post", "Product", "Service"]
+    product: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Product",
+      required: [true, "Review must belong to a product."]
     },
     user: {
       type: mongoose.Schema.ObjectId,

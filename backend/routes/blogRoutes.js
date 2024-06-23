@@ -1,11 +1,10 @@
 const express = require("express");
 const blogController = require("./../controllers/blogControllers");
 const authController = require("./../controllers/authControllers");
-const reviewRouter = require("./reviewRoutes");
 
 const router = express.Router();
 
-router.use("/:blogId/reviews", reviewRouter);
+router.get("/:category", blogController.findByCategory);
 
 router
   .route("/")

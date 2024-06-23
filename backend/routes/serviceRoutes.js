@@ -2,11 +2,10 @@ const express = require("express");
 const servicesControllers = require("./../controllers/servicesControllers");
 const authController = require("../controllers/authControllers");
 const analysis = require("../controllers/analysis");
-const reviewRouter = require("./reviewRoutes");
 
 const router = express.Router();
 
-router.use("/:serviceId/reviews", reviewRouter);
+router.get("/:category", servicesControllers.findByCategory);
 
 router.get(
   "/analysis",

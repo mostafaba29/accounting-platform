@@ -15,6 +15,10 @@ const BlogPostSchema = new mongoose.Schema(
     views: { type: Number, default: 0 },
     author: String,
     slug: String,
+    category: {
+      type: String,
+      required: true
+    },
     reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
     imageCover: {
       type: String
