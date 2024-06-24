@@ -49,7 +49,10 @@ exports.uploadFileAndImages = multer({
 ]);
 
 exports.createService = catchAsync(async (req, res) => {
-  const { title, body } = req.body;
+  const { title, body, category } = req.body;
+  if (!title || !body || !category) {
+    AppError("All required fields must be provided.");
+  }
 
   const coverImage = req.files.coverImage[0].filename;
   const images = req.files.images
@@ -59,6 +62,7 @@ exports.createService = catchAsync(async (req, res) => {
   const service = await Service.create({
     title,
     body,
+    category,
     coverImage,
     images
   });
@@ -82,7 +86,7 @@ exports.updateImages = catchAsync(async (req, res, next) => {
     ? req.files.images.map(file => file.filename)
     : [];
 
-  const updatedFiles = await Service.findByIdAndUpdate(req.params.id, {
+  await Service.findByIdAndUpdate(req.params.id, {
     images: images,
     coverImage: coverImage
   });
@@ -133,7 +137,7 @@ exports.getOneService = factory.getOne(Service);
 exports.updateService = factory.updateOne(Service);
 exports.deleteService = factory.deleteOne(Service);
 
-exports.findByCategory = catchAsync(async (req, res) => {
+exports.serviceCategory = catchAsync(async (req, res) => {
   const services = await Service.find({ category: req.params.category });
   if (!services) {
     res.status(404).json("no products found in this category");

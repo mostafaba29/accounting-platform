@@ -18,7 +18,6 @@ const ServiceSchema = new mongoose.Schema(
       required: true
     },
     views: { type: Number, default: 0 },
-    reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
     coverImage: {
       type: String,
       required: [true, "a post must have an image"]

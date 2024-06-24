@@ -4,6 +4,7 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
+  googleId: { type: String, unique: true },
   name: {
     type: String,
     required: [true, "Please tell us your name!"]
@@ -44,7 +45,8 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false
-  }
+  },
+  purchases: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
 });
 
 userSchema.pre("save", async function(next) {

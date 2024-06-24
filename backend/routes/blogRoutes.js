@@ -4,7 +4,7 @@ const authController = require("./../controllers/authControllers");
 
 const router = express.Router();
 
-router.get("/:category", blogController.findByCategory);
+router.get("/:category", blogController.postCategory);
 
 router
   .route("/")

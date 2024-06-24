@@ -72,9 +72,9 @@ exports.uploadFileAndImages = multer({
 ]);
 
 exports.createProduct = catchAsync(async (req, res) => {
-  const { name, description, price } = req.body;
+  const { name, description, price, category } = req.body;
 
-  if (!name || !description || !price) {
+  if (!name || !description || !price || !category) {
     AppError("All required fields must be provided.");
   }
 
@@ -87,6 +87,7 @@ exports.createProduct = catchAsync(async (req, res) => {
   const product = await Product.create({
     name,
     description,
+    category,
     document,
     price,
     coverImage,
@@ -113,7 +114,7 @@ exports.updateFilesAndImages = catchAsync(async (req, res, next) => {
     ? req.files.images.map(file => file.filename)
     : [];
 
-  const updatedFiles = await Product.findByIdAndUpdate(req.params.id, {
+  await Product.findByIdAndUpdate(req.params.id, {
     images: images,
     coverImage: coverImage,
     document: document
@@ -190,7 +191,7 @@ exports.deleteProductFiles = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.findByCategory = catchAsync(async (req, res) => {
+exports.productCategory = catchAsync(async (req, res) => {
   const products = await Product.find({ category: req.params.category });
   if (!products) {
     res.status(404).json("no products found in this category");

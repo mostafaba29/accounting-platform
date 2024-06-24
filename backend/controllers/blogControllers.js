@@ -52,9 +52,9 @@ exports.uploadFileAndImages = multer({
 ]);
 
 exports.createPost = catchAsync(async (req, res) => {
-  const { name, description, author } = req.body;
+  const { name, description, author, category } = req.body;
 
-  if (!name || !description) {
+  if (!name || !description || !category) {
     AppError("All required fields must be provided.");
   }
 
@@ -66,6 +66,7 @@ exports.createPost = catchAsync(async (req, res) => {
   const post = await BlogPost.create({
     name,
     description,
+    category,
     author,
     coverImage,
     images
@@ -90,7 +91,7 @@ exports.updateImages = catchAsync(async (req, res, next) => {
     ? req.files.images.map(file => file.filename)
     : [];
 
-  const updatedFiles = await BlogPost.findByIdAndUpdate(req.params.id, {
+  await BlogPost.findByIdAndUpdate(req.params.id, {
     images: images,
     coverImage: coverImage
   });
@@ -141,7 +142,7 @@ exports.getOnePost = factory.getOne(BlogPost);
 exports.updatePost = factory.updateOne(BlogPost);
 exports.deletePost = factory.deleteOne(BlogPost);
 
-exports.findByCategory = catchAsync(async (req, res) => {
+exports.postCategory = catchAsync(async (req, res) => {
   const posts = await BlogPost.find({ category: req.params.category });
   if (!posts) {
     res.status(404).json("no products found in this category");

@@ -21,7 +21,6 @@ const productSchema = new mongoose.Schema({
   },
   Sucessful_Purchases: Number,
   views: { type: Number, default: 0 },
-  reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
   images: [String],
   category: {
     type: String,

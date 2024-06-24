@@ -33,13 +33,7 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.pre(/^find/, function(next) {
-  this.populate({
-    path: "user",
-    select: "name photo"
-  });
-  next();
-});
+reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
 reviewSchema.statics.calcAverageRatings = async function(productId) {
   const stats = await this.aggregate([
@@ -69,16 +63,22 @@ reviewSchema.statics.calcAverageRatings = async function(productId) {
   }
 };
 
+reviewSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: "user",
+    select: "name image"
+  });
+  next();
+});
+
 reviewSchema.post("save", function() {
   // this points to current review
   this.constructor.calcAverageRatings(this.tour);
 });
 
-// findByIdAndUpdate
-// findByIdAndDelete
 reviewSchema.pre(/^findOneAnd/, async function(next) {
   this.r = await this.findOne();
-  // console.log(this.r);
+
   next();
 });
 

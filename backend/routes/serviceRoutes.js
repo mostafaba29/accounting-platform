@@ -5,14 +5,14 @@ const analysis = require("../controllers/analysis");
 
 const router = express.Router();
 
-router.get("/:category", servicesControllers.findByCategory);
-
 router.get(
   "/analysis",
   authController.protect,
   authController.restrictTo("admin"),
   analysis.websiteAnalysis
 );
+
+router.get("/:category", servicesControllers.serviceCategory);
 
 router
   .route("/")

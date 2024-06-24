@@ -1,6 +1,4 @@
-const express = require("express");
 const catchAsync = require("./../utils/catchAsync");
-const AppError = require("./../utils/appError");
 const Service = require("../models/serviceModel");
 const User = require("../models/userModel");
 const BlogPost = require("../models/blogPostModel");

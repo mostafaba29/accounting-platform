@@ -19,7 +19,6 @@ const BlogPostSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    reviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
     imageCover: {
       type: String
     },
