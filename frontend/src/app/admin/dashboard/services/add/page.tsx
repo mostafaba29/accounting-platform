@@ -12,12 +12,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
 
 const formSchema = z.object({
   title: z.string().min(1, "Service title is required").max(100),
   body: z.string(),
+  category: z.string().min(1, "Category is required").max(100),
   coverImage: z.instanceof(File).refine((file) => file.size > 0, {
     message: "Cover image is required",
   }),
@@ -29,11 +31,14 @@ export default function AddService() {
     resolver: zodResolver(formSchema),
   });
 
+  const { toast } = useToast();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("body", values.body);
     formData.append("coverImage", values.coverImage);
+    formData.append("category", values.category);
     console.log(values.images);
     if (values.images) {
       values.images.forEach((image) => {
@@ -53,7 +58,17 @@ export default function AddService() {
         }
       );
       console.log(response.data);
+      if (response.data.message === "success") {
+        toast({
+          description: "Service added successfully",
+        });
+        form.reset();
+      }
     } catch (error) {
+      toast({
+        description: "Error saving serivce",
+        variant: "destructive",
+      });
       console.log("Error saving serivce", error);
     }
   };
@@ -94,7 +109,19 @@ export default function AddService() {
                 </FormItem>
               )}
             />
-
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="text" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="coverImage"

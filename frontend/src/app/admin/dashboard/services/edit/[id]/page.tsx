@@ -14,15 +14,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
 import Image from "next/image";
 import Link from "next/link";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Service name is required").max(100),
+  title: z.string().min(1, "Service title is required").max(100),
   body: z.string(),
-  imageCover: z.instanceof(File).optional(),
+  category:z.string().min(1,"category is required").max(50),
+  coverImage: z.instanceof(File).optional(),
   images: z.array(z.instanceof(File)).optional(),
 });
 
@@ -31,10 +33,12 @@ export default function EditService() {
   let id = pathname?.split("/").pop();
   const [ServiceData, setServiceData] = useState(null);
 
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      title: "",
       body: "",
     },
   });
@@ -47,7 +51,7 @@ export default function EditService() {
           setServiceData(data);
           console.log(data);
           form.reset({
-            name: data.name,
+            title: data.name,
             body: data.body,
           });
         })
@@ -57,9 +61,10 @@ export default function EditService() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
-    formData.append("name", values.name);
+    formData.append("name", values.title);
     formData.append("description", values.body);
-    if (values.imageCover) formData.append("coverImage", values.imagecover);
+    formData.append("category",values.category);
+    if (values.coverImage) formData.append("coverImage", values.coverImage);
     if (values.images) {
       values.images.forEach((image, index) => {
         formData.append('images', image);
@@ -77,7 +82,17 @@ export default function EditService() {
         }
       );
       console.log(response.data);
+      if (response.data.message === "success") {
+        toast({
+          description: "Service updated successfully",
+        });
+        form.reset();
+      }
     } catch (error) {
+      toast({
+        description: "Error updating Service",
+        variant: "destructive",
+      })
       console.log("Error updating Service", error);
     }
   };
@@ -90,7 +105,7 @@ export default function EditService() {
         <div className="flex flex-row items-center justify-between gap-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full">
-            <FormField control={form.control} name="name" render={({ field }) => (
+            <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
@@ -110,7 +125,17 @@ export default function EditService() {
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="imageCover" render={({ field }) => (
+            <FormField control={form.control} name="category" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <Input {...field} type="text" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
+            <FormField control={form.control} name="coverImage" render={({ field }) => (
               <FormItem>
                 <FormLabel>Cover Image</FormLabel>
                 <FormControl>
@@ -154,7 +179,7 @@ export default function EditService() {
               )}
             </div>
             <h2 className="text-xl font-bold mt-5">Cover Image</h2>
-            <Image src={`/imgs/services/${ServiceData.imageCover}`} alt="Service cover image" width={200} height={200} className="object-cover" />
+            <Image src={`/imgs/services/${ServiceData.coverImage}`} alt="Service cover image" width={200} height={200} className="object-cover" />
              
           </div>
         )}

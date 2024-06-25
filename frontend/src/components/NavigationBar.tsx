@@ -1,6 +1,7 @@
 "use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import clsx from "clsx";
 import Link from "next/link";
 import {Button} from "./ui/button";
 import Image from "next/image";
@@ -15,6 +16,14 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { ShoppingBasket,Phone,User,Search,LogIn} from 'lucide-react';
 import axios from 'axios';
 
@@ -172,7 +181,7 @@ const HrServices:{title:string; href:string}[] =[
 ]
 export default function NavigationBar(){
     const [userLoggedIn,setUserLoggedIn] = React.useState(false);
-
+    const [profileIconActive,setProfileIconActive] = React.useState(false);
     const checkUser = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
@@ -183,6 +192,19 @@ export default function NavigationBar(){
         console.log(error);
       }
     }
+
+    const logout = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/v1/users/logout',{withCredentials: true });
+        if (response.data.status === "success") {
+          setUserLoggedIn(false);
+          window.location.href = '/auth/login';
+        }
+      }catch (error) {
+        console.log(error);
+      }
+    }
+
     React.useEffect(() => {
       checkUser();
     }, []);
@@ -198,9 +220,28 @@ export default function NavigationBar(){
                 </Link>
               ) 
               : (
-                <Link href="/profile">
-                  <User size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <User size={36} className={clsx("text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white ",{
+                      "bg-white text-black":profileIconActive,"text-white": !profileIconActive}
+                    )} onClick={() => setProfileIconActive(true)}/>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-28 ml-1 flex flex-col items-center">
+                  <DropdownMenuLabel>User</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link href="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/orders">Orders</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    {/* <Link href="/auth/logout">Logout</Link> */}
+                    <p className="w-full hover:cursor-pointer" onClick={logout}>Logout</p>
+                  </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+          
               )}
               <Link href="/products">
               <ShoppingBasket size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>

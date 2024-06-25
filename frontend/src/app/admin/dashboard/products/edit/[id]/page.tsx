@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import BackButton from "@/components/BackButton";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,6 +25,7 @@ const formSchema = z.object({
   description: z.string(),
   price: z
     .preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
+  category:z.string().min(1, "category is required"),
   coverImage: z.instanceof(File).optional(),
   document: z.instanceof(File).optional(),
   images: z.array(z.instanceof(File)).optional(),
@@ -33,6 +35,8 @@ export default function EditProduct() {
   const pathname = usePathname();
   let id = pathname?.split("/").pop();
   const [productData, setProductData] = useState(null);
+
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,6 +69,7 @@ export default function EditProduct() {
     formData.append("name", values.name);
     formData.append("description", values.description);
     formData.append("price", values.price.toString());
+    formData.append("category", values.category);
     if (values.coverImage) formData.append("coverImage", values.coverImage);
     if (values.document) formData.append("document", values.document);
     if (values.images) {
@@ -84,7 +89,17 @@ export default function EditProduct() {
         }
       );
       console.log(response.data);
+      if(response.data.message === "success") {
+        toast({
+          description: "Product updated successfully",
+        });
+        window.location.href = '/admin/dashboard/products';
+      }
     } catch (error) {
+      toast({
+        description: "Error updating product",
+        variant: "destructive",
+      })
       console.log("Error updating product", error);
     }
   };
@@ -122,6 +137,16 @@ export default function EditProduct() {
                 <FormLabel>Price</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
+            <FormField control={form.control} name="category" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <Input {...field} type="text" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

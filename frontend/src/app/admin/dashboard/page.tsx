@@ -32,7 +32,7 @@ export default function Dashboard() {
         { withCredentials: true }
       );
       console.log(response.data.data);
-      setAnalysis(response.data.data);
+      // setAnalysis(response.data.data);
     } catch (error) {
       console.log(error);
     }

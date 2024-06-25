@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import BackButton from "@/components/BackButton";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,6 +24,7 @@ const formSchema = z.object({
   name: z.string().min(1, "blog name is required").max(100),
   description: z.string(),
   author: z.string(),
+  category:z.string().min(1,"category is required").max(100),
   imageCover: z.instanceof(File).optional(),
   file: z.instanceof(File).optional(),
   images: z.array(z.instanceof(File)).optional(),
@@ -32,7 +34,7 @@ export default function EditBlog() {
   const pathname = usePathname();
   let id = pathname?.split("/").pop();
   const [blogData, setBlogData] = useState(null);
-
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,6 +65,7 @@ export default function EditBlog() {
     formData.append("name", values.name);
     formData.append("description", values.description);
     formData.append("price", values.author);
+    formData.append("category",values.category);
     if (values.imageCover) formData.append("imageCover", values.imageCover);
     if (values.file) formData.append("file", values.file);
     if (values.images) {
@@ -82,7 +85,17 @@ export default function EditBlog() {
         }
       );
       console.log(response.data);
+      if(response.data.message === 'success') {
+        toast({
+          description: "Blog updated successfully",
+        });
+        window.location.href = '/admin/dashboard/blogs';
+      }
     } catch (error) {
+      toast({
+        description: "Error updating blog",
+        variant: "destructive",
+      })
       console.log("Error updating blog", error);
     }
   };
@@ -118,6 +131,16 @@ export default function EditBlog() {
             <FormField control={form.control} name="author" render={({ field }) => (
               <FormItem>
                 <FormLabel>Author</FormLabel>
+                <FormControl>
+                  <Input {...field} type="text" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
+            <FormField control={form.control} name="category" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>
@@ -182,7 +205,6 @@ export default function EditBlog() {
             </div>
             <h2 className="text-xl font-bold mt-5">Cover Image</h2>
             <Image src={`/imgs/products/${blogData.imageCover}`} alt="Product cover image" width={200} height={200} className="object-cover" />
-            <Link href={`/files/products/${blogData.file}`} download className="text-blue-500 underline">Download current file</Link> 
           </div>
         )}
         </div>

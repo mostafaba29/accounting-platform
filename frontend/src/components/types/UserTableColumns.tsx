@@ -5,6 +5,7 @@ export interface User {
     _id: string;
     name:string;
     email:string;
+    active:boolean;
     photo:string;
     createdAt:Date;
 }
@@ -18,8 +19,8 @@ export const columns: ColumnDef<User>[] = [
         header: 'Email',
     },
     {
-        accessorKey: 'photo',
-        header: 'Photo',
+        accessorKey: 'active',
+        header: 'Active',
     },
     {
         accessorKey: 'createdAt',

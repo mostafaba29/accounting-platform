@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
 
@@ -19,6 +20,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Product name is required").max(100),
   description: z.string(),
   author: z.string(),
+  category:z.string().min(1,"Category is required").max(100),
   imageCover: z.instanceof(File).refine(file => file.size > 0, {
     message: "Cover image is required",
   }),
@@ -30,12 +32,15 @@ export default function AddBlog() {
     resolver: zodResolver(formSchema),
   });
 
+  const { toast } = useToast();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
     formData.append("author", values.author);
     formData.append("imageCover", values.imageCover);
+    formData.append("category", values.category);
     if (values.images) {
       values.images.forEach((image) => {
         formData.append('images', image);
@@ -53,8 +58,18 @@ export default function AddBlog() {
         }
       );
       console.log(response.data);
+      if (response.data.message === 'success') {
+        toast({
+          description: "Blog added successfully",
+        });
+        form.reset();
+      }
     } catch (error) {
-      console.log("Error saving product", error);
+      toast({
+        description: "Error adding blog",
+        variant: "destructive",
+      });
+      console.log("Error adding blog", error);
     }
   };
 
@@ -95,7 +110,16 @@ export default function AddBlog() {
               </FormItem>
             )}
             />
-          
+            <FormField control={form.control} name="category" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <Input {...field} type="text" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
             <FormField control={form.control} name="imageCover" render={({ field }) => (
               <FormItem>
                 <FormLabel>Cover Image</FormLabel>

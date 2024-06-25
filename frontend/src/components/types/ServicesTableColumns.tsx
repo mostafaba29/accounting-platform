@@ -6,26 +6,33 @@ import Link from 'next/link';
 
 export interface Service {
     _id: string;
-    name:string;
-    description:string;
+    title:string;
+    body:string;
+    category:string;
+    views:number;
     images:string[];
-    imageCover:string;
+    coverImage:string;
     createdAt:Date;
 }
 export const columns: ColumnDef<Service>[] = [
     {
-        accessorKey: 'name',
-        header: 'Name',
+        accessorKey: 'title',
+        header: 'Title',
     },
     {
-        accessorKey: 'description',
-        header: 'Description',
+        accessorKey: 'category',
+        header: 'Category',
+    },
+    {
+        accessorKey:'views',
+        header: 'Views',
     },
     {
         accessorKey: 'createdAt',
         header: 'Created At',
     },{
         id: 'actions',
+        header: 'Actions',
         cell:({row})=>{
             const service = row.original 
 
@@ -35,7 +42,7 @@ export const columns: ColumnDef<Service>[] = [
 
             const handleDelete = async ()=>{
                 try{
-                    const response = await axios.delete(`http://localhost:8000/api/v1/service/${service._id}`);
+                    const response = await axios.delete(`http://localhost:8000/api/v1/services/${service._id}`,{withCredentials:true});
                     if(response.data.status === "success"){
                         window.location.reload();
                     }    
@@ -46,7 +53,7 @@ export const columns: ColumnDef<Service>[] = [
 
             const handleDisable = async ()=>{
                 try{
-                    const response = await axios.patch(`/api/service/${service._id}`, { status: 'disabled' },{withCredentials:true});
+                    const response = await axios.patch(`/api/services/${service._id}`, { status: 'disabled' },{withCredentials:true});
                     if(response.data.status === "success"){
                         window.location.reload();
                     }    

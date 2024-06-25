@@ -13,7 +13,7 @@ export default function ResetPassword() {
     const router = useRouter();
     const sendNewPassword = async () => {
         try {
-            const response = await axios.post("http://localhost:8000/api/v1/users/forgot-password", {
+            const response = await axios.post("http://localhost:8000/api/v1/users/resetPassword/:token", {
                 password,
                 confirmPassword
             });

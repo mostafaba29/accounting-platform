@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
 
@@ -20,6 +21,7 @@ const formSchema = z.object({
   description: z.string(),
   price: z
     .preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
+  category:z.string().min(5, "category is required"),
   coverImage:z.instanceof(File).refine(file => file.size > 0, {
    message: "Cover image is required",
    }),
@@ -34,6 +36,7 @@ export default function AddProduct() {
     resolver: zodResolver(formSchema),
   });
 
+  const { toast } = useToast();
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("name", values.name);
@@ -41,6 +44,7 @@ export default function AddProduct() {
     formData.append("price", values.price.toString());
     formData.append("coverImage", values.coverImage);
     formData.append("document", values.document);
+    formData.append("category", values.category);
     console.log(values.images);
     if (values.images) {
       values.images.forEach((image) => {
@@ -60,7 +64,17 @@ export default function AddProduct() {
         }
       );
       console.log(response.data);
+      if (response.data.status === "success") {
+        toast({
+          description: "Product added successfully",
+        });
+        form.reset();
+      }
     } catch (error) {
+      toast({
+        description: "Error adding product",
+        variant: "destructive",
+      })
       console.log("Error saving product", error);
     }
   };
@@ -85,6 +99,16 @@ export default function AddProduct() {
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input {...field} type="text" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
+            <FormField control={form.control} name="category" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>

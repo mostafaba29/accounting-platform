@@ -8,7 +8,9 @@ export interface Blog {
     _id: string;
     name:string;
     description:string;
+    views:number;
     author:string;
+    category:string;
     images:string[];
     slug: string,
     imageCover:string;
@@ -20,18 +22,23 @@ export const columns: ColumnDef<Blog>[] = [
         header: 'Name',
     },
     {
-        accessorKey: 'description',
-        header: 'Description',
-    },
-    {
         accessorKey: 'author',
         header: 'author',
+    },
+    {
+        accessorKey: 'views',
+        header: 'Views',
+    },
+    {
+        accessorKey: 'category',
+        header: 'Category',
     },
     {
         accessorKey: 'createdAt',
         header: 'Created At',
     },{
         id: 'actions',
+        header: 'Actions',
         cell:({row})=>{
             const blog = row.original 
 

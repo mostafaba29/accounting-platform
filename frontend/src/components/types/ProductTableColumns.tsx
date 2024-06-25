@@ -8,6 +8,10 @@ export interface Product {
     _id: string;
     name: string;
     description: string;
+    document:string;
+    views:number;
+    Sucessful_Purchases: number;
+    category:string;
     price: number;
     images: string[];
     coverImage: string;
@@ -20,12 +24,20 @@ export const columns: ColumnDef<Product>[] = [
         header: 'Name',
     },
     {
-        accessorKey: 'description',
-        header: 'Description',
+        accessorKey: 'views',
+        header: 'Views',
+    },
+    {
+        accessorKey: 'category',
+        header: 'Category',
     },
     {
         accessorKey: 'price',
         header: 'Price',
+    },
+    {
+        accessorKey: 'Sucessful_Purchases',
+        header: 'Sucessful Purchases',
     },
     {
         accessorKey: 'createdAt',
