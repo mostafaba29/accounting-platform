@@ -22,18 +22,19 @@ export default function ProductPage() {
 
     
     useEffect(() => {
-      // const fetchReviews = async () => {
-      //   try {
-      //     const response = await axios.get(`http://localhost:8000/api/v1/reviews/${id}`);
-      //     setReviews(response.data.data.data);
-      //   } catch (error) {
-      //     console.error("Error fetching reviews:", error);
-      //   }
-      // };
+      const fetchReviews = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8000/api/v1/reviews/${id}`);
+          setReviews(response.data.data.data);
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+        }
+      };
     const fetchProductData = async () => {
       if(id) {
         try {
           const response = await axios.get(`http://localhost:8000/api/v1/products/${id}`);
+          console.log(response);
           setProductData(response.data.data.data);
         } catch (error) {
           console.error("Error fetching product data:", error);
@@ -41,7 +42,7 @@ export default function ProductPage() {
       }
     }
         fetchProductData();
-        // fetchReviews();
+        fetchReviews();
       }, [ id ]);
     
     if(!id || !productData) {
@@ -73,7 +74,7 @@ export default function ProductPage() {
               </Link>
           </div>
         </div>  
-        {/* <ReviewSection reviews={reviews} id={productData._id}/> */}
+        <ReviewSection reviews={reviews} id={productData._id}/> 
       <Footer />
     </div>
     )

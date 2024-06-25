@@ -4,7 +4,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <div className="flex">
             <CommandSidebar />
-            <div className="w-full h-screen">
+            <div className="w-full ">
                 {children}
             </div>
         </div>

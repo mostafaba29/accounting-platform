@@ -1,5 +1,6 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { useRef } from 'react';
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -15,18 +16,22 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const formSchema = z.object({
   name: z.string().min(1, "Product name is required").max(100),
-  description: z.string(),
+  description: z.string().optional(),
   price: z
     .preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
-  category:z.string().min(5, "category is required"),
-  coverImage:z.instanceof(File).refine(file => file.size > 0, {
-   message: "Cover image is required",
-   }),
+  category: z.string().min(5, "Category is required"),
+  coverImage: z.instanceof(File).refine(file => file.size > 0, {
+    message: "Cover image is required",
+  }),
   document: z.instanceof(File).refine(file => file.size > 0, {
-    message: "doucment is required",
+    message: "Document is required",
   }),
   images: z.array(z.instanceof(File)).optional(),
 });
@@ -34,9 +39,23 @@ const formSchema = z.object({
 export default function AddProduct() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      price: 0,
+      category: "",
+      coverImage: null,
+      document: null,
+      images: [],
+    }
   });
 
+  const coverImageRef = useRef<HTMLInputElement>(null);
+  const documentRef = useRef<HTMLInputElement>(null);
+  const imagesRef = useRef<HTMLInputElement>(null);
+
   const { toast } = useToast();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("name", values.name);
@@ -45,14 +64,12 @@ export default function AddProduct() {
     formData.append("coverImage", values.coverImage);
     formData.append("document", values.document);
     formData.append("category", values.category);
-    console.log(values.images);
     if (values.images) {
       values.images.forEach((image) => {
         formData.append('images', image);
       });
     }
     try {
-      console.log(formData);
       const response = await axios.post(
         "http://localhost:8000/api/v1/products",
         formData,
@@ -68,7 +85,18 @@ export default function AddProduct() {
         toast({
           description: "Product added successfully",
         });
-        form.reset();
+        form.reset({
+          name: "",
+          description: "",
+          price: 0,
+          category: "",
+          coverImage: null,
+          document: null,
+          images: [],
+        });
+        if (coverImageRef.current) coverImageRef.current.value = "";
+        if (documentRef.current) documentRef.current.value = "";
+        if (imagesRef.current) imagesRef.current.value = "";
       }
     } catch (error) {
       toast({
@@ -81,97 +109,104 @@ export default function AddProduct() {
 
   return (
     <div>
-      <BackButton text={'Go Back'} link={'/admin/dashboard/products'}/>
+      <BackButton text={'Go Back'} link={'/admin/dashboard/products'} />
       <div className="w-full h-screen flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold">Add Product</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full">
-            <FormField control={form.control} name="name" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} type="text" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
+        <h1 className="text-3xl font-bold mb-4">Add a new product</h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-3 gap-3">
+              <FormField control={form.control} name="name" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="text" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+              <FormField control={form.control} name="category" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="text" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+              <FormField control={form.control} name="price" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+            </div>
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} type="text" />
+                  <Controller control={form.control} name="description" render={({ field }) => (
+                    <ReactQuill value={field.value} onChange={field.onChange} />
+                  )} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="category" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Input {...field} type="text" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
-            <FormField control={form.control} name="price" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price</FormLabel>
-                <FormControl>
-                  <Input {...field} type="number" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
-          
-            <FormField control={form.control} name="coverImage" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cover Image</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
-            <FormField control={form.control} name="document" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Document</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
-            <FormField control={form.control} name="images" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    multiple
-                    onChange={(e) => field.onChange(e.target.files ? Array.from(e.target.files) : [])}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
-          <Button type="submit" className=" mt-1 w-full ">Save</Button>
-        </form>
-      </Form>
+            <div>
+              <FormField control={form.control} name="coverImage" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cover Image</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      ref={coverImageRef}
+                      onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+              <FormField control={form.control} name="document" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Document</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      ref={documentRef}
+                      onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+              <FormField control={form.control} name="images" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Images</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      multiple
+                      ref={imagesRef}
+                      onChange={(e) => field.onChange(e.target.files ? Array.from(e.target.files) : [])}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+            </div>
+            <Button type="submit" className="mt-1 w-50 bg-sky-800 hover:bg-sky-700">Save</Button>
+          </form>
+        </Form>
+      </div>
     </div>
-    </div>
-    
   );
 }

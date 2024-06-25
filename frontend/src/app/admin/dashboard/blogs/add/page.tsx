@@ -1,5 +1,6 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { useRef } from "react";
+import { useForm,Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -15,6 +16,10 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const formSchema = z.object({
   name: z.string().min(1, "Product name is required").max(100),
@@ -30,8 +35,18 @@ const formSchema = z.object({
 export default function AddBlog() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+      defaultValues: {
+        name: "",
+        description: "",
+        author: "",
+        category: "",
+        imageCover: null,
+        images: [],
+      }
   });
 
+  const coverImageRef = useRef<HTMLInputElement>(null);
+  const imagesRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -62,7 +77,18 @@ export default function AddBlog() {
         toast({
           description: "Blog added successfully",
         });
-        form.reset();
+        form.reset(
+          {
+            name: "",
+            description: "",
+            author: "",
+            category: "",
+            imageCover: null,
+            images: [],
+          }
+        );
+        if (coverImageRef.current) coverImageRef.current.value = "";
+        if (imagesRef.current) imagesRef.current.value = "";
       }
     } catch (error) {
       toast({
@@ -77,9 +103,9 @@ export default function AddBlog() {
     <div>
       <BackButton text={'Go Back'} link={'/admin/dashboard/blogs'}/>
       <div className="w-full h-screen flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold">Add Blog</h1>
+      <h1 className="text-3xl font-bold">Add a new blog post </h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full grid gird-cols-1 gap-6">
             <FormField control={form.control} name="name" render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -94,7 +120,9 @@ export default function AddBlog() {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} type="text" />
+                  <Controller control={form.control} name="description" render={({field}) => (
+                    <ReactQuill value={field.value} onChange={field.onChange}  />
+                  )} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

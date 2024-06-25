@@ -51,7 +51,7 @@ export default function ReviewDialog({ Id, type, isOpen, onClose }: ReviewDialog
         formData.append("rating", data.rating.toString());
         try {
             const response = await axios.post(
-                `http://localhost:8000/api/v1/reviews/${Id}`,
+                `http://localhost:8000/api/v1/reviews`,
                 formData,
                 {
                     withCredentials: true,
