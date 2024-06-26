@@ -17,7 +17,6 @@ router
   .post(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    productControllers.uploadFileAndImages,
     productControllers.createProduct
   );
 
@@ -27,9 +26,7 @@ router
   .patch(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    productControllers.deleteProductFiles,
-    productControllers.uploadFileAndImages,
-    productControllers.updateFilesAndImages,
+    productControllers.updateProductFiles,
     productControllers.updateProduct
   )
   .delete(

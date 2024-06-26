@@ -18,6 +18,7 @@ const reviewRouter = require("./routes/reviewRoutes");
 const productRoutes = require("./routes/productRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
+const analysisRoutes = require("./routes/analysisRoutes");
 
 const app = express();
 
@@ -48,14 +49,15 @@ app.use(mongoSanitize()); //Data sanitization against NoSQL query injection
 app.use(xss()); // Data sanitization against XSS
 app.use(hpp()); // prevent parameter pollution
 
-// Initialize Passport and session middleware
-// app.use(
-//   cookieSession({
-//     secret: process.env.SESSION_SECRET || "random-session-secret",
-//     resave: false,
-//     saveUninitialized: false
-//   })
-// );
+//Initialize Passport and session middleware
+app.use(
+  cookieSession({
+    secret: process.env.SESSION_SECRET || "random-session-secret",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
 // app.use(passport.initialize());
 // app.use(passport.session());
 
@@ -65,6 +67,7 @@ app.use("/api/v1/blogs", blogRoutes);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/services", serviceRoutes);
+app.use("/api/v1/content", analysisRoutes);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

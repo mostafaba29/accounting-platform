@@ -1,18 +1,10 @@
 const express = require("express");
 const servicesControllers = require("./../controllers/servicesControllers");
 const authController = require("../controllers/authControllers");
-const analysis = require("../controllers/analysis");
 
 const router = express.Router();
 
-router.get(
-  "/analysis",
-  authController.protect,
-  authController.restrictTo("admin"),
-  analysis.websiteAnalysis
-);
-
-router.get("/:category", servicesControllers.serviceCategory);
+//router.get("/:category", servicesControllers.serviceCategory);
 
 router
   .route("/")
@@ -30,6 +22,7 @@ router
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
+    servicesControllers.uploadFileAndImages,
     servicesControllers.updateImages,
     servicesControllers.updateService
   )

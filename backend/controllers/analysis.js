@@ -24,3 +24,38 @@ exports.websiteAnalysis = catchAsync(async (req, res) => {
     }
   });
 });
+
+// getting the latest 4 blogs, 4 featured services, most successfully purchased products
+exports.landingPageContent = catchAsync(async (req, res) => {
+  // Fetch last 4 blogs
+  const latestBlogs = await BlogPost.find()
+    .sort({ createdAt: -1 })
+    .limit(4);
+
+  // Fetch featured 4 rated services
+  let featuredServices = await Service.find()
+    .sort({ rating: -1 })
+    .limit(4);
+  if (featuredServices.length === 0) {
+    featuredServices = await Service.find()
+      .sort({ createdAt: -1 })
+      .limit(4);
+  }
+
+  // fetch most successfully purchased
+  let bestSellingProducts = await Product.find({
+    Sucessful_Purchases: -1
+  }).limit(6);
+  if (bestSellingProducts.length === 0) {
+    bestSellingProducts = await Product.find()
+      .sort({ createdAt: -1 })
+      .limit(6);
+  }
+
+  // Return all data as a single JSON response
+  res.status(200).json({
+    latestBlogs,
+    featuredServices,
+    bestSellingProducts
+  });
+});

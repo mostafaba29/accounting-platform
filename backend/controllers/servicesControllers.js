@@ -6,10 +6,12 @@ const catchAsync = require("./../utils/catchAsync");
 const Service = require("../models/serviceModel");
 const factory = require("./FactoryHandlers");
 
+// time format
 const now = new Date();
 const formattedDate = `${now.getDate()}-${now.getMonth() +
   1}-${now.getFullYear()}`;
 
+// multer storage
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     if (file.mimetype.startsWith("image")) {
@@ -40,6 +42,7 @@ const multerFilter = (req, file, cb) => {
   }
 };
 
+// uploading files
 exports.uploadFileAndImages = multer({
   storage,
   fileFilter: multerFilter
