@@ -47,7 +47,7 @@ exports.uploadFileAndImages = multer({
   storage,
   fileFilter: multerFilter
 }).fields([
-  { name: "coverImage", maxCount: 1 },
+  { name: "imageCover", maxCount: 1 },
   { name: "images", maxCount: 3 }
 ]);
 
@@ -58,7 +58,7 @@ exports.createPost = catchAsync(async (req, res) => {
     AppError("All required fields must be provided.");
   }
 
-  const coverImage = req.files.coverImage[0].filename;
+  const imageCover = req.files.imageCover[0].filename;
   const images = req.files.images
     ? req.files.images.map(file => file.filename)
     : [];
@@ -68,7 +68,7 @@ exports.createPost = catchAsync(async (req, res) => {
     description,
     category,
     author,
-    coverImage,
+    imageCover,
     images
   });
 
