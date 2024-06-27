@@ -39,10 +39,10 @@ BlogPostSchema.pre("save", function(next) {
   next();
 });
 
-BlogPostSchema.pre(/^find/, async function(next) {
-  await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
-  next();
-});
+// BlogPostSchema.pre(/^find/, async function(next) {
+//   await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
+//   next();
+// });
 
 const BlogPost = mongoose.model("Blog_Post", BlogPostSchema);
 

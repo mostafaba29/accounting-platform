@@ -2,6 +2,7 @@ const express = require("express");
 const authControllers = require("./../controllers/authControllers");
 const productControllers = require("./../controllers/productControllers");
 const reviewRouter = require("./reviewRoutes");
+const views = require("./../controllers/FactoryHandlers");
 
 const router = express.Router();
 
@@ -9,11 +10,11 @@ router.use("/:productId/reviews", reviewRouter);
 
 router.get("/download/:productId", productControllers.downloadFile);
 
-// router.get("/:category", productControllers.productCategory);
+router.route("/:category").get(productControllers.productCategory);
 
 router
   .route("/")
-  .get(productControllers.getAllProducts)
+  .get(views.isAdmin, productControllers.getAllProducts)
   .post(
     authControllers.protect,
     authControllers.restrictTo("admin"),

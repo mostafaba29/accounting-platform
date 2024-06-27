@@ -4,7 +4,7 @@ const authController = require("../controllers/authControllers");
 
 const router = express.Router();
 
-//router.get("/:category", servicesControllers.serviceCategory);
+router.route("/:category").get(servicesControllers.serviceCategory);
 
 router
   .route("/")
@@ -12,7 +12,6 @@ router
   .post(
     authController.protect,
     authController.restrictTo("admin"),
-    servicesControllers.uploadFileAndImages,
     servicesControllers.createService
   );
 
@@ -22,8 +21,7 @@ router
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
-    servicesControllers.uploadFileAndImages,
-    servicesControllers.updateImages,
+    servicesControllers.updateServiceImages,
     servicesControllers.updateService
   )
   .delete(

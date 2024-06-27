@@ -254,7 +254,7 @@ exports.deleteProductFiles = catchAsync(async (req, res, next) => {
 //category
 exports.productCategory = catchAsync(async (req, res) => {
   const products = await Product.find({ category: req.params.category });
-  if (!products) {
+  if (products.length === 0) {
     res.status(404).json("no products found in this category");
   }
   res.status(200).json({

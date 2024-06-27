@@ -1,9 +1,9 @@
-const catchAsync = require("./../utils/catchAsync");
+const catchAsync = require("../utils/catchAsync");
 const Service = require("../models/serviceModel");
 const User = require("../models/userModel");
 const BlogPost = require("../models/blogPostModel");
-const Product = require("./../models/productModel");
-const Review = require("./../models/reviewModel");
+const Product = require("../models/productModel");
+const Review = require("../models/reviewModel");
 
 // getting the total number of all models available
 exports.websiteAnalysis = catchAsync(async (req, res) => {

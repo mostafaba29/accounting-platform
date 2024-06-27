@@ -17,7 +17,14 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: [true, "a product must have a price"]
+    required: true,
+    min: [1, "Price must be greater than zero"],
+    validate: {
+      validator: function(value) {
+        return value > 0;
+      },
+      message: "Price must be greater than zero"
+    }
   },
   Sucessful_Purchases: Number,
   views: { type: Number, default: 0 },
@@ -26,6 +33,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  featured: Boolean,
   coverImage: {
     type: String,
     required: [true, "a product must have a cover image"]
@@ -36,10 +44,10 @@ const productSchema = new mongoose.Schema({
   }
 });
 
-productSchema.pre(/^find/, async function(next) {
-  await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
-  next();
-});
+// productSchema.pre(/^find/, async function(next) {
+//   await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
+//   next();
+// });
 
 const Product = mongoose.model("Product", productSchema);
 

@@ -5,39 +5,27 @@ module.exports = class Email {
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
     this.url = url;
-    this.from = `WEBSITENAME <${process.env.EMAIL_FROM}>`;
+    this.from = `UNITED GROUP <${process.env.EMAIL_FROM}>`;
   }
 
   newTransport() {
-    // Sendgrid
     return nodemailer.createTransport({
-      service: "SendGrid",
+      service: "gmail",
       auth: {
-        user: process.env.SENDGRID_USERNAME,
-        pass: process.env.SENDGRID_PASSWORD
+        user: process.env.EMAIL_FROM,
+        pass: process.env.GMAIL_PASSWORD
       }
     });
   }
 
   // Send the actual email
-  async send(template, subject) {
-    // 1) Render HTML based on a pug template
-    const htmlpage = html.renderFile(
-      `${__dirname}/../views/email/${template}.html`,
-      {
-        firstName: this.firstName,
-        url: this.url,
-        subject
-      }
-    );
-
-    // 2) Define email options
+  async send(subject, text) {
+    // Define email options
     const mailOptions = {
       from: this.from,
       to: this.to,
       subject,
-      html,
-      text: htmlToText.fromString(html)
+      text
     };
 
     // 3) Create a transport and send email

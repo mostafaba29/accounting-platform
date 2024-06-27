@@ -1,6 +1,8 @@
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const APIFeatures = require("./../utils/apiFeatures");
+const Product = require("./../models/productModel");
+const BlogPost = require("./../models/blogPostModel");
 
 exports.deleteOne = Model =>
   catchAsync(async (req, res, next) => {
@@ -47,6 +49,15 @@ exports.createOne = Model =>
     });
   });
 
+exports.isAdmin = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    req.isAdmin = true;
+  } else {
+    req.isAdmin = false;
+  }
+  next();
+};
+
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
@@ -55,6 +66,10 @@ exports.getOne = (Model, popOptions) =>
 
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
+    }
+    if ((Model === Product || Model === BlogPost) && req.isAdmin === false) {
+      doc.views += 1;
+      await doc.save();
     }
 
     res.status(200).json({

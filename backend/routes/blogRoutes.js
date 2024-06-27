@@ -1,10 +1,11 @@
 const express = require("express");
 const blogController = require("./../controllers/blogControllers");
 const authController = require("./../controllers/authControllers");
+const views = require("./../controllers/FactoryHandlers");
 
 const router = express.Router();
 
-//router.get("/:category", blogController.postCategory);
+router.route("/:category").get(blogController.postCategory);
 
 router
   .route("/")
@@ -12,17 +13,16 @@ router
   .post(
     authController.protect,
     authController.restrictTo("admin"),
-    blogController.uploadFileAndImages,
-    blogController.createPost
+    blogController.createBlog
   );
 
 router
   .route("/:id")
-  .get(blogController.getOnePost)
+  .get(views.isAdmin, blogController.getOnePost)
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
-    blogController.updateImages,
+    blogController.updateBlogImages,
     blogController.updatePost
   )
   .delete(
