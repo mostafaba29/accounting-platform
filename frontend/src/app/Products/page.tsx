@@ -35,7 +35,7 @@ export default function ProductsPage(){
         <div className='w-full'>
         <NavigationBar />
          <div className="container mx-auto py-8">
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4 ">
                  {currentProducts.map((product,id) => (
                     <ProductCard key={id} product={product} />
                 ))} 

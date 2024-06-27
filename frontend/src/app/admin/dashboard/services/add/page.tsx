@@ -1,5 +1,5 @@
 "use client";
-import {useRef} from 'react';
+import {useRef,useState} from 'react';
 import { useForm,Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import Link from 'next/link';
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
@@ -32,6 +41,8 @@ const formSchema = z.object({
 });
 
 export default function AddService() {
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [coverImageName, setCoverImageName] = useState('');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues:{
@@ -45,6 +56,13 @@ export default function AddService() {
   const coverImageRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setCoverImageName(file ? file.name : '');
+    form.setValue('coverImage', file);
+  };
+
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
@@ -85,6 +103,7 @@ export default function AddService() {
         );
         if (coverImageRef.current) coverImageRef.current.value = "";
         if (imagesRef.current) imagesRef.current.value = "";
+        setSaveDialogOpen(true);
       }
     } catch (error) {
       toast({
@@ -103,16 +122,29 @@ export default function AddService() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="max-w-[1200px] w-full grid grid-cols-1 gap-6"
+            className="max-w-[1200px] w-full grid grid-cols-1 gap-3"
           >
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel className="font-semibold">* Title:</FormLabel>
                   <FormControl>
-                    <Input {...field} type="text" />
+                    <Input {...field} type="text" placeholder='Title of the service'/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">* Category:</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="text" placeholder='Financial,HR ... etc' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,7 +152,7 @@ export default function AddService() {
             />
             <FormField control={form.control} name="body" render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel className="font-semibold">* Description:</FormLabel>
                 <FormControl>
                   <Controller control={form.control} name="body" render={({field}) => (
                     <ReactQuill value={field.value} onChange={field.onChange}  />
@@ -130,39 +162,32 @@ export default function AddService() {
               </FormItem>
             )}
             />
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
+            
+            <FormField control={form.control} name="coverImage" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel className='font-semibold'>* Cover Image:</FormLabel>
                   <FormControl>
-                    <Input {...field} type="text" />
+                    <div className="flex items-center">
+                      <Button
+                        type="button"
+                        onClick={() => coverImageRef.current?.click()}
+                        className="custom-file-input bg-sky-800 hover:bg-sky-700 w-[200px]"
+                      >
+                        {coverImageName ? 'Choose Another Image' : 'Upload Cover Image'}
+                      </Button>
+                      <input
+                        type="file"
+                        ref={coverImageRef}
+                        onChange={handleCoverImageChange}
+                        className="hidden"
+                      />
+                      {coverImageName && <p className="ml-2 font-medium">Selected Image : <b>{coverImageName}</b></p>}
+                  </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="coverImage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cover Image</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.files ? e.target.files[0] : null
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              />
             <FormField
               control={form.control}
               name="images"
@@ -184,12 +209,26 @@ export default function AddService() {
                 </FormItem>
               )}
             />
+            <p className="text-gray-500 text-xs">Elements marked with * are <b>required</b></p>
             <Button type="submit" className=" mt-1 w-full ">
               Save
             </Button>
           </form>
         </Form>
       </div>
+      <AlertDialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Do You want to add another service ?</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Link href='/admin/dashboard/services'>
+                <Button variant={"outline"}>No</Button>
+              </Link>
+              <AlertDialogCancel className='bg-sky-800 hover:bg-sky-700 text-white'>Yes</AlertDialogCancel>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

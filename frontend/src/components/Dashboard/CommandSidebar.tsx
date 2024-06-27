@@ -1,5 +1,4 @@
 
-import {useState} from 'react';
 import {
     Command,
     CommandDialog,
@@ -22,6 +21,7 @@ import {
     Wrench,
   } from "lucide-react";
   import Link from "next/link";
+  import axios from 'axios';
 
 export default function CommandSidebar (){
 

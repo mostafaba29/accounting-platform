@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState , useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,9 +14,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import BackButton from "@/components/BackButton";
+import { FileDown } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
@@ -42,6 +51,13 @@ export default function EditProduct() {
   const [showCoverImageInput, setShowCoverImageInput] = useState(false);
   const [showDocumentInput, setShowDocumentInput] = useState(false);
   const [showImagesInput, setShowImagesInput] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [coverImageName, setCoverImageName] = useState('');
+  const [documentName, setDocumentName] = useState('');
+
+  const coverImageRef = useRef<HTMLInputElement>(null);
+  const documentRef = useRef<HTMLInputElement>(null);
+  const imagesRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
 
@@ -75,6 +91,18 @@ export default function EditProduct() {
     }
   }, [id]);
 
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setCoverImageName(file ? file.name : '');
+    form.setValue('coverImage', file);
+  };
+  
+  const handleDocumentChange = (e) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setDocumentName(file ? file.name : '');
+    form.setValue('document', file);
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("name", values.name);
@@ -104,7 +132,7 @@ export default function EditProduct() {
         toast({
           description: "Product updated successfully",
         });
-        window.location.href = '/admin/dashboard/products';
+        setSaveDialogOpen(true);
       }
     } catch (error) {
       toast({
@@ -122,12 +150,10 @@ export default function EditProduct() {
         <h1 className="text-3xl font-bold">Edit Product</h1>
         <div >
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-[1500px]" >
-              <div className="flex flex-col items-center gap-6">
-              <div className="w-full grid grid-cols-3 gap-3">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-[1500px] grid grid-cols-1 gap-5 items-center" >
               <FormField control={form.control} name="name" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel className='font-semibold'>Name</FormLabel>
                   <FormControl>
                     <Input {...field} type="text" />
                   </FormControl>
@@ -137,7 +163,7 @@ export default function EditProduct() {
               />
               <FormField control={form.control} name="category" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel className='font-semibold'>Category</FormLabel>
                   <FormControl>
                     <Input {...field} type="text" />
                   </FormControl>
@@ -147,7 +173,7 @@ export default function EditProduct() {
               />
               <FormField control={form.control} name="price" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel className='font-semibold'>Price</FormLabel>
                   <FormControl>
                     <Input {...field} type="number" />
                   </FormControl>
@@ -155,11 +181,10 @@ export default function EditProduct() {
                 </FormItem>
               )}
               />
-              </div>
               
               <FormField control={form.control} name="description" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel className='font-semibold'>Description</FormLabel>
                   <FormControl>
                     <Controller control={form.control} name="description" render={({ field }) => (
                       <ReactQuill value={field.value} onChange={field.onChange} className="w-full min-w-[1500px]"/>
@@ -169,17 +194,28 @@ export default function EditProduct() {
                 </FormItem>
               )}
               />
-              </div>
-              <div className="flex flex-row items-center justify-between">
+
               {showCoverImageInput ? (
                 <FormField control={form.control} name="coverImage" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Cover Image</FormLabel>
+                    <FormLabel className='font-semibold'>Cover Image</FormLabel>
                     <FormControl>
-                      <Input
-                        type="file"
-                        onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
-                      />
+                      <div className="flex items-center">
+                        <Button
+                          type="button"
+                          onClick={() => coverImageRef.current?.click()}
+                          className="custom-file-input bg-sky-800 hover:bg-sky-700 w-[200px]"
+                        >
+                          {coverImageName ? 'Choose Another Image' : 'Upload Cover Image'}
+                        </Button>
+                        <input
+                          type="file"
+                          ref={coverImageRef}
+                          onChange={handleCoverImageChange}
+                          className="hidden"
+                        />
+                        {coverImageName && <p className="ml-2 font-medium">Selected Image: <b>{coverImageName}</b></p>}
+                      </div>
                     </FormControl>
                     <Button onClick={() => setShowCoverImageInput(false)} className="mt-2">Cancel</Button>
                     <FormMessage />
@@ -189,26 +225,27 @@ export default function EditProduct() {
               ) : (
                 productData && (
                   <div className="mt-5">
-                    <h2 className="text-xl font-bold">Cover Image</h2>
-                    <Image 
-                      src={`/imgs/products/${productData.coverImage}`} 
-                      alt="Product cover image" 
-                      width={250} 
-                      height={250} 
-                      className="object-cover cursor-pointer" 
-                      onClick={() => setShowCoverImageInput(true)}
-                    />
-                  </div>
+                      <h2 className="font-semibold">Cover Image (Current)</h2>
+                      <Image 
+                        src={`/imgs/products/${productData.coverImage}`} 
+                        alt="Product cover image" 
+                        width={550} 
+                        height={250} 
+                        className="object-cover cursor-pointer border border-sky-800 " 
+                        onClick={() => setShowCoverImageInput(true)}
+                      />
+                    </div>
                 )
               )}
               {showImagesInput ? (
                 <FormField control={form.control} name="images" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Images</FormLabel>
+                    <FormLabel className='font-semibold'>Images</FormLabel>
                     <FormControl>
                       <Input
                         type="file"
                         multiple
+                        ref={imagesRef}
                         onChange={(e) => field.onChange(e.target.files ? Array.from(e.target.files) : [])}
                       />
                     </FormControl>
@@ -219,65 +256,93 @@ export default function EditProduct() {
                 />
               ) : (
                 productData && (
-                  <div className="mt-5">
-                    <h2 className="text-xl font-bold">Images</h2>
-                    <div className="flex space-x-4">
+                  <div className="mt-5 w-full">
+                    <h2 className="font-semibold">Images (Current)</h2>
+                    <div className="flex flex-row justify-between ">
                       {productData.images.length > 0 ? (
                         productData.images.map((image, index) => (
                           <Image 
                             key={index}
                             src={`/imgs/products/${image}`} 
                             alt={`Product image ${index + 1}`} 
-                            width={200} 
-                            height={200} 
-                            className="object-cover cursor-pointer" 
+                            width={400} 
+                            height={250} 
+                            className="object-cover cursor-pointer border-sky-800 border" 
                             onClick={() => setShowImagesInput(true)}
                           />
                         ))
                       ) : (
-                        <p>No images found.</p>
+                        <p className="mt-2 font-semibold">No images found.</p>
                       )}
                     </div>
                   </div>
                 )
               )}
-              </div>
               
               {showDocumentInput ? (
-                <FormField control={form.control} name="document" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Document</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="file"
-                        onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
-                      />
-                    </FormControl>
-                    <Button onClick={() => setShowDocumentInput(false)} className="mt-2">Cancel</Button>
-                    <FormMessage />
-                  </FormItem>
+                  <FormField control={form.control} name="document" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='font-semibold'>Document</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center">
+                          <Button
+                            type="button"
+                            onClick={() => documentRef.current?.click()}
+                            className="custom-file-input bg-sky-800 hover:bg-sky-700 w-[200px]"
+                          >
+                            {documentName ? 'Choose Another Document' : 'Upload Document'}
+                          </Button>
+                          <input
+                            type="file"
+                            ref={documentRef}
+                            onChange={handleDocumentChange}
+                            className="hidden"
+                          />
+                          {documentName && <p className="ml-2">Selected Document: <b>{documentName}</b></p>}
+                        </div>
+                      </FormControl>
+                      <Button onClick={() => setShowDocumentInput(false)} className="mt-2">Cancel</Button>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  />
+                ) : (
+                  productData && (
+                    <div className="mt-5 w-full flex flex-col ">
+                      <h2 className="font-semibold">Document (Current)</h2>
+                      <div className="flex flex-row justify-between mt-1">
+                        <Link href={`/files/products/${productData.document}`} download className="text-blue-500 underline">
+                          <Button>
+                          <p className="mr-2">{productData.document}</p> <FileDown size={18}/> 
+                          </Button>
+                        </Link>
+                        <Button onClick={() => setShowDocumentInput(true)} className="ml-2">
+                          Update Document
+                        </Button>
+                      </div>
+                      
+                    </div>
+                  )
                 )}
-                />
-              ) : (
-                productData && (
-                  <div className="mt-5 w-full flex flex-row justify-between">
-                    <h2 className="text-xl font-bold">Document</h2>
-
-                    <Link href={`/files/products/${productData.document}`} download className="text-blue-500 underline">
-                      <Button>Download Document</Button>
-                    </Link>
-                    <Button onClick={() => setShowDocumentInput(true)} className="ml-2">
-                      Update Document
-                    </Button>
-                  </div>
-                )
-              )}
               
-              <Button type="submit" className="my-1 w-full">Save</Button>
+              <Button type="submit" className="my-3 w-full">Save</Button>
             </form>
           </Form>
         </div>
       </div>
+      <AlertDialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Do You want to keep editing ?</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Link href='/admin/dashboard/products'>
+                <Button variant={"outline"}>No</Button>
+              </Link>
+              <AlertDialogCancel className='bg-sky-800 hover:bg-sky-700 text-white'>Yes</AlertDialogCancel>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

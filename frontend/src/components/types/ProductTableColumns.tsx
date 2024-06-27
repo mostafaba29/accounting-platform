@@ -4,6 +4,7 @@ import {Pencil,Trash,Eye,Ban} from "lucide-react";
 import axios from 'axios';
 import Link from 'next/link';
 
+
 export interface Product {
     _id: string;
     name: string;
@@ -77,7 +78,7 @@ export const columns: ColumnDef<Product>[] = [
                     <Eye className="cursor-pointer hover:text-cyan-600" size={16} onClick={() => handleView()} />
                     <Link href={`/admin/dashboard/products/edit/${product._id}`}><Pencil className="cursor-pointer hover:text-emerald-500" size={16} /></Link>
                     <Trash className="cursor-pointer hover:text-red-600" size={16} onClick={() => handleDelete()} />
-                    <Ban className="cursor-pointer hover:text-gray-600" size={16} onClick={() => handleDisable()} />
+                    <Ban className="cursor-pointer hover:text-gray-600" size={16} onClick={() => handleDisable()} />  
                 </div>
             );
         }

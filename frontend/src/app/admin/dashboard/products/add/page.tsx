@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from 'react';
+import { useState,useRef } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import Link from 'next/link';
+
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
@@ -37,12 +47,15 @@ const formSchema = z.object({
 });
 
 export default function AddProduct() {
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [coverImageName, setCoverImageName] = useState('');
+  const [documentName, setDocumentName] = useState('');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
-      price: 0,
+      // price: null,
       category: "",
       coverImage: null,
       document: null,
@@ -56,7 +69,20 @@ export default function AddProduct() {
 
   const { toast } = useToast();
 
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setCoverImageName(file ? file.name : '');
+    form.setValue('coverImage', file);
+  };
+
+  const handleDocumentChange = (e) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setDocumentName(file ? file.name : '');
+    form.setValue('document', file);
+  };
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
@@ -97,6 +123,7 @@ export default function AddProduct() {
         if (coverImageRef.current) coverImageRef.current.value = "";
         if (documentRef.current) documentRef.current.value = "";
         if (imagesRef.current) imagesRef.current.value = "";
+        setSaveDialogOpen(true);
       }
     } catch (error) {
       toast({
@@ -113,13 +140,12 @@ export default function AddProduct() {
       <div className="w-full h-screen flex flex-col items-center justify-center">
         <h1 className="text-3xl font-bold mb-4">Add a new product</h1>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full grid grid-cols-1 gap-6">
-            <div className="grid grid-cols-3 gap-3">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full grid grid-cols-1 gap-3">
               <FormField control={form.control} name="name" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel className='font-semibold'>* Name:</FormLabel>
                   <FormControl>
-                    <Input {...field} type="text" />
+                    <Input {...field} type="text" placeholder='Title of the product' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -127,9 +153,9 @@ export default function AddProduct() {
               />
               <FormField control={form.control} name="category" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel className='font-semibold'>* Category:</FormLabel>
                   <FormControl>
-                    <Input {...field} type="text" />
+                    <Input {...field} type="text" placeholder='Financial,HR ... etc'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -137,37 +163,48 @@ export default function AddProduct() {
               />
               <FormField control={form.control} name="price" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel className='font-semibold'>* Price:</FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" />
+                    <Input {...field} type="number" placeholder='0' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
               />
-            </div>
+
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel className='font-semibold'>* Description:</FormLabel>
                 <FormControl>
                   <Controller control={form.control} name="description" render={({ field }) => (
-                    <ReactQuill value={field.value} onChange={field.onChange} />
+                    <ReactQuill value={field.value} onChange={field.onChange} theme='snow' /> 
                   )} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
             />
-            <div>
+
               <FormField control={form.control} name="coverImage" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Cover Image</FormLabel>
+                  <FormLabel className='font-semibold'>* Cover Image:</FormLabel>
                   <FormControl>
-                    <Input
-                      type="file"
-                      ref={coverImageRef}
-                      onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
-                    />
+                    <div className="flex items-center">
+                      <Button
+                        type="button"
+                        onClick={() => coverImageRef.current?.click()}
+                        className="custom-file-input bg-sky-800 hover:bg-sky-700 w-[200px]"
+                      >
+                        {coverImageName ? 'Choose Another Image' : 'Upload Cover Image'}
+                      </Button>
+                      <input
+                        type="file"
+                        ref={coverImageRef}
+                        onChange={handleCoverImageChange}
+                        className="hidden"
+                      />
+                      {coverImageName && <p className="ml-2 font-medium">Selected Image : <b>{coverImageName}</b></p>}
+                  </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,13 +212,24 @@ export default function AddProduct() {
               />
               <FormField control={form.control} name="document" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Document</FormLabel>
+                  <FormLabel className='font-semibold'>* Document :</FormLabel>
                   <FormControl>
-                    <Input
+                  <div className="flex items-center">
+                    <Button
+                      type="button"
+                      onClick={() => documentRef.current?.click()}
+                      className="custom-file-input bg-sky-800  hover:bg-sky-700 w-[200px] "
+                    >
+                      {documentName ? 'Choose Another Document' : 'Upload Document'}
+                    </Button>
+                    <input
                       type="file"
                       ref={documentRef}
-                      onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
+                      onChange={handleDocumentChange}
+                      className="hidden"
                     />
+                    {documentName && <p className="ml-2">Selected Document : <b>{documentName}</b></p>}
+                  </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -202,11 +250,24 @@ export default function AddProduct() {
                 </FormItem>
               )}
               />
-            </div>
+            <p className="text-gray-500 text-xs">Elements marked with * are <b>required</b></p>
             <Button type="submit" className="mt-1 w-50 bg-sky-800 hover:bg-sky-700">Save</Button>
           </form>
         </Form>
       </div>
+      <AlertDialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Do You want to add another product ?</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Link href='/admin/dashboard/products'>
+                <Button variant={"outline"}>No</Button>
+              </Link>
+              <AlertDialogCancel className='bg-sky-800 hover:bg-sky-700 text-white'>Yes</AlertDialogCancel>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

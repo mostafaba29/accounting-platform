@@ -14,10 +14,10 @@ import Link from "next/link";
           <Link href={`/blogs/${blog._id}`}>
           <CardTitle className="hover:text-sky-700">{blog.name}</CardTitle>
           </Link>
-          <CardDescription className="text-sky-800 font-bold">by: {blog.author}</CardDescription>
+ 
         </CardHeader>
         <CardContent>
-          <p>{blog.description}</p>
+          <CardDescription className="text-sky-800 font-bold">by: {blog.author}</CardDescription>
         </CardContent>
         <CardFooter>
           <Link href={`/blogs/${blog._id}`}>

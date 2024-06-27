@@ -1,7 +1,7 @@
 "use client";
-import MainComponent from "@/components/MainComponent";
+
 import AdminLoginForm from "@/components/AdminLoginForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
 import PostsTable from "@/components/posts/PostsTable";
 import AnalyticsChart from "@/components/Dashboard/AnalyticsChart";
@@ -28,15 +28,31 @@ export default function Dashboard() {
   const fetchAnalysis = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/services/analysis",
+        "http://localhost:8000/api/v1/content/analysis",
         { withCredentials: true }
       );
       console.log(response.data.data);
-      // setAnalysis(response.data.data);
+      setAnalysis(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const fetchAdminUser = async () => {
+    try {
+        const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
+        if(response.data.status === "success" && response.data.data.data.role === "admin") {
+          setIsLoggedIn(true);
+        }
+    } catch (error) {
+        console.log('error', error);
+    }
+};
+
+  useEffect(() => {
+    fetchAdminUser();
+    fetchAnalysis();
+  }, []);
   const handleSuccessfulLogin = () => {
     setIsLoggedIn(true);
     fetchAnalysis();
@@ -49,6 +65,8 @@ export default function Dashboard() {
       />
     );
   }
+
+
 
   return (
     <>
@@ -84,12 +102,6 @@ export default function Dashboard() {
       </div>
       <AnalyticsChart />
       <PostsTable title={"posts"} />
-      {/* <div >
-                {true ? <MainComponent  />
-                : 
-                <AdminLoginForm isLoggedIn={true} onLoginSuccess={handleSuccessfulLogin} />
-                }
-            </div> */}
     </>
   );
 }
