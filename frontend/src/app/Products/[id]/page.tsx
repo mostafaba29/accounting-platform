@@ -12,6 +12,7 @@ import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";
 import ReviewSection from "@/components/ReviewSection";
 import {Review} from "@/components/types/Review"; 
+import {sanitizeHtml} from "@/components/Security/dompurify";
 
 
 export default function ProductPage() {
@@ -63,9 +64,12 @@ export default function ProductPage() {
         <BackButton text={'Go Back'} link={'/products'}/>
         <div className="flex flex-row items-start justify-around my-3">
           <ImageGallery coverImage={productData.coverImage} images={productData.images} type="products"/>
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start w-[700px]">
               <h1 className="text-3xl font-bold mb-4">{productData.name}</h1>
-              <p className="text-sky-800 mb-6">{productData.description}</p>
+              <div 
+                className="text-sky-800 mb-6" 
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(productData.description) }}
+              />
               <p className="text-2xl font-semibold mb-6">$ {productData.price}</p>
               <Link href={`/products/${productData._id}/checkout`}>
               <Button className="bg-sky-600 text-white py-2 px-4 rounded font-semibold hover:bg-sky-500">

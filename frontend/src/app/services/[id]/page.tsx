@@ -12,6 +12,7 @@ import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";
 import ReviewSection from "@/components/ReviewSection";
 import {Review} from "@/components/types/Review"; 
+import { sanitizeHtml } from "@/components/Security/dompurify";
 
 
 export default function ServicePage() {
@@ -61,10 +62,13 @@ export default function ServicePage() {
         <NavigationBar />
         <BackButton text={'Go Back'} link={'/services'}/>
         <div className="flex flex-row items-start justify-around my-3">
-          <ImageGallery coverImage={serviceData.imageCover} images={serviceData.images} type="services"/>
+          <ImageGallery coverImage={serviceData.coverImage} images={serviceData.images} type="services"/>
           <div className="flex flex-col items-start">
-              <h1 className="text-3xl font-bold mb-4">{serviceData.name}</h1>
-              <p className="text-sky-800 mb-6">{serviceData.description}</p>
+              <h1 className="text-3xl font-bold mb-4">{serviceData.title}</h1>
+              <div 
+                className="text-sky-800 mb-6" 
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(serviceData.body) }}
+              />
               <Link href={`/services/${serviceData._id}/whatsContact`}>
               <Button className="bg-sky-600 text-white py-2 px-4 rounded font-semibold hover:bg-sky-500">
                 Contact us via whatsapp

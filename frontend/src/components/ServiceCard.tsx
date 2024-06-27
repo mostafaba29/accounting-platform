@@ -19,15 +19,14 @@ interface ServiceCardProps {
 export default function ServiceCard( {service}: ServiceCardProps) {
 
     return (
-        <Card className="w-80 flex flex-col items-center justify-between ">
-            <CardHeader className="w-full flex flex-col items-center text-center">
-                <CardTitle>{service.name}</CardTitle>
-                <Image src={`/imgs/services/${service.imageCover}`} alt={service.name} width={200} height={200}/> 
+        <Card className="w-80 h-[400px] flex flex-col items-center justify-between rounded-lg ">
+            <CardHeader >
+                <CardTitle>{service.title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <CardDescription>{service.description}</CardDescription>
+                <Image src={`/imgs/services/${service.coverImage}`} alt={service.title} width={200} height={200} className="object-fit w-[200px] h-[200px]"/> 
             </CardContent>
-            <CardFooter className="w-full flex flex-row justify-between items-end bg-slate-200 ">
+            <CardFooter>
                 <Link href={`/services/${service._id}`}><Button >View Details</Button></Link>
             </CardFooter>
         </Card>
