@@ -44,11 +44,6 @@ const productSchema = new mongoose.Schema({
   }
 });
 
-// productSchema.pre(/^find/, async function(next) {
-//   await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
-//   next();
-// });
-
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
