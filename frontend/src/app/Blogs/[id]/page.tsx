@@ -63,9 +63,11 @@ export default function BlogPage() {
               />
             </div>
             <div className="md:ml-8 md:w-1/2">
+            <div className="flex flex-col items-start w-[700px]">
               <h1 className="text-3xl font-bold mb-4">{blogData.name}</h1>
               <p className="text-gray-700 mb-2">By {blogData.author}</p>
-              <div className="text-gray-700 mb-6" dangerouslySetInnerHTML={{ __html: sanitizeHtml(blogData.description) }}></div>
+              <div className="text-gray-700 mb-6" dangerouslySetInnerHTML={{ __html: sanitizeHtml(blogData.description) }}/>
+              </div>
               {blogData.images && blogData.images.length > 0 && (
                 <div className="mt-8">
                   <h2 className="text-2xl font-semibold mb-4">More Images</h2>

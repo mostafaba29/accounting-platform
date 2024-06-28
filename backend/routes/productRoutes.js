@@ -10,7 +10,7 @@ router.use("/:productId/reviews", reviewRouter);
 
 router.get("/download/:productId", productControllers.downloadFile);
 
-router.route("/:category").get(productControllers.productCategory);
+// router.route("/:category").get(productControllers.productCategory);
 
 router
   .route("/")

@@ -63,7 +63,7 @@ export default function AddBlog() {
   const handleCoverImageChange = (e) => {
     const file = e.target.files ? e.target.files[0] : null;
     setCoverImageName(file ? file.name : '');
-    form.setValue('coverImage', file);
+    form.setValue('imageCover', file);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -90,7 +90,7 @@ export default function AddBlog() {
         }
       );
       console.log(response.data);
-      if (response.data.message === 'success') {
+      if (response.data.status === 'success') {
         toast({
           description: "Blog added successfully",
         });

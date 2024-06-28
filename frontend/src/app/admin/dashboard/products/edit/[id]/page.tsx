@@ -128,7 +128,7 @@ export default function EditProduct() {
         }
       );
       console.log(response.data);
-      if(response.data.message === "success") {
+      if(response.data.status === "success") {
         toast({
           description: "Product updated successfully",
         });

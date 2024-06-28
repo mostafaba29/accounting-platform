@@ -5,7 +5,7 @@ const views = require("./../controllers/FactoryHandlers");
 
 const router = express.Router();
 
-router.route("/:category").get(blogController.postCategory);
+// router.route("/:category").get(blogController.postCategory);
 
 router
   .route("/")

@@ -62,8 +62,7 @@ export default function ServicePage() {
         <NavigationBar />
         <BackButton text={'Go Back'} link={'/services'}/>
         <div className="flex flex-row items-start justify-around my-3">
-          <ImageGallery coverImage={serviceData.coverImage} images={serviceData.images} type="services"/>
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start w-[700px]">
               <h1 className="text-3xl font-bold mb-4">{serviceData.title}</h1>
               <div 
                 className="text-sky-800 mb-6" 
@@ -75,6 +74,7 @@ export default function ServicePage() {
               </Button>
               </Link>
           </div>
+          <ImageGallery coverImage={serviceData.coverImage} images={serviceData.images} type="services"/>
         </div>  
         <ReviewSection reviews={reviews} id={serviceData._id}/>
       <Footer />

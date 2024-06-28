@@ -110,7 +110,7 @@ export default function EditBlog() {
         }
       );
       console.log(response.data);
-      if(response.data.message === 'success') {
+      if(response.data.status === 'success') {
         toast({
           description: "Blog updated successfully",
         });

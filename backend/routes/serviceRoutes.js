@@ -4,7 +4,7 @@ const authController = require("../controllers/authControllers");
 
 const router = express.Router();
 
-router.route("/:category").get(servicesControllers.serviceCategory);
+// router.route("/:category").get(servicesControllers.serviceCategory);
 
 router
   .route("/")
