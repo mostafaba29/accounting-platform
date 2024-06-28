@@ -126,25 +126,32 @@ exports.updateServiceImages = catchAsync(async (req, res, next) => {
     }
 
     // Update a specific image in the images array
-    if (req.files.images) {
+    if (req.files.images && typeof req.body.imageIndex !== "undefined") {
       const indexToUpdate = parseInt(req.body.imageIndex, 10);
-      //    if (
-      //      // eslint-disable-next-line no-restricted-globals
-      //      isNaN(indexToUpdate) ||
-      //      indexToUpdate < 0 ||
-      //      indexToUpdate >= product.images.length
-      //    ) {
-      //      return res.status(400).send({ error: "Invalid image index" });
-      //    }
 
-      req.body.images = [...service.images]; // Copy existing images array
-      const newImageFilename = req.files.images.filename;
-      req.body.images[indexToUpdate] = newImageFilename;
-      await deleteFile(
-        `./../frontend/public/imgs/services/
-          ${service.images}`
-      );
+      if (
+        // eslint-disable-next-line no-restricted-globals
+        isNaN(indexToUpdate) ||
+        indexToUpdate < 0 ||
+        indexToUpdate >= service.images.length
+      ) {
+        return res.status(400).send({ error: "Invalid image index" });
+      }
+
+      const newImageFilename = req.files.images[0].filename;
+      if (service.images[indexToUpdate]) {
+        await deleteFile(
+          path.join(
+            "./../frontend/public/imgs/services/",
+            service.images[indexToUpdate]
+          )
+        );
+      }
+
+      service.images[indexToUpdate] = newImageFilename;
     }
+
+    await service.save();
 
     next();
   });
