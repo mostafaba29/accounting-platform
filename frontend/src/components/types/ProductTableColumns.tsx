@@ -1,28 +1,47 @@
 'use client';
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import {Pencil,Trash,Eye,Ban} from "lucide-react";
+import {ArrowUpDown, MoreHorizontal} from "lucide-react";
 import axios from 'axios';
 import Link from 'next/link';
 
 
 export interface Product {
     _id: string;
-    name: string;
-    description: string;
-    document:string;
+    ArTitle:string;
+    EnTitle:string;
+    ArDescription: string;
+    EnDescription: string;
     views:number;
     Sucessful_Purchases: number;
     category:string;
-    price: number;
+    video: string;
     images: string[];
     coverImage: string;
+    basicPrice:number;
+    openPrice:number;
+    editablePrice:number;
+    basicDocument: string;
+    openDocument: string;
+    editableDocument: string;
     createdAt: Date;
 }
 
 export const columns: ColumnDef<Product>[] = [
     {
-        accessorKey: 'name',
-        header: 'Name',
+        accessorKey: 'ArTitle',
+        header: ({column}) => {
+            return(
+                <div>
+                    <Button variant="ghost" className="hover:bg-transparent " onClick={() => column.toggleSorting(column.getIsSorted()==="asc")}>
+                    <ArrowUpDown className=" h-4 w-4" />
+                    </Button>
+                    Title
+                </div>
+            )
+        }
+
     },
     {
         accessorKey: 'views',
@@ -33,8 +52,16 @@ export const columns: ColumnDef<Product>[] = [
         header: 'Category',
     },
     {
-        accessorKey: 'price',
-        header: 'Price',
+        accessorKey: 'basicPrice',
+        header: 'Basic Price',
+    },
+    {
+        accessorKey: 'openPrice',
+        header: 'Open Price',
+    },
+    {
+        accessorKey: 'editablePrice',
+        header: 'Editable Price',
     },
     {
         accessorKey: 'Sucessful_Purchases',

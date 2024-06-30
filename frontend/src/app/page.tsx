@@ -41,7 +41,7 @@ export default function Home() {
     <main >
       <NavigationBar />
       <OurVision />
-      {/* <RecentBlogs blogs={recentBlogs}/> */}
+      <RecentBlogs blogs={recentBlogs}/>
       <FeaturedServices services={featuredServices} />  
       <FeaturedProducts products={popularProducts} />
       <Footer />

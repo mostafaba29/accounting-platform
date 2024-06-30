@@ -17,17 +17,15 @@ interface ProductCardProps {
 }
 export default function ProductCard({product}: ProductCardProps) {
     return(
-        <Card className="w-80 h-[400px] flex flex-col items-center justify-between rounded-xl  border border-sky-800 ">
+        <Card className="w-80 h-[400px] max-h-[400px] flex flex-col items-center justify-between  rounded-xl  border border-sky-800 ">
             <CardHeader>
                 <CardTitle className=" w-full text-center text-black">{product.name}</CardTitle>
             </CardHeader>
-            <CardContent className='w-full flex flex-col items-center'>
-                <Image src={`/imgs/products/${product.coverImage}`} alt={product.name} width={250} height={200}/> 
+            <CardContent className='w-full flex flex-col items-center '>
+                <Image src={`/imgs/products/${product.coverImage}`} alt={product.name} width={200} height={200}/> 
                 <Badge className="m-1" >Price: ${product.price}</Badge>
-            </CardContent>
-            <CardFooter >
                 <Link href={`/products/${product._id}`}><Button >View Details</Button></Link>
-            </CardFooter>
+            </CardContent>
         </Card>
         );
 };

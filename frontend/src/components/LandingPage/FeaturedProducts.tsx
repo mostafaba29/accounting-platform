@@ -5,6 +5,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Product } from '../types/ProductTableColumns';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 interface FeaturedProductsProps {
     products: Product[];
@@ -20,7 +21,8 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8  ">
+            <h2 className="text-3xl font-bold mb-4 w-full text-center">Featured Products</h2>
             <Slider {...settings}>
                 {products.map(product => (
                     <div key={product._id} className="p-4">
@@ -32,9 +34,10 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                         >
                             <div className="relative w-full h-full transition-transform duration-500 transform-style-preserve-3d">
                                 {/* Front Side */}
-                                <div className="absolute w-full h-full bg-white rounded-lg shadow-lg flex flex-col items-center justify-center backface-hidden">
+                                <div className="absolute w-full h-full bg-white rounded-lg shadow-lg flex flex-col items-center justify-between text-center backface-hidden">
                                     <h2 className="text-xl font-bold mb-2">{product.name}</h2>
                                     <p className="text-gray-700">{product.category}</p>
+                                    <Image src={`/imgs/products/${product.coverImage}`} alt={product.name} width={125} height={125} className="object-cover" />
                                     <p className="text-gray-900 font-semibold">${product.price}</p>
                                 </div>
                                 {/* Back Side */}
