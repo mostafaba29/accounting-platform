@@ -1,28 +1,45 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 
-const BlogPostSchema = new mongoose.Schema(
+const blogSchema = new mongoose.Schema(
   {
-    name: {
+    title_AR: {
       type: String,
       trim: true,
-      required: [true, "a post must have a name"]
+      required: [true, "a blog must have an arabic name"]
     },
-    description: {
+    title_EN: {
       type: String,
-      required: [true, "a post must have a description"]
+      trim: true,
+      required: [true, "a blog must have an english name"]
+    },
+    description_AR: {
+      type: String,
+      required: [true, "a blog must have an arabic description"]
+    },
+    description_EN: {
+      type: String,
+      required: [true, "a post must have an english description"]
+    },
+    body_AR: {
+      type: String,
+      required: [true, "an blog must have an arabic body"]
+    },
+    body_EN: {
+      type: String,
+      required: [true, "an blog must have an english body"]
     },
     views: { type: Number, default: 0 },
-    author: String,
-    slug: String,
     category: {
       type: String,
       required: true
     },
-    imageCover: {
-      type: String
+    coverImage: {
+      type: String,
+      required: true
     },
     images: [String],
+    slug: String,
     createdAt: {
       type: Date,
       default: Date.now()
@@ -34,16 +51,13 @@ const BlogPostSchema = new mongoose.Schema(
   }
 );
 
-BlogPostSchema.pre("save", function(next) {
-  this.slug = slugify(this.name, { lower: true });
+blogSchema.index({ slug: 1 });
+
+blogSchema.pre("save", function(next) {
+  this.slug = slugify(this.title_EN, { lower: true });
   next();
 });
 
-// BlogPostSchema.pre(/^find/, async function(next) {
-//   await this.model.updateOne(this.getQuery(), { $inc: { views: 1 } });
-//   next();
-// });
+const Blog = mongoose.model("Blog", blogSchema);
 
-const BlogPost = mongoose.model("Blog_Post", BlogPostSchema);
-
-module.exports = BlogPost;
+module.exports = Blog;

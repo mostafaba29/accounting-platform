@@ -4,10 +4,10 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  googleId: { type: String, unique: true },
   name: {
     type: String,
-    required: [true, "Please tell us your name!"]
+    required: [true, "Please tell us your name!"],
+    trim: true
   },
   email: {
     type: String,
@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
     validate: [validator.isEmail, "Please provide a valid email"]
+  },
+  phone: {
+    type: String,
+    trim: true,
+    required: true,
+    unique: true
   },
   role: {
     type: String,
@@ -46,7 +52,17 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false
   },
-  purchases: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
+  purchases: [{ type: mongoose.Schema.ObjectId, ref: "Product" }],
+  cart: [
+    {
+      product: { type: mongoose.Schema.ObjectId, ref: "Product" },
+      quantity: { type: Number, required: true, default: 1 }
+    }
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  }
 });
 
 userSchema.pre("save", async function(next) {

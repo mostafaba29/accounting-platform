@@ -8,7 +8,6 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const morgan = require("morgan");
 const cookieSession = require("cookie-session");
-const passport = require("./controllers/passport");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorConrollers");
@@ -17,7 +16,7 @@ const blogRoutes = require("./routes/blogRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
 const productRoutes = require("./routes/productRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
-const serviceRoutes = require("./routes/serviceRoutes");
+const consultationRoutes = require("./routes/consultationRoutes");
 const analysisRoutes = require("./routes/analysisRoutes");
 
 const app = express();
@@ -66,8 +65,8 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/blogs", blogRoutes);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/products", productRoutes);
-app.use("/api/v1/services", serviceRoutes);
 app.use("/api/v1/content", analysisRoutes);
+app.use("/api/v1/consults", consultationRoutes);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

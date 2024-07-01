@@ -1,17 +1,57 @@
+const fs = require("fs");
+const path = require("path");
+const mongoose = require("mongoose");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const APIFeatures = require("./../utils/apiFeatures");
 const Product = require("./../models/productModel");
-const BlogPost = require("./../models/blogPostModel");
+const Blog = require("./../models/blogPostModel");
+const upload = require("./uploadMiddleware");
+
+exports.uploadFiles = upload.fields([
+  { name: "coverImage", maxCount: 1 },
+  { name: "images", maxCount: 5 },
+  { name: "video", maxCount: 1 },
+  { name: "basic_version_document", maxCount: 1 },
+  { name: "open_version_document", maxCount: 1 },
+  { name: "editable_version_document", maxCount: 1 }
+]);
+
+const deleteFiles = files => {
+  files.forEach(file => {
+    fs.unlink(path.join("./../frontend/public/imgs", file), err => {
+      if (err) console.error(`Failed to delete file: ${file}`, err);
+    });
+  });
+};
 
 exports.deleteOne = Model =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id);
+    const doc = await Model.findById(req.params.id);
 
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
     }
 
+    // Collect files to be deleted
+    const filesToDelete = [];
+    if (doc.coverImage) filesToDelete.push(doc.coverImage);
+    if (doc.images) filesToDelete.push(...doc.images);
+    if (doc.video) filesToDelete.push(doc.video);
+    if (doc.basic_version_document && doc.basic_version_document_length > 0)
+      filesToDelete.push(doc.basic_version_document);
+    if (doc.open_version_document && doc.open_version_document.length > 0)
+      filesToDelete.push(doc.open_version_document);
+    if (
+      doc.editable_version_document &&
+      doc.editable_version_document.length > 0
+    )
+      filesToDelete.push(doc.editable_version_document);
+
+    await Model.findByIdAndDelete(req.params.id);
+
+    // Delete the files
+    deleteFiles(filesToDelete);
     res.status(204).json({
       status: "success",
       data: null
@@ -20,26 +60,104 @@ exports.deleteOne = Model =>
 
 exports.updateOne = Model =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+    // Handle file uploads
+    const { files } = req;
+    const updatedData = { ...req.body };
 
+    // Find existing document to delete old files
+    const doc = await Model.findById(req.params.id);
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
     }
 
+    const filesToDelete = [];
+
+    if (files.coverImage) {
+      if (doc.coverImage) filesToDelete.push(doc.coverImage);
+      updatedData.coverImage = files.coverImage[0].filename;
+    }
+    if (files.images) {
+      if (doc.images) filesToDelete.push(...doc.images);
+      updatedData.images = files.images.map(file => file.filename);
+    }
+    if (files.video) {
+      if (doc.video) filesToDelete.push(doc.video);
+      updatedData.video = files.video[0].filename;
+    }
+    if (files.basic_version_document) {
+      if (doc.basic_version && doc.basic_version.document)
+        filesToDelete.push(doc.basic_version.document);
+      updatedData.basic_version = {
+        document: files.basic_version_document[0].filename
+      };
+    }
+    if (files.open_version_document) {
+      if (doc.open_version && doc.open_version.document)
+        filesToDelete.push(doc.open_version.document);
+      updatedData.open_version = {
+        document: files.open_version_document[0].filename
+      };
+    }
+    if (files.editable_version_document) {
+      if (doc.editable_version && doc.editable_version.document)
+        filesToDelete.push(doc.editable_version.document);
+      updatedData.editable_version = {
+        document: files.editable_version_document[0].filename
+      };
+    }
+
+    const updatedDoc = await Model.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+
+    // Delete old files
+    deleteFiles(filesToDelete);
+
     res.status(200).json({
       status: "success",
       data: {
-        data: doc
+        data: updatedDoc
       }
     });
   });
 
 exports.createOne = Model =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.create(req.body);
+    const { files } = req;
+    const newData = { ...req.body };
+
+    if (files.coverImage && files.coverImage.length > 0) {
+      newData.coverImage = files.coverImage[0].filename;
+    }
+    if (files.images && files.images.length > 0) {
+      newData.images = files.images.map(file => file.filename);
+    }
+    if (files.video && files.video.length > 0) {
+      newData.video = files.video[0].filename;
+    }
+    if (
+      files.basic_version_document &&
+      files.basic_version_document.length > 0
+    ) {
+      newData.basic_version.document = files.basic_version_document[0].filename;
+    }
+    if (files.open_version_document && files.open_version_document.length > 0) {
+      newData.open_version.document = files.open_version_document[0].filename;
+    }
+    if (
+      files.editable_version_document &&
+      files.editable_version_document.length > 0
+    ) {
+      newData.editable_version.document =
+        files.editable_version_document[0].filename;
+    }
+
+    const doc = await Model.create(newData);
 
     res.status(201).json({
       status: "success",
@@ -49,25 +167,24 @@ exports.createOne = Model =>
     });
   });
 
-exports.isAdmin = (req, res, next) => {
-  if (req.user && req.user.role === "admin") {
-    req.isAdmin = true;
-  } else {
-    req.isAdmin = false;
-  }
-  next();
-};
-
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id);
+    const { id } = req.params;
+    let query;
+
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      query = Model.findById(id);
+    } else {
+      query = Model.findOne({ slug: id });
+    }
+
     if (popOptions) query = query.populate(popOptions);
     const doc = await query;
 
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
     }
-    if ((Model === Product || Model === BlogPost) && req.isAdmin === false) {
+    if ((Model === Product || Model === Blog) && req.isAdmin === false) {
       doc.views += 1;
       await doc.save();
     }
@@ -91,7 +208,6 @@ exports.getAll = Model =>
       .sort()
       .limitFields()
       .paginate();
-    // const doc = await features.query.explain();
     const doc = await features.query;
 
     // SEND RESPONSE

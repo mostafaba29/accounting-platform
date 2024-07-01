@@ -1,35 +1,33 @@
 const express = require("express");
 const blogController = require("./../controllers/blogControllers");
 const authController = require("./../controllers/authControllers");
-const views = require("./../controllers/FactoryHandlers");
+const uploadMiddleware = require("./../controllers/FactoryHandlers");
 
 const router = express.Router();
 
-router.route("/:category").get(blogController.postCategory);
-
 router
   .route("/")
-  .get(blogController.getAllPosts)
+  .get(blogController.getAllBlogs)
   .post(
     authController.protect,
     authController.restrictTo("admin"),
+    uploadMiddleware.uploadFiles,
     blogController.createBlog
   );
 
 router
   .route("/:id")
-  .get(views.isAdmin, blogController.getOnePost)
+  .get(blogController.getOneBlog)
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
-    blogController.updateBlogImages,
-    blogController.updatePost
+    uploadMiddleware.uploadFiles,
+    blogController.updateBlog
   )
   .delete(
     authController.protect,
     authController.restrictTo("admin"),
-    blogController.deletePostImages,
-    blogController.deletePost
+    blogController.deleteBlog
   );
 
 module.exports = router;
