@@ -6,10 +6,12 @@ import Footer from "@/components/Footer";
 import OurVision from "@/components/LandingPage/OurVision";
 import RecentBlogs from "@/components/LandingPage/RecentBlogs";
 import FeaturedServices from "@/components/LandingPage/FeaturedServices";
+import FeaturedProducts from "@/components/LandingPage/FeaturedProducts";
 import axios from "axios";
 import { Blog } from "@/components/types/BlogTableColumns";
 import { Service } from "@/components/types/ServicesTableColumns";
 import {Product} from "@/components/types/ProductTableColumns";
+
 
 export default function Home() {
   const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
@@ -22,7 +24,7 @@ export default function Home() {
         "http://localhost:8000/api/v1/content/landingPage"
       );
 
-      console.log(response.data.latestBlogs);
+      console.log(response.data);
       setRecentBlogs(response.data.latestBlogs);
       setFeaturedServices(response.data.featuredServices);
       setPopularProducts(response.data.bestSellingProducts);
@@ -39,8 +41,9 @@ export default function Home() {
     <main >
       <NavigationBar />
       <OurVision />
-      {/* <RecentBlogs blogs={recentBlogs}/> */}
-      {/* <FeaturedServices services={featuredServices} />  */}
+      <RecentBlogs blogs={recentBlogs}/>
+      <FeaturedServices services={featuredServices} />  
+      <FeaturedProducts products={popularProducts} />
       <Footer />
     </main>
   );

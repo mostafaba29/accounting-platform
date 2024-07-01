@@ -101,7 +101,7 @@ export default function Dashboard() {
         />
       </div>
       <AnalyticsChart />
-      <PostsTable title={"posts"} />
+      {/* <PostsTable title={"posts"} /> */}
     </>
   );
 }

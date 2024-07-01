@@ -1,13 +1,15 @@
 'use client';
 import { ColumnDef } from "@tanstack/react-table";
 import {Eye} from "lucide-react";
+import { Product } from "./ProductTableColumns";
 export interface User {
     _id: string;
     name:string;
     email:string;
+    phone:string;
     active:boolean;
-    photo:string;
     createdAt:Date;
+    purchases: Product[];
 }
 export const columns: ColumnDef<User>[] = [
     {
@@ -17,6 +19,10 @@ export const columns: ColumnDef<User>[] = [
     {
         accessorKey: 'email',
         header: 'Email',
+    },
+    {
+        accessorKey: 'phone',
+        header: 'Phone',
     },
     {
         accessorKey: 'active',

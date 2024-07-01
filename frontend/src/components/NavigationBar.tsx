@@ -185,7 +185,7 @@ export default function NavigationBar(){
     const checkUser = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
-        if (response.data.status === "success") {
+        if (response.data.status === "success" && response.data.data.user.role !== "admin") {
           setUserLoggedIn(true);
         }
       }catch (error) {
@@ -264,8 +264,6 @@ export default function NavigationBar(){
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
                     <Link href='/about-us'><ListItem>About us</ListItem></Link>
-                    <Link href='/vision'><ListItem> Vision</ListItem></Link>
-                    <Link href='/team'><ListItem> Team</ListItem></Link>
                     <Link href='/contact-us'><ListItem> Contact</ListItem></Link>
                     <Link href='/careers'><ListItem> Careers</ListItem></Link>
                     <Link href='/terms-and-conditions'><ListItem> Terms and conditions</ListItem></Link>
