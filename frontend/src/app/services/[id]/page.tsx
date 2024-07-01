@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Service } from "@/components/types/ServicesTableColumns";
+import { Service } from "@/components/types/ConsultationTableColumns";
 import BackButton from "@/components/BackButton";
 import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";

@@ -6,24 +6,26 @@ import Link from 'next/link';
 
 export interface Blog {
     _id: string;
-    name:string;
-    description:string;
+    title_AR:string;
+    title_EN:string;
+    description_AR:string;
+    description_EN:string;
+    body_AR:string;
+    body_EN:string;
     views:number;
-    author:string;
     category:string;
     images:string[];
-    slug: string,
     imageCover:string;
     createdAt:Date;
 }
 export const columns: ColumnDef<Blog>[] = [
     {
-        accessorKey: 'name',
-        header: 'Name',
+        accessorKey: 'title_EN',
+        header: 'English Title',
     },
     {
-        accessorKey: 'author',
-        header: 'author',
+        accessorKey: 'descripiton_EN',
+        header: 'English Description',
     },
     {
         accessorKey: 'views',

@@ -41,21 +41,27 @@ import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const formSchema = z.object({
-  ArTitle: z.string().min(1, "Product title is required").max(100),
-  EnTitle: z.string().min(1, "Product title is required").max(100),
-  Ardescription: z.string().min(1, "Product description is required"),
-  Endescription: z.string().min(1, "Product description is required"),
-  basicPrice: z.preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
-  openPrice: z.preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
-  editablePrice: z.preprocess((val) => Number(val), z.number().positive("Product price must be a positive number")),
+  title_AR: z.string().min(1, "Product title is required").max(100),
+  title_EN: z.string().min(1, "Product title is required").max(100),
+  description_AR: z.string().min(1, "Product description is required"),
+  description_EN: z.string().min(1, "Product description is required"),
+  body_AR: z.string().min(1, "Product body is required"),
+  body_EN: z.string().min(1, "Product body is required"),
   category: z.string().min(1, "Category is required"),
-  video:z.instanceof(File).refine(file => file.size>0, {message: "Video is required",}),
-  coverImage: z.instanceof(File).refine(file => file.size > 0, {
-    message: "Cover image is required",
+  video: z.instanceof(File).refine(file => file.size > 0, { message: "Video is required" }),
+  coverImage: z.instanceof(File).refine(file => file.size > 0, { message: "Cover image is required" }),
+  basicVersion: z.object({
+    document: z.instanceof(File).refine(file => file.size > 0, { message: "Document is required" }),
+    price: z.preprocess((val) => Number(val), z.number().positive("Price must be a positive number"))
   }),
-  basicDocument: z.instanceof(File).refine(file => file.size > 0, {message: "Document is required",}),
-  openDocument: z.instanceof(File).refine(file => file.size > 0, {message: "Document is required",}),
-  editableDocument: z.instanceof(File).refine(file => file.size > 0, {message: "Document is required",}),
+  openVersion: z.object({
+    document: z.instanceof(File).refine(file => file.size > 0, { message: "Document is required" }),
+    price: z.preprocess((val) => Number(val), z.number().positive("Price must be a positive number"))
+  }),
+  editableVersion: z.object({
+    document: z.instanceof(File).refine(file => file.size > 0, { message: "Document is required" }),
+    price: z.preprocess((val) => Number(val), z.number().positive("Price must be a positive number"))
+  }),
   images: z.array(z.instanceof(File)).optional(),
 });
 
@@ -71,15 +77,25 @@ export default function AddProduct() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      // price: null,
+      title_AR: "",
+      title_EN: "",
+      description_AR: "",
+      description_EN: "",
       category: "",
       video: null,
       coverImage: null,
-      basicDocument: null,
-      openDocument: null,
-      editableDocument: null,
+      basicVersion: {
+        document: null,
+        price: 0,
+      },
+      openVersion: {
+        document: null,
+        price: 0,
+      },
+      editableVersion: {
+        document: null,
+        price: 0,
+      },
       images: [],
     }
   });
@@ -117,17 +133,17 @@ export default function AddProduct() {
   const handleBasicDocumentChange = (e) => {
     const file = e.target.files ? e.target.files[0] : null;
     setDocumentName(file ? file.name : '');
-    form.setValue('basicDocument', file);
+    form.setValue('basicVersion.document', file);
   };
   const handleOpenDocumentChange = (e) => {
     const file = e.target.files ? e.target.files[0] : null;
     setOpenDocumentName(file ? file.name : '');
-    form.setValue('openDocument', file);
+    form.setValue('openVersion.document', file);
   };
   const handleEditableDocumentChange = (e) => {
     const file = e.target.files ? e.target.files[0] : null;
     setEditableDocumentName(file ? file.name : '');
-    form.setValue('editableDocument', file);
+    form.setValue('editableVersion.document', file);
   };
   
 
@@ -135,19 +151,21 @@ export default function AddProduct() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
 
     const formData = new FormData();
-    formData.append("Artitle", values.ArTitle);
-    formData.append("Entitle", values.EnTitle);
-    formData.append("Ardescription", values.Ardescription);
-    formData.append("Endescription", values.Endescription);
-    formData.append("basicPrice", values.basicPrice.toString());
-    formData.append("openPrice", values.openPrice.toString());
-    formData.append("editablePrice", values.editablePrice.toString());
+    formData.append("title_AR", values.title_AR);
+    formData.append("title_EN", values.title_EN);
+    formData.append("description_AR", values.description_AR);
+    formData.append("description_EN", values.description_EN);
+    formData.append("body_EN", values.body_EN);
+    formData.append("body_AR", values.body_AR);
+    formData.append("category", values.category);
     formData.append("video", values.video);
     formData.append("coverImage", values.coverImage);
-    formData.append("basicDocument", values.basicDocument);
-    formData.append("openDocument", values.openDocument);
-    formData.append("editableDocument", values.editableDocument);
-    formData.append("category", values.category);
+    formData.append("basic_version_document", values.basicVersion.document);
+    formData.append("basic_version[price]", values.basicVersion.price.toString());
+    formData.append("open_version_document", values.openVersion.document);
+    formData.append("open_version[price]", values.openVersion.price.toString());
+    formData.append("editable_version_document", values.editableVersion.document);
+    formData.append("editable_version[price]", values.editableVersion.price.toString());
     if (values.images) {
       values.images.forEach((image) => {
         formData.append('images', image);
@@ -170,19 +188,25 @@ export default function AddProduct() {
           description: "Product added successfully",
         });
         form.reset({
-          ArTitle: "",
-          EnTitle: "",
-          Ardescription: "",
-          Endescription: "",
-          basicPrice: 0,
-          openPrice: 0,
-          editablePrice: 0,
+          title_AR: "",
+          title_EN: "",
+          description_AR: "",
+          description_EN: "",
           category: "",
           video: null,
           coverImage: null,
-          basicDocument: null,
-          openDocument: null,
-          editableDocument: null,
+          basicVersion: {
+            document: null,
+            price: 0,
+          },
+          openVersion: {
+            document: null,
+            price: 0,
+          },
+          editableVersion: {
+            document: null,
+            price: 0,
+          },
           images: [],
         });
         if (videoRef.current) videoRef.current.value = "";
@@ -211,7 +235,7 @@ export default function AddProduct() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[1200px] w-full grid grid-cols-1 gap-3">
             <div className="grid grid-cols-2 gap-5">
-            <FormField control={form.control} name="ArTitle" render={({ field }) => (
+            <FormField control={form.control} name="title_AR" render={({ field }) => (
                 <FormItem>
                   <FormLabel className='font-semibold'>* Arabic Title:</FormLabel>
                   <FormControl>
@@ -221,7 +245,7 @@ export default function AddProduct() {
                 </FormItem>
               )}
               />
-              <FormField control={form.control} name="EnTitle" render={({ field }) => (
+              <FormField control={form.control} name="title_EN" render={({ field }) => (
                 <FormItem>
                   <FormLabel className='font-semibold'>* English Title:</FormLabel>
                   <FormControl>
@@ -255,7 +279,7 @@ export default function AddProduct() {
               )}
               />
               <div className="grid grid-cols-3 gap-5">
-                  <FormField control={form.control} name="basicPrice" render={({ field }) => (
+                  <FormField control={form.control} name="basicVersion.price" render={({ field }) => (
                     <FormItem>
                       <FormLabel className='font-semibold'>* Basic Price:</FormLabel>
                       <FormControl>
@@ -265,7 +289,7 @@ export default function AddProduct() {
                     </FormItem>
                   )}
                   />
-                  <FormField control={form.control} name="openPrice" render={({ field }) => (
+                  <FormField control={form.control} name="openVersion.price" render={({ field }) => (
                     <FormItem>
                       <FormLabel className='font-semibold'>* Open Price:</FormLabel>
                       <FormControl>
@@ -275,7 +299,7 @@ export default function AddProduct() {
                     </FormItem>
                   )}
                   />
-                  <FormField control={form.control} name="editablePrice" render={({ field }) => (
+                  <FormField control={form.control} name="editableVersion.price" render={({ field }) => (
                     <FormItem>
                       <FormLabel className='font-semibold'>* Editable Price:</FormLabel>
                       <FormControl>
@@ -286,13 +310,35 @@ export default function AddProduct() {
                   )}
                   />
               </div>
-    
-            <div className="grid grid-cols-1 gap-11" >
-                <FormField control={form.control} name="Ardescription" render={({ field }) => (
-                  <FormItem >
+            
+            <div className='grid grid-cols-1 gap-5'>
+              <FormField control={form.control} name="description_AR" render={({ field }) => (
+                  <FormItem>
                     <FormLabel className='font-semibold'>* Arabic Description:</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" placeholder='Description of the product' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                />
+                <FormField control={form.control} name="description_EN" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-semibold'>* English Description:</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" placeholder='Description of the product' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                />
+            </div>
+            <div className="grid grid-cols-1 gap-11" >
+                <FormField control={form.control} name="body_AR" render={({ field }) => (
+                  <FormItem >
+                    <FormLabel className='font-semibold'>* Arabic body:</FormLabel>
                     <FormControl >
-                      <Controller control={form.control} name="Ardescription" render={({ field }) => (
+                      <Controller control={form.control} name="body_AR" render={({ field }) => (
                         <ReactQuill value={field.value} onChange={field.onChange} theme='snow' className='h-[150px]' /> 
                       )} />
                     </FormControl>
@@ -300,11 +346,11 @@ export default function AddProduct() {
                   </FormItem>
                 )}
                 />
-                <FormField control={form.control} name="Endescription" render={({ field }) => (
+                <FormField control={form.control} name="body_EN" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-semibold'>* English Description:</FormLabel>
+                  <FormLabel className='font-semibold'>* English body:</FormLabel>
                   <FormControl>
-                    <Controller control={form.control} name="Endescription" render={({ field }) => (
+                    <Controller control={form.control} name="body_EN" render={({ field }) => (
                       <ReactQuill value={field.value} onChange={field.onChange} theme='snow' className='h-[150px]'/> 
                     )} />
                   </FormControl>
@@ -369,7 +415,7 @@ export default function AddProduct() {
             </div>
               
             
-            <FormField control={form.control} name="basicDocument" render={({ field }) => (
+            <FormField control={form.control} name="basicVersion.document" render={({ field }) => (
                 <FormItem>
                   <FormLabel className='font-semibold'>* Basic Document :</FormLabel>
                   <FormControl>
@@ -395,7 +441,7 @@ export default function AddProduct() {
                  )}
               />
               
-              <FormField control={form.control} name="openDocument" render={({ field }) => (
+              <FormField control={form.control} name="openVersion.document" render={({ field }) => (
                 <FormItem>
                   <FormLabel className='font-semibold'>* Open Document :</FormLabel>
                   <FormControl>
@@ -421,7 +467,7 @@ export default function AddProduct() {
               )}
               />
 
-              <FormField control={form.control} name="editableDocument" render={({ field }) => (
+              <FormField control={form.control} name="editableVersion.document" render={({ field }) => (
                 <FormItem>
                   <FormLabel className='font-semibold'>* Editable Document :</FormLabel>
                   <FormControl>
@@ -447,7 +493,7 @@ export default function AddProduct() {
               )}
               />
 
-<FormField control={form.control} name="images" render={({ field }) => (
+        <FormField control={form.control} name="images" render={({ field }) => (
           <FormItem>
             <FormLabel className='font-semibold'>Images:</FormLabel>
             <FormControl>

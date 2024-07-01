@@ -1,86 +1,80 @@
 
-import {
-    Command,
-    CommandDialog,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-    CommandShortcut,
-  } from "@/components/ui/command"
-
   import {
     FileBarChart,
     Book,
     Users,
     Home,
     Settings,
+    Package,
     LineChart,
     Wrench,
     CircleHelp,
+    HelpCircle,
   } from "lucide-react";
   import Link from "next/link";
   import axios from 'axios';
 
-export default function CommandSidebar (){
+export default function divSidebar (){
 
     return (
-        <Command className="bg-gray-50  h-screen  md:w-[175px] w-[50px] rounded-none ">
-            <CommandList>
-                <CommandGroup heading="Dashboard Commands" className="text-center font-semibold hidden md:block">
-                <CommandItem className= 'flex flex-row'>
-                    <Link className='flex flex-row items-center' href="/admin/dashboard">
-                        <Home className="mx-2 h-5 w-5" /> 
-                        <span className="font-semibold hidden md:block">Dashboard</span>
+        <div className="bg-sky-700 h-screen md:w-[175px] w-[50px] rounded-none shadow-lg">
+            <h1 className="text-sky-700 font-bold text-base text-center w-full bg-white ">Command Sidebar</h1>
+            <div className="flex flex-col items-start my-2">
+                <div className= 'flex flex-row my-1 w-full'>
+                    <Link className='flex flex-row items-center w-full p-1 hover:bg-sky-600' href="/admin/dashboard">
+                        <Home className="mx-2 h-5 w-5 text-white " /> 
+                        <span className="font-semibold text-white hidden md:block">Dashboard</span>
                     </Link>
-                </CommandItem>
-                <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row items-center" href="/admin/dashboard/services">
-                        <Wrench className="mx-2 h-5 w-5" /> 
-                        <span className="font-semibold hidden md:block">Services</span>
+                </div>
+                <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/consultations">
+                        <Wrench className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">Consultations</span>
                     </Link>
-                </CommandItem>
-                <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row items-center" href="/admin/dashboard/products">
-                        <FileBarChart className="mx-2 h-5 w-5" /> 
-                        <span className="font-semibold hidden md:block">Products</span>
+                </div>
+                <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/products">
+                        <FileBarChart className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">Products</span>
                     </Link>
-                </CommandItem>
-                <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row items-center" href="/admin/dashboard/blogs">
-                        <Book className="mx-2 h-5 w-5" /> 
-                        <span className="font-semibold hidden md:block">Blogs</span>
+                </div>
+                <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/blogs">
+                        <Book className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">Blogs</span>
                     </Link>
-                </CommandItem>
-                <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row items-center" href="/admin/dashboard/inquiries">
-                        <CircleHelp className="mx-2 h-5 w-5" />
-                        <span className="font-semibold hidden md:block">Inquiries</span>
+                </div>
+                <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/inquries">
+                        <CircleHelp className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">Inquries</span>
                     </Link>
-                </CommandItem>
-                <CommandItem className="flex flex-row">
-                    <Link className="flex flex-row items-center" href="/admin/dashboard/users">
-                        <Users className="mx-2 h-5 w-5" />
-                        <span className="font-semibold hidden md:block">Users</span>
+                </div>
+                <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/users">
+                        <Users className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">Users</span>
                     </Link>
-                </CommandItem>
-                <CommandItem className="flex flex-row items-center">
-                    <Link className="flex flex-row" href="/admin/dashboard/analytics">
-                        <LineChart className="mx-2 h-5 w-5" /> 
-                        <span className="font-semibold hidden md:block">Analytics</span>
+                </div>
+                <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/packages">
+                        <Package className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">Packages</span>
                     </Link>
-                </CommandItem>
-                <CommandSeparator />
-                <CommandItem className="flex flex-row items-center">
-                    <Link className="flex flex-row" href="/admin/dashboard/settings">
-                        <Settings className="mx-2 h-5 w-5" /> 
-                        <span className="font-semibold hidden md:block">Settings</span>
+                </div>
+                <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/analytics">
+                        <LineChart className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">Analytics</span>
                     </Link>
-                </CommandItem>
-                </CommandGroup>
-            </CommandList>
-        </Command>
+                </div>
+            </div>
+            <div className="flex flex-row my-1 w-full">
+                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/settings">
+                        <Settings className="mx-2 h-5 w-5 text-white" /> 
+                        <span className="font-semibold text-white hidden md:block ">settings</span>
+                    </Link>
+                </div>
+        </div>
     )
 }

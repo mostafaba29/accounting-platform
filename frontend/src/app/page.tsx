@@ -9,7 +9,7 @@ import FeaturedServices from "@/components/LandingPage/FeaturedServices";
 import FeaturedProducts from "@/components/LandingPage/FeaturedProducts";
 import axios from "axios";
 import { Blog } from "@/components/types/BlogTableColumns";
-import { Service } from "@/components/types/ServicesTableColumns";
+import { Service } from "@/components/types/ConsultationTableColumns";
 import {Product} from "@/components/types/ProductTableColumns";
 
 

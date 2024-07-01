@@ -2,37 +2,37 @@
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import { DataTable } from '@/components/Dashboard/DataTable';
-import {Service,columns as ServiceCoulmns} from '@/components/types/ServicesTableColumns';
+import {Package,columns as PackageCoulmns} from '@/components/types/PackagesTableColumns';
 import { Button } from '@/components/ui/button';
 import {Plus} from "lucide-react";
 import { useRouter } from 'next/navigation';
 import BackButton from "@/components/BackButton";
 
-export default function AdminServicesView () {
-    const [services,setServices]= useState<Service[]>([]);
+export default function AdminPackageView () {
+    const [packageData,setPackageData]= useState<Package[]>([]);
     const router = useRouter();
-    const fetchServices = async ()=>{
+    const fetchPackage= async ()=>{
         try {
-            const response = await axios.get('http://localhost:8000/api/v1/services');
-            setServices(response.data.data.data);
+            const response = await axios.get('http://localhost:8000/api/v1/package');
+            setPackageData(response.data.data.data);
         }catch(error){
-            console.log('error fetching services',error);
+            console.log('error fetching Packages',error);
         }
     }
     const handleAddClick = ()=>{
-        router.push('/admin/dashboard/services/add')
+        router.push('/admin/dashboard/packages/add')
     }
 
     useEffect(()=>{
-        fetchServices();
+        fetchPackage();
     },[]);
     return (
         <div>
             <div className='flex flex-row justify-between items-center'>
                 <BackButton text={'Go Back'} link={'/admin/dashboard'}/>
-                <Button className='m-1 mr-[95px]' onClick={handleAddClick}><Plus/> Add Service</Button>
+                <Button className='m-1 mr-[95px]' onClick={handleAddClick}><Plus/> Add Package</Button>
             </div>
-            <DataTable columns={ServiceCoulmns} data={services} />
+            <DataTable columns={PackageCoulmns} data={packageData} />
         </div>
     )
 }

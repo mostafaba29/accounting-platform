@@ -3,7 +3,7 @@ import {useState,useEffect} from 'react';
 import axios from 'axios';
 import {Blog} from '@/components/types/BlogTableColumns';
 import {Product} from '@/components/types/ProductTableColumns';
-import { Service } from './types/ServicesTableColumns';
+import { Service } from './types/ConsultationTableColumns';
 import { Button } from '@/components/ui/button';
 
 interface MoreLikeThisProps {

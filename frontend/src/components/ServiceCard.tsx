@@ -10,7 +10,7 @@ import Image from "next/image";
 import {Button} from "./ui/button";
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link";
-import { Service } from "./types/ServicesTableColumns"
+import { Service } from "./types/ConsultationTableColumns"
 
 interface ServiceCardProps {
     service: Service;
