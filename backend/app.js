@@ -18,6 +18,7 @@ const productRoutes = require("./routes/productRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const consultationRoutes = require("./routes/consultationRoutes");
 const analysisRoutes = require("./routes/analysisRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 
@@ -57,9 +58,6 @@ app.use(
   })
 );
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-
 app.use("/auth", googleAuthRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/blogs", blogRoutes);
@@ -67,6 +65,7 @@ app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/content", analysisRoutes);
 app.use("/api/v1/consults", consultationRoutes);
+app.use("/api/v1/contact", contactRoutes);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
