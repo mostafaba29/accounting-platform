@@ -1,6 +1,6 @@
 import Image from "next/image"
 import {Button} from "@/components/ui/button"
-import { Service } from "../types/ServicesTableColumns"
+import { Service } from "../types/ConsultationTableColumns"
 import Link from "next/link";
 import { sanitizeHtml } from "../Security/dompurify"
 

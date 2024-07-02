@@ -1,5 +1,5 @@
 'use client';
-import { Service } from '@/components/types/ServicesTableColumns';
+import { Service } from '@/components/types/ConsultationTableColumns';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import NavigationBar from '@/components/NavigationBar';

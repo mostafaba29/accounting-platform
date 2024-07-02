@@ -4,20 +4,24 @@ import { ColumnDef } from "@tanstack/react-table";
 import {Eye,Pencil,Trash,Ban} from "lucide-react";
 import Link from 'next/link';
 
-export interface Service {
+export interface Consultation {
     _id: string;
-    title:string;
-    body:string;
+    title_AR:string;
+    title_EN:string;
+    description_AR:string;
+    description_EN:string;
+    body_AR:string;
+    body_EN:string;
     category:string;
     views:number;
     images:string[];
     coverImage:string;
     createdAt:Date;
 }
-export const columns: ColumnDef<Service>[] = [
+export const columns: ColumnDef<Consultation>[] = [
     {
-        accessorKey: 'title',
-        header: 'Title',
+        accessorKey: 'title_EN',
+        header: 'English Title',
     },
     {
         accessorKey: 'category',
@@ -28,37 +32,41 @@ export const columns: ColumnDef<Service>[] = [
         header: 'Views',
     },
     {
+        accessorKey:'description_EN',
+        header: 'English Description',
+    },
+    {
         accessorKey: 'createdAt',
         header: 'Created At',
     },{
         id: 'actions',
         header: 'Actions',
         cell:({row})=>{
-            const service = row.original 
+            const consultation = row.original 
 
             const handleView = () => {
-                window.open(`/services/${service._id}`, '_blank');
+                window.open(`/Consultation/${consultation._id}`, '_blank');
             }
 
             const handleDelete = async ()=>{
                 try{
-                    const response = await axios.delete(`http://localhost:8000/api/v1/services/${service._id}`,{withCredentials:true});
+                    const response = await axios.delete(`http://localhost:8000/api/v1/consults/${consultation._id}`,{withCredentials:true});
                     if(response.data.status === "success"){
                         window.location.reload();
                     }    
                 }catch(error){
-                    console.log('error deleting this service', error);
+                    console.log('error deleting this consultation', error);
                 }
             }
 
             const handleDisable = async ()=>{
                 try{
-                    const response = await axios.patch(`/api/services/${service._id}`, { status: 'disabled' },{withCredentials:true});
+                    const response = await axios.patch(`/api/consults/${consultation._id}`, { status: 'disabled' },{withCredentials:true});
                     if(response.data.status === "success"){
                         window.location.reload();
                     }    
                 }catch(error){
-                    console.log('error disabling this service', error);
+                    console.log('error disabling this consultation', error);
                 }
             }
 
@@ -66,7 +74,7 @@ export const columns: ColumnDef<Service>[] = [
             return (
                 <div className="flex flex-row items-center space-x-4">
                     <Eye className="cursor-pointer hover:text-cyan-600" size={16} onClick={() => handleView()} />
-                    <Link href={`/admin/dashboard/services/edit/${service._id}`}><Pencil className="cursor-pointer hover:text-emerald-500" size={16}  /></Link>
+                    <Link href={`/admin/dashboard/consultations/edit/${consultation._id}`}><Pencil className="cursor-pointer hover:text-emerald-500" size={16}  /></Link>
                     <Trash className="cursor-pointer hover:text-red-600" size={16} onClick={() => handleDelete()} />
                     <Ban className="cursor-pointer hover:text-gray-600" size={16} onClick={() => handleDisable()} />
                 </div>
