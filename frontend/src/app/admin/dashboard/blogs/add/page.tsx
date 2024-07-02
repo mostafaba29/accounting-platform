@@ -21,7 +21,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
 import {
   Select,
   SelectContent,
@@ -38,7 +37,7 @@ import BackButton from "@/components/BackButton";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const formSchema = z.object({
   title_AR: z.string().min(1, "blog title is required").max(100),
@@ -77,6 +76,26 @@ export default function AddBlog() {
   const imagesRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
+  const modules = {
+    toolbar: [
+      [{ header: '1' }, { header: '2' }, { font: [] }],
+      [{ size: [] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
+      ['link', 'image', 'video'],
+      ['clean'],
+    ],
+    clipboard: {
+      matchVisual: false,
+    },
+  }
+
+  
   const handleCoverImageChange = (e) => {
     const file = e.target.files ? e.target.files[0] : null;
     setCoverImageName(file ? file.name : '');
@@ -227,7 +246,9 @@ export default function AddBlog() {
                     <FormLabel className='font-semibold'>* Arabic Body:</FormLabel>
                     <FormControl >
                       <Controller control={form.control} name="body_AR" render={({ field }) => (
-                        <ReactQuill value={field.value} onChange={field.onChange} theme='snow' className='h-[150px]' /> 
+                        <ReactQuill value={field.value} onChange={field.onChange} theme='snow' 
+                        modules={modules}
+                        className='h-[150px]' /> 
                       )} />
                     </FormControl>
                     <FormMessage />

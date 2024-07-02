@@ -4,7 +4,6 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,6 +21,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { categories } from "@/components/types/Categories";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import BackButton from "@/components/BackButton";
@@ -33,18 +40,19 @@ import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const formSchema = z.object({
-  name: z.string().min(1, "blog name is required").max(100),
-  description: z.string(),
-  author: z.string(),
-  category:z.string().min(1,"category is required").max(100),
-  imageCover: z.instanceof(File).optional(),
-  file: z.instanceof(File).optional(),
+  title_AR:z.string().optional(),
+  title_EN:z.string().optional(),
+  body_AR:z.string().optional(),
+  body_EN:z.string().optional(),
+  description_AR:z.string().optional(),
+  description_EN:z.string().optional(),
+  category:z.string().optional(),
+  coverImage: z.instanceof(File).optional(),
   images: z.array(z.instanceof(File)).optional(),
 });
 
-export default function EditBlog() {
-  const pathname = usePathname();
-  let id = pathname?.split("/").pop();
+export default function EditBlog({ params }:{params:{id:string}}) {
+  let id = params.id;
   const [blogData, setBlogData] = useState(null);
   const [showCoverImageInput, setShowCoverImageInput] = useState(false);
   const [showImagesInput, setShowImagesInput] = useState(false);
@@ -54,18 +62,46 @@ export default function EditBlog() {
   const coverImageRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  const modules = {
+    toolbar: [
+      [{ header: '1' }, { header: '2' }, { font: [] }],
+      [{ size: [] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
+      ['link', 'image', 'video'],
+      ['clean'],
+    ],
+    clipboard: {
+      matchVisual: false,
+    },
+  }
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      title_AR: "",
+      title_EN: "",
+      body_AR: "",
+      body_EN: "",
+      description_AR: "",
+      description_EN: "",
+      category: "",
+      coverImage: null,
+      images: [],
     },
   });
 
   const handleCoverImageChange = (e) => {
     const file = e.target.files ? e.target.files[0] : null;
     setCoverImageName(file ? file.name : '');
-    form.setValue('imageCover', file);
+    form.setValue('coverImage', file);
   };
 
   useEffect(() => {
@@ -76,23 +112,29 @@ export default function EditBlog() {
           setBlogData(data);
           console.log(data);
           form.reset({
-            name: data.name,
-            description: data.description,
-            author: data.author,
+            title_AR: data.title_AR,
+            title_EN: data.title_EN,
+            body_AR: data.body_AR,
+            body_EN: data.body_EN,
+            description_AR: data.description_AR,
+            description_EN: data.description_EN,
+            category: data.category,
           });
         })
         .catch(error => console.error("Error fetching blog data", error));
     }
-  }, [id]);
+  }, [id, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("description", values.description);
-    formData.append("price", values.author);
-    formData.append("category",values.category);
-    if (values.imageCover) formData.append("imageCover", values.imageCover);
-    if (values.file) formData.append("file", values.file);
+    if (values.title_AR)formData.append("title_AR", values.title_AR);
+    if (values.title_EN)formData.append("title_EN", values.title_EN);
+    if (values.body_AR)formData.append("body_AR", values.body_AR);
+    if (values.body_EN)formData.append("body_EN", values.body_EN);
+    if (values.description_AR)formData.append("description_AR", values.description_AR);
+    if (values.description_EN)formData.append("description_EN", values.description_EN);
+    if (values.category)formData.append("category", values.category);
+    if (values.coverImage) formData.append("coverImage", values.coverImage);
     if (values.images) {
       values.images.forEach((image) => {
         formData.append('images', image);
@@ -133,9 +175,10 @@ export default function EditBlog() {
         <div className="">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-[1500px] grid grid-cols-1 gap-5 items-center">
-            <FormField control={form.control} name="name" render={({ field }) => (
+          <div className="grid grid-cols-2 gap-5">
+            <FormField control={form.control} name="title_AR" render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold'>Name</FormLabel>
+                <FormLabel className='font-semibold'>Arabic Title</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>
@@ -143,9 +186,9 @@ export default function EditBlog() {
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="author" render={({ field }) => (
+            <FormField control={form.control} name="title_EN" render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold'>Author</FormLabel>
+                <FormLabel className='font-semibold'>English Title</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>
@@ -153,30 +196,81 @@ export default function EditBlog() {
               </FormItem>
             )}
             />
+            </div>
+            
             <FormField control={form.control} name="category" render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-semibold'>Category</FormLabel>
-                <FormControl>
-                  <Input {...field} type="text" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
-            <FormField control={form.control} name="description" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-semibold'>Description</FormLabel>
+                  <FormLabel className='font-semibold'>Category:</FormLabel>
                   <FormControl>
-                    <Controller control={form.control} name="description" render={({ field }) => (
-                      <ReactQuill value={field.value} onChange={field.onChange} className="w-full min-w-[1500px]"/>
-                    )} />
+                  <Select {...field} onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
               />
+            <div className="grid gird-cols-1 gap-5">
+            <FormField control={form.control} name="description_AR" render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-semibold">Arabic Description:</FormLabel>
+                <FormControl>
+                    <Input {...field} type="text"  />
+                  </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
+            <FormField control={form.control} name="description_EN" render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-semibold">English Description:</FormLabel>
+                <FormControl>
+                    <Input {...field} type="text"  />
+                  </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+            />
+              </div>
+
+              <div className="grid grid-cols-1 gap-11">
+              <FormField control={form.control} name="body_AR" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-semibold'>Arabic Body</FormLabel>
+                    <FormControl>
+                      <Controller control={form.control} name="body_AR" render={({ field }) => (
+                        <ReactQuill value={field.value} onChange={field.onChange} modules={modules} className='h-[150px]'/>
+                      )} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                />
+              <FormField control={form.control} name="body_EN" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-semibold'>English Body</FormLabel>
+                    <FormControl>
+                      <Controller control={form.control} name="body_EN" render={({ field }) => (
+                        <ReactQuill value={field.value} onChange={field.onChange} className='h-[150px]'/>
+                      )} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                />
+              </div>
+
             {showCoverImageInput ? (
-                <FormField control={form.control} name="imageCover" render={({ field }) => (
+                <FormField control={form.control} name="coverImage" render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-semibold'>Cover Image</FormLabel>
                     <FormControl>
@@ -207,7 +301,7 @@ export default function EditBlog() {
                   <div className="mt-5">
                       <h2 className="font-semibold">Cover Image (Current)</h2>
                       <Image 
-                        src={`/imgs/blogs/${blogData.imageCover}`} 
+                        src={`/imgs/${blogData.coverImage}`} 
                         alt="blog cover image" 
                         width={550} 
                         height={250} 
@@ -244,7 +338,7 @@ export default function EditBlog() {
                         blogData.images.map((image, index) => (
                           <Image 
                             key={index}
-                            src={`/imgs/blogs/${image}`} 
+                            src={`/imgs/${image}`} 
                             alt={`blog image ${index + 1}`} 
                             width={400} 
                             height={250} 

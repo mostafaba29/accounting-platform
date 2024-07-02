@@ -16,18 +16,18 @@ import {
   import {Button} from "./ui/button";
 
 const fromSchema = z.object({
-    name: z.string().min(1, { message: "Please enter your name" }),
+    subject: z.string().min(1, { message: "Please enter your name" }),
     email: z.string().min(1, { message: "Please enter your email" }),
-    number: z.string().min(1, { message: "Please enter your number" }),
+    phone: z.string().min(1, { message: "Please enter your number" }),
     message: z.string().min(1, { message: "Please enter your message" }),
 })
 export default function InquiryForm() {
     const form=useForm<z.infer<typeof fromSchema>>({
         resolver:zodResolver(fromSchema),
         defaultValues: {
-            name: "",
+            subject: "",
             email: "",
-            number: "",
+            phone: "",
             message: "",
         },
     })
@@ -35,7 +35,7 @@ export default function InquiryForm() {
     const onSubmit = async( data: z.infer<typeof fromSchema> )=>{
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/v1/inquiries",
+                "http://localhost:8000/api/v1/contact/contact_us",
                 data,
                 {
                     withCredentials: true,
@@ -58,10 +58,10 @@ export default function InquiryForm() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-[50%] flex flex-col gap-4 border border-slate-600 p-6 rounded-md shadow-md">
                     <FormField
                         control={form.control}
-                        name="name"
+                        name="subject"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Name:</FormLabel>
+                                <FormLabel>Subject:</FormLabel>
                                 <Input
                                     placeholder="Name"
                                     {...field}
@@ -86,12 +86,12 @@ export default function InquiryForm() {
                     />
                     <FormField
                         control={form.control}
-                        name="number"
+                        name="phone"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Number:</FormLabel>
+                                <FormLabel>Phone Number:</FormLabel>
                                 <Input
-                                    placeholder="Number"
+                                    placeholder="Phone Number"
                                     {...field}
                                 />
                                 <FormMessage />

@@ -13,8 +13,7 @@ const storage = multer.diskStorage({
       cb(null, "./../frontend/public/imgs");
     } else if (
       file.mimetype === "application/pdf" ||
-      file.mimetype ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      file.mimetype === "video/mp4" ||
       file.mimetype === "application/vnd.ms-excel" ||
       file.mimetype ===
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
