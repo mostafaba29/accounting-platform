@@ -1,0 +1,30 @@
+version: "2.1"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_data:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - ./backend/config.env
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - frontend_data:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
+
+volumes:
+  backend_data:
+  frontend_data:

@@ -1,28 +1,33 @@
 const express = require("express");
-const contactHandlers = require("../controllers/contactControllers");
+const membersControllers = require("../controllers/membersControllers");
 const authControllers = require("../controllers/authControllers");
+const uploadMiddleware = require("../controllers/FactoryHandlers");
 
 const router = express.Router();
 
-router.post("/contact_us", contactHandlers.inquiryEmail);
-
 router
   .route("/")
-  .get(contactHandlers.getContactInfo)
+  .get(membersControllers.getAllMembers)
   .post(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    contactHandlers.createContactInfo
-  )
+    uploadMiddleware.uploadFiles,
+    membersControllers.createMember
+  );
+
+router
+  .route("/:id")
+  .get(membersControllers.getMember)
   .patch(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    contactHandlers.updateContactInfo
+    uploadMiddleware.uploadFiles,
+    membersControllers.updateMember
   )
   .delete(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-    contactHandlers.deleteContactInfo
+    membersControllers.deleteMember
   );
 
 module.exports = router;

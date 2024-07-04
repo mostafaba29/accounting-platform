@@ -30,21 +30,9 @@ const contactSchema = new mongoose.Schema({
       validator: v => validator.isEmail(v),
       message: "Invalid email"
     }
-  },
-  body: {
-    type: String,
-    required: true
-  },
-  members: {
-    info: {
-      type: String,
-      required: true
-    },
-    image: {
-      type: String,
-      required: true
-    }
   }
 });
 
-module.exports = mongoose.model("Contact", contactSchema);
+const Contact = mongoose.model("Contact", contactSchema);
+
+module.exports = Contact;

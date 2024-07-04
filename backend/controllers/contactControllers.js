@@ -25,15 +25,7 @@ exports.getContactInfo = factory.getAll(Contact);
 
 exports.updateContactInfo = catchAsync(async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = [
-    "facebook",
-    "x",
-    "whatsapp",
-    "phone",
-    "email",
-    "body",
-    "members"
-  ];
+  const allowedUpdates = ["facebook", "x", "whatsapp", "phone", "email"];
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)
   );
@@ -52,7 +44,7 @@ exports.updateContactInfo = catchAsync(async (req, res) => {
   });
 
   await contact.save();
-  res.status(200).json(contact);
+  res.status(200).json({ status: "success", contact });
 });
 
 exports.deleteContactInfo = catchAsync(async (req, res) => {

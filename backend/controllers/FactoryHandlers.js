@@ -71,39 +71,40 @@ exports.updateOne = Model =>
     }
 
     const filesToDelete = [];
-
-    if (files.coverImage) {
-      if (doc.coverImage) filesToDelete.push(doc.coverImage);
-      updatedData.coverImage = files.coverImage[0].filename;
-    }
-    if (files.images) {
-      if (doc.images) filesToDelete.push(...doc.images);
-      updatedData.images = files.images.map(file => file.filename);
-    }
-    if (files.video) {
-      if (doc.video) filesToDelete.push(doc.video);
-      updatedData.video = files.video[0].filename;
-    }
-    if (files.basic_version_document) {
-      if (doc.basic_version && doc.basic_version.document)
-        filesToDelete.push(doc.basic_version.document);
-      updatedData.basic_version = {
-        document: files.basic_version_document[0].filename
-      };
-    }
-    if (files.open_version_document) {
-      if (doc.open_version && doc.open_version.document)
-        filesToDelete.push(doc.open_version.document);
-      updatedData.open_version = {
-        document: files.open_version_document[0].filename
-      };
-    }
-    if (files.editable_version_document) {
-      if (doc.editable_version && doc.editable_version.document)
-        filesToDelete.push(doc.editable_version.document);
-      updatedData.editable_version = {
-        document: files.editable_version_document[0].filename
-      };
+    if (files) {
+      if (files.coverImage) {
+        if (doc.coverImage) filesToDelete.push(doc.coverImage);
+        updatedData.coverImage = files.coverImage[0].filename;
+      }
+      if (files.images) {
+        if (doc.images) filesToDelete.push(...doc.images);
+        updatedData.images = files.images.map(file => file.filename);
+      }
+      if (files.video) {
+        if (doc.video) filesToDelete.push(doc.video);
+        updatedData.video = files.video[0].filename;
+      }
+      if (files.basic_version_document) {
+        if (doc.basic_version && doc.basic_version.document)
+          filesToDelete.push(doc.basic_version.document);
+        updatedData.basic_version = {
+          document: files.basic_version_document[0].filename
+        };
+      }
+      if (files.open_version_document) {
+        if (doc.open_version && doc.open_version.document)
+          filesToDelete.push(doc.open_version.document);
+        updatedData.open_version = {
+          document: files.open_version_document[0].filename
+        };
+      }
+      if (files.editable_version_document) {
+        if (doc.editable_version && doc.editable_version.document)
+          filesToDelete.push(doc.editable_version.document);
+        updatedData.editable_version = {
+          document: files.editable_version_document[0].filename
+        };
+      }
     }
 
     const updatedDoc = await Model.findByIdAndUpdate(
@@ -130,33 +131,37 @@ exports.createOne = Model =>
   catchAsync(async (req, res, next) => {
     const { files } = req;
     const newData = { ...req.body };
-
-    if (files.coverImage && files.coverImage.length > 0) {
-      newData.coverImage = files.coverImage[0].filename;
+    if (files) {
+      if (files.coverImage && files.coverImage.length > 0) {
+        newData.coverImage = files.coverImage[0].filename;
+      }
+      if (files.images && files.images.length > 0) {
+        newData.images = files.images.map(file => file.filename);
+      }
+      if (files.video && files.video.length > 0) {
+        newData.video = files.video[0].filename;
+      }
+      if (
+        files.basic_version_document &&
+        files.basic_version_document.length > 0
+      ) {
+        newData.basic_version.document =
+          files.basic_version_document[0].filename;
+      }
+      if (
+        files.open_version_document &&
+        files.open_version_document.length > 0
+      ) {
+        newData.open_version.document = files.open_version_document[0].filename;
+      }
+      if (
+        files.editable_version_document &&
+        files.editable_version_document.length > 0
+      ) {
+        newData.editable_version.document =
+          files.editable_version_document[0].filename;
+      }
     }
-    if (files.images && files.images.length > 0) {
-      newData.images = files.images.map(file => file.filename);
-    }
-    if (files.video && files.video.length > 0) {
-      newData.video = files.video[0].filename;
-    }
-    if (
-      files.basic_version_document &&
-      files.basic_version_document.length > 0
-    ) {
-      newData.basic_version.document = files.basic_version_document[0].filename;
-    }
-    if (files.open_version_document && files.open_version_document.length > 0) {
-      newData.open_version.document = files.open_version_document[0].filename;
-    }
-    if (
-      files.editable_version_document &&
-      files.editable_version_document.length > 0
-    ) {
-      newData.editable_version.document =
-        files.editable_version_document[0].filename;
-    }
-
     const doc = await Model.create(newData);
 
     res.status(201).json({
@@ -209,6 +214,10 @@ exports.getAll = Model =>
       .limitFields()
       .paginate();
     const doc = await features.query;
+
+    if (!doc || doc.length === 0) {
+      return next(new AppError("Data not found", 404));
+    }
 
     // SEND RESPONSE
     res.status(200).json({

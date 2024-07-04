@@ -4,7 +4,7 @@ const app = require("./app");
 
 dotenv.config({ path: "./config.env" });
 
-const DB = process.env.DATABASE;
+const DB = process.env.MONGO_URI;
 
 mongoose.connect(DB).then(() => {
   console.log("Connected to database successfully");
