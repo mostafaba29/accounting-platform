@@ -40,9 +40,9 @@ export default function ReviewSection ({ reviews,id }: ReviewSectionProps){
 
   return (
 
-    <div className="max-w-6xl mx-auto p-4">
-      <div className="flex flex-row justify-between">
-        <h2 className="review-3xl font-bold mb-8 review-center">Customer Reviews</h2>
+    <div className='shadow-md my-5'>
+      <div className="lg:w-[1500px] md:w-[1000px] w-[600px] flex flex-row justify-around my-3 px-4 ">
+        <h2 className="review-3xl font-bold mb-8 review-center text-white">Customer Reviews</h2>
         <Button className="px-4 py-2 bg-sky-600 review-white rounded hover:bg-sky-500" onClick={handleOpenDialog}>
           Add a Review
         </Button>

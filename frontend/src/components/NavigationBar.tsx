@@ -182,12 +182,22 @@ const HrServices:{title:string; href:string}[] =[
 export default function NavigationBar(){
     const [userLoggedIn,setUserLoggedIn] = React.useState(false);
     const [profileIconActive,setProfileIconActive] = React.useState(false);
+    const [consults,setConsults] = React.useState([]);
     const checkUser = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
         if (response.data.status === "success" && response.data.data.user.role !== "admin") {
           setUserLoggedIn(true);
         }
+      }catch (error) {
+        console.log(error);
+      }
+    }
+
+    const fetchConsults = async ()=> {
+      try {
+        const response = await axios.get('http://localhost:8000/api/v1/consults');
+        setConsults(response.data.data.data);
       }catch (error) {
         console.log(error);
       }
@@ -207,11 +217,13 @@ export default function NavigationBar(){
 
     React.useEffect(() => {
       checkUser();
+      fetchConsults();
     }, []);
     return(
     <>
       <div className="h-32 bg-sky-800 sticky top-0 flex flex-col z-50">
-          <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-center justify-between px-4">
+            <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>
             <div className="flex flex-row items-center ml-4 ">
               {!userLoggedIn ? 
               (
@@ -236,7 +248,6 @@ export default function NavigationBar(){
                     <Link href="/orders">Orders</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    {/* <Link href="/auth/logout">Logout</Link> */}
                     <p className="w-full hover:cursor-pointer" onClick={logout}>Logout</p>
                   </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -250,24 +261,24 @@ export default function NavigationBar(){
               <Phone size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
               </Link>
               <Link href="/search">
-              <Search size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
+              <Search size={36} className=" text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white  "/>
               </Link>
-              <Button variant="ghost" className="text-white font-bold rounded-full ">AR</Button>
+              <Button variant="ghost" className="text-black bg-white font-bold rounded-full ml-4  hover:text-white hover:bg-sky-500  ">ع</Button>
             </div>
-            <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>
           </div>
-          <div className="flex flex-row w-full justify-center">
+          <div className="flex flex-row w-full items-start gap-4 ml-1">
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent text-white ">Platform</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
-                    <Link href='/about-us'><ListItem>About us</ListItem></Link>
-                    <Link href='/contact-us'><ListItem> Contact</ListItem></Link>
-                    <Link href='/careers'><ListItem> Careers</ListItem></Link>
-                    <Link href='/terms-and-conditions'><ListItem> Terms and conditions</ListItem></Link>
-                    <Link href='/privacy-policy'><ListItem> Privacy policy</ListItem></Link>
+                    <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/careers'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/clients'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -276,14 +287,15 @@ export default function NavigationBar(){
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-white ">Accounting and financial services</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="bg-transparent text-white ">Consults</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
-                    {accAndFinancialServices.map((item) => (
-                      <Link href={item.href} key={item.title}>
-                        <ListItem key={item.title} title={item.title} />
+                    {(consults.map((item) => (
+                      <Link href={`/consults/${item._id}`} key={item.title_EN}>
+                        <ListItem key={item._id} title={item.title_EN} className="hover:text-white hover:bg-sky-800"/>
                       </Link>
-                    ))}
+                    )))
+                    }
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>

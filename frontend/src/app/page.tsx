@@ -5,17 +5,17 @@ import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";
 import OurVision from "@/components/LandingPage/OurVision";
 import RecentBlogs from "@/components/LandingPage/RecentBlogs";
-import FeaturedServices from "@/components/LandingPage/FeaturedServices";
+import FeaturedConsults from "@/components/LandingPage/FeaturedConsults";
 import FeaturedProducts from "@/components/LandingPage/FeaturedProducts";
 import axios from "axios";
 import { Blog } from "@/components/types/BlogTableColumns";
-import { Service } from "@/components/types/ConsultationTableColumns";
+import { Consultation } from "@/components/types/ConsultationTableColumns";
 import {Product} from "@/components/types/ProductTableColumns";
 
 
 export default function Home() {
   const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
-  const [featuredServices, setFeaturedServices] = useState<Service[]>([]);
+  const [featuredConsults, setFeaturedConsults] = useState<Consultation[]>([]);
   const [popularProducts, setPopularProducts] = useState<Product[]>([]);
 
   const fetchLandingPageData = async () => {
@@ -26,8 +26,8 @@ export default function Home() {
 
       console.log(response.data);
       setRecentBlogs(response.data.latestBlogs);
-      setFeaturedServices(response.data.featuredServices);
-      setPopularProducts(response.data.bestSellingProducts);
+      setFeaturedConsults(response.data.bestConsults);
+      setPopularProducts(response.data.topRatedProducts);
     } catch (error) {
       console.log(error);
     }
@@ -41,8 +41,8 @@ export default function Home() {
     <main >
       <NavigationBar />
       <OurVision />
+      <FeaturedConsults consults={featuredConsults} /> 
       <RecentBlogs blogs={recentBlogs}/>
-      <FeaturedServices services={featuredServices} />  
       <FeaturedProducts products={popularProducts} />
       <Footer />
     </main>

@@ -1,4 +1,4 @@
-@tailwind base;
+  @tailwind base;
   @tailwind components;
   @tailwind utilities;
 
@@ -81,11 +81,17 @@
           transform: rotateY(180deg);
       }
   }
+  * {
+    @apply border-border;
+    }
+
+    body {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='2500' height='3000' preserveAspectRatio='none' viewBox='0 0 2500 3000'%3e%3cg mask='url(%26quot%3b%23SvgjsMask3034%26quot%3b)' fill='none'%3e%3crect width='2500' height='3000' x='0' y='0' fill='url(%26quot%3b%23SvgjsLinearGradient3035%26quot%3b)'%3e%3c/rect%3e%3cpath d='M2500 0L1439.96 0L2500 1071.82z' fill='rgba(255%2c 255%2c 255%2c .1)'%3e%3c/path%3e%3cpath d='M1439.96 0L2500 1071.82L2500 1981.26L1434.57 0z' fill='rgba(255%2c 255%2c 255%2c .075)'%3e%3c/path%3e%3cpath d='M1434.57 0L2500 1981.26L2500 2372.63L1335.48 0z' fill='rgba(255%2c 255%2c 255%2c .05)'%3e%3c/path%3e%3cpath d='M1335.48 0L2500 2372.63L2500 2494.62L1190.03 0z' fill='rgba(255%2c 255%2c 255%2c .025)'%3e%3c/path%3e%3cpath d='M0 3000L112.11 3000L0 2816.45z' fill='rgba(0%2c 0%2c 0%2c .1)'%3e%3c/path%3e%3cpath d='M0 2816.45L112.11 3000L754.57 3000L0 1889.62z' fill='rgba(0%2c 0%2c 0%2c .075)'%3e%3c/path%3e%3cpath d='M0 1889.62L754.57 3000L1229.81 3000L0 1130.07z' fill='rgba(0%2c 0%2c 0%2c .05)'%3e%3c/path%3e%3cpath d='M0 1130.07L1229.81 3000L1753.42 3000L0 388.31999999999994z' fill='rgba(0%2c 0%2c 0%2c .025)'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask3034'%3e%3crect width='2500' height='3000' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='-5%25' y1='4.17%25' x2='105%25' y2='95.83%25' gradientUnits='userSpaceOnUse' id='SvgjsLinearGradient3035'%3e%3cstop stop-color='%230e2a47' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(77%2c 155%2c 255%2c 0.31)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e");
+      background-size: cover; 
+    }
   }
   @layer base {
-    * {
-      @apply border-border;
-    }
+    
     /* body {
       @apply bg-background text-foreground grid items-center justify-center h-screen;
     } */

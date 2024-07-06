@@ -19,18 +19,16 @@ interface consultCardProps {
 export default function ConsultCard( {consult}: consultCardProps) {
 
     return (
-        <div className="w-80 h-[450px]  flex flex-col items-center  rounded-xl  border border-sky-800 ">
-            <div className="w-full text-center text-black m-1 h-[100px]  flex items-center justify-center">
-                <h2 className=" text-sky-900 text-xl font-semibold break-words w-full">{consult.title_EN}</h2>
+        <div className="flex flex-row items-center justify-between shadow-sm rounded-xl  bg-gradient-to-br from-slate-100 to-sky-50/75 p-3 h-[400px]">
+            <div className="flex flex-col items-start justify-around w-[315px]" >
+                    <h2 className=" text-black text-xl font-semibold break-words w-full h-[50px]">{consult.title_EN}</h2>
+                <div className="w-full flex flex-col items-center h-[210px]">
+                    <Image src={`/imgs/${consult.coverImage}`} alt={consult.title_EN} width={300} height={200} className="w-[300px] h-[200px] object-cover"/>
+                </div>
+                    <Link href={`/consults/${consult._id}`} className='w-full h-[50px]'><Button className="bg-sky-700 hover:bg-sky-600" >View Details</Button></Link>
             </div>
-            <div className="w-full flex flex-col items-center justify-center h-[225px]">
-                <Image src={`/imgs/${consult.coverImage}`} alt={consult.title_EN} width={200} height={200}/>
-            </div>
-            <div className="w-full flex flex-col items-center justify-center h-[75px]">
-                <p className="w-full text-center text-black break-words line-clamp-3">{consult.description_EN}</p>
-            </div>
-            <div className='w-full flex flex-col items-center h-[50px]'>
-                <Link href={`/consults/${consult._id}`}><Button className="bg-sky-700 hover:bg-sky-600" >View Details</Button></Link>
+            <div className="w-[375px]  flex flex-colitems-center   ">  
+                    <p className="w-full text-center text-black break-words ">{consult.description_EN}</p>
             </div>
         </div>
     );

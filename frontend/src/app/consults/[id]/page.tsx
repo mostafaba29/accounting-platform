@@ -8,11 +8,10 @@ import BackButton from "@/components/BackButton";
 import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";
-import ReviewSection from "@/components/ReviewSection";
 import {Review} from "@/components/types/Review"; 
 import { sanitizeHtml } from "@/components/Security/dompurify";
+import HeaderSection from "@/components/HeaderSection";
 
 
 export default function ConsultPage({params}: {params: {id: string}}) {
@@ -22,14 +21,7 @@ export default function ConsultPage({params}: {params: {id: string}}) {
 
     
     useEffect(() => {
-      const fetchReviews = async () => {
-        try {
-          const response = await axios.get(`http://localhost:8000/api/v1/reviews/${id}`);
-          setReviews(response.data.data.data);
-        } catch (error) {
-          console.error("Error fetching reviews:", error);
-        }
-    }
+
     const fetchConsultData = async () => {
       if(id) {
         try {
@@ -41,7 +33,6 @@ export default function ConsultPage({params}: {params: {id: string}}) {
       }
     }
         fetchConsultData();
-        fetchReviews();
       }, [ id ]);
     
     if(!id || !consultData) {
@@ -59,40 +50,57 @@ export default function ConsultPage({params}: {params: {id: string}}) {
     return (
       <div>
         <NavigationBar />
-        <BackButton text={'Go Back'} link={'/consults'}/>
-        <div className="flex flex-row items-start justify-around my-3">
-          <div className="flex flex-col items-start w-[700px]">
-              <h1 className="text-3xl font-bold mb-4">{consultData.title_EN}</h1>
+        <div className="flex flex-col items-center ">
+        <HeaderSection pageTitle={consultData.title_EN} pageImage="contactUs.jpg" breadCrumbArr={['Consults']} breadCrumbLinkArr={['/consults']}/>
+        <div className="lg:w-[1500px] md:w-[1000px] w-[600px] flex flex-col items-start justify-around my-3 bg-gradient-to-br from-slate-50/50 to-sky-50/50 p-3 shadow-lg">
+          <div className="flex flex-row items-start ">
+              <Image src={`/imgs/${consultData.coverImage}`} alt={consultData.title_EN} width={300} height={400} className="w-[300px] h-[400px] object-cover p-2"/>
+              <div className="m-2 p-3">
+              <h1 className="text-3xl font-bold mb-4 text-zinc-900">What is {consultData.title_EN} ?</h1>
+              <p className="text-gray-200 font-medium text-lg break-words ">{consultData.description_EN}</p>
+              </div>
+              
+          </div>
+          <div className="w-full p-2 m-1 flex flex-row justify-between items-end">
+            <div>
+              <h3 className="text-2xl font-bold mb-4 text-zinc-900 ">What will you get ?</h3>
               <div 
-                className="text-sky-800 mb-6 w-[700px] break-words" 
+                className="text-gray-200 text-lg font-medium mb-6 w-[700px] break-words" 
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(consultData.body_EN) }}
-              />
-              <div className="grid grid-cols-2 gap-4">
+              /> 
+              <h3 className="text-xl font-bold mb-4 text-zinc-900 ">Available Consults</h3>
+              <div className="grid grid-cols-2 gap-1 w-[500px]">
                 <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-sky-600 w-[200px] text-white py-2 px-4 rounded font-semibold hover:bg-sky-500">
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
                       15 min consult
                   </Button>
                 </Link>
                 <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-sky-600 w-[200px] text-white py-2 px-4 rounded font-semibold hover:bg-sky-500">
-                      1 hour consult
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
+                      1 Hr Consult
                   </Button>
                 </Link>
                 <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-sky-600 w-[200px] text-white py-2 px-4 rounded font-semibold hover:bg-sky-500">
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
                       Personal visit to us 
                   </Button>
                 </Link>
                 <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-sky-600 w-[200px] text-white py-2 px-4 rounded font-semibold hover:bg-sky-500">
-                      Personal visit ot you 
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
+                      Personal visit to you 
                   </Button>
                 </Link>
               </div> 
+            </div>
+            <div >
+              {(consultData.images.map((image, index) => (
+                <Image key={index} src={`/imgs/${image}`} alt={consultData.title_EN} width={300} height={200} className="w-[300px] h-[200px] object-cover p-2"/>
+              ))
+              )}
+            </div>
           </div>
-          <ImageGallery coverImage={consultData.coverImage} images={consultData.images} />
         </div>  
-        <ReviewSection reviews={reviews} id={consultData._id}/>
+        </div>
       <Footer />
     </div>
     )

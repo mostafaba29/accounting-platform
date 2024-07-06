@@ -5,6 +5,7 @@ import axios from 'axios';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
 import ConsultCard from '@/components/ConsultCard';
+import HeaderSection from '@/components/HeaderSection';
 
 export default function ConsultsPage(){
     const [consults,setConsults] = useState<Consultation[]>([]);
@@ -35,11 +36,14 @@ export default function ConsultsPage(){
     return (
         <div className='w-full'>
         <NavigationBar />
-         <div className="container mx-auto py-8">
-            <div className="grid grid-cols-4 gap-4">
-                 {currentConsults.map((consult,id) => (
-                    <ConsultCard key={id} consult={consult} />
-                ))} 
+        <div className='flex flex-col items-center'>
+            <HeaderSection pageTitle="Consults" pageImage='contactUs.jpg' breadCrumbArr={[]} breadCrumbLinkArr={[]}/>
+            <div className="lg:w-[1500px] md:w-[1000px] w-[600px] p-4 m-2 shadow-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
+                    {currentConsults.map((consult,id) => (
+                        <ConsultCard key={id} consult={consult} />
+                    ))} 
+                </div>
             </div>
         </div>
         <Footer /> 

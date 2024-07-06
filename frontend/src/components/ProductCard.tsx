@@ -17,15 +17,17 @@ interface ProductCardProps {
 }
 export default function ProductCard({product}: ProductCardProps) {
     return(
-        <Card className="w-80 h-[400px] max-h-[400px] flex flex-col items-center justify-between  rounded-xl  border border-sky-800 ">
-            <CardHeader>
-                <CardTitle className=" w-full text-center text-black">{product.name}</CardTitle>
-            </CardHeader>
-            <CardContent className='w-full flex flex-col items-center '>
-                <Image src={`/imgs/products/${product.coverImage}`} alt={product.name} width={200} height={200}/> 
-                <Badge className="m-1" >Price: ${product.price}</Badge>
-                <Link href={`/products/${product._id}`}><Button >View Details</Button></Link>
-            </CardContent>
-        </Card>
+        <div className="w-[350px] h-[450px] flex flex-col items-center justify-between rounded-xl  bg-gradient-to-br from-sky-50/75 to-slate-100 ">
+            <div>
+                <div className="w-full h-[75px] text-center text-black text-xl font-semibold py-1 px-2">{product.title_EN}</div>
+            </div>
+            <div className='w-full flex flex-col items-center px-1'>
+                <Image src={`/imgs/${product.coverImage}`} alt={product.title_EN} width={200} height={200} className="w-[200px] h-[200px] object-cover"/> 
+                <p className="text-black line-clamp-5">{product.description_EN}</p>
+            </div>
+            <div className='p-1'>
+            <Link href={`/products/${product._id}`}><Button className="text-zinc-800  bg-transparent hover:bg-sky-200">View Details</Button></Link>
+            </div>
+        </div>
         );
 };
