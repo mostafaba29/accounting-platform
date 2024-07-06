@@ -88,7 +88,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "a product must have a cover image"]
     },
-    images: [String],
+    images: {
+      type: [String],
+      required: true
+    },
     video: String,
     slug: String,
     discount: {

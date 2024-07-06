@@ -10,7 +10,7 @@ const upload = require("./uploadMiddleware");
 
 exports.uploadFiles = upload.fields([
   { name: "coverImage", maxCount: 1 },
-  { name: "images", maxCount: 5 },
+  { name: "images", maxCount: 3 },
   { name: "video", maxCount: 1 },
   { name: "basic_version_document", maxCount: 1 },
   { name: "open_version_document", maxCount: 1 },

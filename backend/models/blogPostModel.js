@@ -38,7 +38,10 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    images: [String],
+    images: {
+      type: [String],
+      required: true
+    },
     slug: String,
     createdAt: {
       type: Date,

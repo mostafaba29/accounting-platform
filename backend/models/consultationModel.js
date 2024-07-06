@@ -39,7 +39,10 @@ const consultationSchema = new mongoose.Schema(
       type: String,
       required: [true, "a consultation must have an image"]
     },
-    images: [String],
+    images: {
+      type: [String],
+      required: true
+    },
     createdAt: {
       type: Date,
       default: Date.now()
