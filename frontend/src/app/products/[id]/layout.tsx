@@ -59,14 +59,16 @@ export default function ProductLayout({ children ,params }: { children: React.Re
             <NavigationBar />
             <div className='w-full flex flex-col items-center'>
                 <HeaderSection pageTitle={productData.title_EN} pageImage={'contactUs.jpg'} breadCrumbArr={['Products']} breadCrumbLinkArr={['/products']} />
-                <div className='flex flex-col items-center lg:w-[1500px] md:w-[1000px] w-[600px] bg-slate-100 shadow-sm'>
+                <div className='flex flex-col items-center lg:w-[1500px] md:w-[1000px] w-[600px] bg-slate-100/85 shadow-lg'>
                 <div>
-                    <div className="lg:w-[1500px] md:w-[1000px] w-[600px] flex flex-row items-start justify-between my-3">
-                        <div className="flex flex-col items-start w-[700px] h-[524px] justify-between">
+                    <div className="lg:w-[1500px] md:w-[1000px] w-[600px] flex flex-row items-start justify-between my-3 py-2 px-4">
+                        <div className="flex flex-col items-start w-[700px] h-[615px] justify-between">
                             <div>
-                                <h1 className="text-3xl font-bold mb-4">{productData.title_EN}</h1>
-                                <div className="text-sky-800 mb-6" dangerouslySetInnerHTML={{ __html: sanitizeHtml(productData.body_EN) }} />
+                                <h1 className="text-2xl font-bold mb-6">Product Info</h1>
+                                <div className="text-black mb-6" dangerouslySetInnerHTML={{ __html: sanitizeHtml(productData.body_EN) }} />
                             </div>
+                            <div>
+                                <h1 className="text-2xl font-bold mb-6">Available Versions</h1>
                             <div className="grid gird-cols-1 lg:grid-cols-3 gap-5 ">
                                 <div>
                                     <Link href={`/products/${productData._id}/checkout`}>
@@ -90,8 +92,12 @@ export default function ProductLayout({ children ,params }: { children: React.Re
                                     </Link>
                                 </div>
                             </div>
+                            </div>
                         </div> 
-                        <ImageGallery coverImage={productData.coverImage} images={productData.images} /> 
+                        <div className="w-[650px]">
+                            <ImageGallery coverImage={productData.coverImage} images={productData.images} /> 
+                            <h1 className="text-2xl text-center font-bold mb-4 break-words">{productData.title_EN}</h1>
+                        </div>
                     </div>
                 </div>  
                 </div>
