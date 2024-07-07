@@ -14,6 +14,10 @@ const memberSchema = new mongoose.Schema({
   brief: {
     type: String,
     trim: true
+  },
+  isFounder: {
+    type: Boolean,
+    default: false
   }
 });
 

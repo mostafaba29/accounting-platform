@@ -26,7 +26,7 @@ export default function RecentBlogs ({blogs}:RecentBlogsProps){
                             </Link>
                         </div>
                         <Image
-                            src={`/imgs/${blog.imageCover}`}
+                            src={`/imgs/${blog.coverImage}`}
                             alt="cover image"
                             width={150}
                             height={200}

@@ -18,7 +18,7 @@ import Link from "next/link";
         <div className="w-full max-w-[1200px] h-[300px] flex flex-row  my-1 bg-gradient-to-br from-sky-50/75 to-slate-100">
           <Image src={`/imgs/${blog.coverImage}`} alt={blog.title_EN} width={300} height={300} className="object-cover w-[300px] h-[300px]" />
           <div className="flex flex-col items-start justify-between">
-            <div className="px-2 text-white bg-slate-700 rounded-br-lg w-[100px]">{formattedDate}</div>
+            <div className="px-2 text-white bg-slate-700 rounded-br-lg w-[110px]">{formattedDate}</div>
             <div className="px-2 ">
               <h2 className="text-black text-2xl font-bold">{blog.title_EN}</h2>
               <p className="text-black text-base my-2">{blog.description_EN}</p>
