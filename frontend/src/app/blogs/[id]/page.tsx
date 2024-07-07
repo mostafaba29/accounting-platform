@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MoreLikeThis from "@/components/MoreLikeThis";
 import { sanitizeHtml } from "@/components/Security/dompurify";
+import HeaderSection from "@/components/HeaderSection";
 
 export default function BlogPage() {
     const pathname = usePathname();
@@ -51,43 +52,10 @@ export default function BlogPage() {
     return (
         <div>
         <NavigationBar />
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row">
-            <div className="flex-shrink-0 mb-4 md:mb-0 md:w-1/2">
-              <Image
-                src={`/imgs/blogs/${blogData.imageCover}`}
-                alt={blogData.title_EN}
-                width={500}
-                height={500}
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <div className="md:ml-8 md:w-1/2">
-            <div className="flex flex-col items-start w-[700px]">
-              <h1 className="text-3xl font-bold mb-4">{blogData.title_EN}</h1>
-              <div className="text-gray-700 mb-6" dangerouslySetInnerHTML={{ __html: sanitizeHtml(blogData.body_AR) }}/>
-            </div>
-              {blogData.images && blogData.images.length > 0 && (
-                <div className="mt-8">
-                  <h2 className="text-2xl font-semibold mb-4">More Images</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {blogData.images.map((image, index) => (
-                      <Image
-                        key={index}
-                        src={`/imgs/blogs/${image}`}
-                        alt={`${blogData.title_EN} image ${index + 1}`}
-                        width={200}
-                        height={200}
-                        className="object-cover w-full h-full"
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mt-16">
-            <MoreLikeThis title={'More Like This'} type={'blog'} id={id} limit={4} />
+        <div className="flex flex-col items-center">
+          <HeaderSection pageTitle={blogData.title_EN} pageImage="contactUs.jpg" breadCrumbArr={['Blogs']} breadCrumbLinkArr={['/blogs']}/>
+          <div className="lg:w-[1500px] md:w-[1000px] w-[600px] p-4 m-2 bg-slate-100/85 shadow-lg min-h-screen">
+              <div className="text-gray-700 mb-6" dangerouslySetInnerHTML={{ __html: sanitizeHtml(blogData.body_EN) }}/>
           </div>
         </div>
         <Footer />

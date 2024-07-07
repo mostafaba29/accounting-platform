@@ -17,7 +17,7 @@
 export default function CommandSidebar (){
 
     return (
-        <div className="bg-sky-700 h-screen md:w-[175px] w-[50px] rounded-none shadow-lg sticky">
+        <div className="bg-sky-700 min-h-screen md:w-[200px] w-[50px] rounded-none shadow-lg sticky">
             <h1 className="text-sky-700 font-bold text-base text-center w-full bg-white ">Command Sidebar</h1>
             <div className="flex flex-col items-start my-2">
                 <div className= 'flex flex-row my-1 w-full'>

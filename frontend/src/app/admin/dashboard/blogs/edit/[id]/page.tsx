@@ -260,7 +260,7 @@ export default function EditBlog({ params }:{params:{id:string}}) {
                     <FormLabel className='font-semibold'>English Body</FormLabel>
                     <FormControl>
                       <Controller control={form.control} name="body_EN" render={({ field }) => (
-                        <ReactQuill value={field.value} onChange={field.onChange} className='h-[150px]'/>
+                        <ReactQuill value={field.value} onChange={field.onChange} modules={modules} className='h-[150px]'/>
                       )} />
                     </FormControl>
                     <FormMessage />

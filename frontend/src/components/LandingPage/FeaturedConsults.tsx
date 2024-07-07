@@ -31,15 +31,15 @@ export default function FeaturedConsults ({consults}:FeaturedConsultsProps) {
                         >
                             <div className="relative w-full h-full transition-transform duration-500 transform-style-preserve-3d">
                                 {/* Front Side */}
-                                <div className="absolute w-full h-full bg-white rounded-lg shadow-lg flex flex-col items-center justify-between text-center backface-hidden border">
+                                <div className="absolute w-full h-full bg-white p-2 rounded-lg shadow-lg flex flex-col items-center justify-between text-center backface-hidden border">
                                     <h2 className="text-xl font-bold mb-2">{consult.title_EN}</h2>
                                     <Image src={`/imgs/${consult.coverImage}`} alt={consult.title_EN} width={125} height={125} className="object-cover" />
                                     <p className="text-gray-700">{consult.category}</p>
                                     
                                 </div>
                                 {/* Back Side */}
-                                <div className="absolute w-full h-full bg-sky-50 rounded-lg shadow-lg flex flex-col items-center justify-center transform rotateY-180 backface-hidden border">
-                                    <p className="text-gray-700">{consult.description_EN}</p>
+                                <div className="absolute w-full h-full bg-sky-50 p-2 rounded-lg shadow-lg flex flex-col items-center justify-center transform rotateY-180 backface-hidden border">
+                                    <p className="text-gray-700 break-words line-clamp-6 mb-1">{consult.description_EN}</p>
                                     <Link href={`/consults/${consult._id}`}>
                                         <Button className="text-blue-800 font-bold py-2 px-4 rounded bg-blue-300 hover:bg-blue-400">
                                             View Details

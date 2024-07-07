@@ -33,7 +33,7 @@ export default function settings () {
                             <Eye size={24} className="hover:text-sky-800"/>
                         </Link>
                     </div>
-                    <Link href="/admin/dashboard/settings/contact-us">
+                    <Link href="/admin/dashboard/settings/about-us">
                         <Button className="w-[250px]" >Change About us settings</Button>
                     </Link>
                 </div>

@@ -5,6 +5,7 @@ import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
 import axios from "axios";
+import HeaderSection from "@/components/HeaderSection";
 
 export default function Blogs() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -29,12 +30,15 @@ export default function Blogs() {
   return (
     <div className="w-full">
       <NavigationBar />
-      <div className="container mx-auto py-8">
-        <div className="flex flex-col ">
-          {blogs.map((blog, id) => (
-            <BlogCard key={id} blog={blog} />
-          ))}
-        </div>
+      <div className='flex flex-col items-center'>
+          <HeaderSection pageTitle="Blogs" pageImage='contactUs.jpg' breadCrumbArr={[]} breadCrumbLinkArr={[]}/>
+            <div className="lg:w-[1500px] md:w-[1000px] w-[600px] p-4 m-2 shadow-lg bg-gray-200">
+              <div className="flex flex-col items-center gap-5">
+              {blogs.map((blog, id) => (
+                <BlogCard key={id} blog={blog} />
+              ))}
+              </div>
+            </div>
       </div>
       <Footer />
     </div>

@@ -260,7 +260,7 @@ export default function AddBlog() {
                   <FormLabel className='font-semibold'>* English Body:</FormLabel>
                   <FormControl>
                     <Controller control={form.control} name="body_EN" render={({ field }) => (
-                      <ReactQuill value={field.value} onChange={field.onChange} theme='snow' className='h-[150px]'/> 
+                      <ReactQuill value={field.value} onChange={field.onChange} theme='snow' modules={modules} className='h-[150px]'/> 
                     )} />
                   </FormControl>
                   <FormMessage />
