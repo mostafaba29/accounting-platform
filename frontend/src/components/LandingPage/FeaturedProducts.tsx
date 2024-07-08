@@ -25,19 +25,20 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             <Slider {...settings}>
                 {products.map(product => (
                     <div key={product._id} className="p-4">
-                        <div className="w-full h-72 cursor-pointer">
-                            <div className="relative w-full h-full bg-white rounded-lg shadow-lg flex flex-col items-center justify-between text-center p-4">
-                                <h2 className="text-xl font-bold mb-2">{product.title_EN}</h2>
-                                <p className="text-gray-700">{product.category}</p>
-                                <Image src={`/imgs/${product.coverImage}`} alt={product.title_EN} width={125} height={125} className="object-cover" />
-                                <p className="text-gray-900 font-semibold">{product.description_EN}</p>
-                                <Link href={`/products/${product._id}`}>
-                                    <Button className="text-blue-800 font-bold rounded bg-blue-300 hover:bg-blue-400">
-                                        View Details
-                                    </Button>
-                                </Link>
-                            </div>
+                        <div className="flex items-center justify-center h-[90px] bg-white bg-opacity-75 px-2 py-1 rounded-lg mb-3 text-center">
+                            <h2 className="text-lg font-bold">{product.title_EN}</h2>
                         </div>
+                        <Link href={`/products/${product._id}`} className="z-10">
+                        <div className="w-full h-[350px] cursor-pointer relative group">   
+                        <div className="absolute inset-0 bg-cover bg-center rounded-lg shadow-lg flex flex-col items-center justify-between text-center p-4 transition-transform duration-300 group-hover:scale-105"
+                            style={{ backgroundImage: `url(/imgs/${product.coverImage})` }}
+                            >
+                            <div className="absolute inset-0 flex items-end justify-center bg-black bg-opacity-0 group-hover:bg-opacity-75 transition-opacity duration-300">
+                                <p className="text-white text-sm break-words p-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">{product.description_EN}</p>
+                            </div>
+                            </div> 
+                        </div>
+                        </Link>
                     </div>
                 ))}
             </Slider>

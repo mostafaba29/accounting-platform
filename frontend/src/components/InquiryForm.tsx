@@ -20,6 +20,7 @@ const fromSchema = z.object({
     email: z.string().min(1, { message: "Please enter your email" }),
     phone: z.string().min(1, { message: "Please enter your number" }),
     message: z.string().min(1, { message: "Please enter your message" }),
+    file: z.instanceof(File).refine((file) => file.size > 0, {}).optional(),
 })
 export default function InquiryForm() {
     const form=useForm<z.infer<typeof fromSchema>>({
@@ -29,9 +30,11 @@ export default function InquiryForm() {
             email: "",
             phone: "",
             message: "",
+            file:null,
         },
     })
 
+    
     const onSubmit = async( data: z.infer<typeof fromSchema> )=>{
         try {
             const response = await axios.post(
@@ -109,6 +112,20 @@ export default function InquiryForm() {
                                     {...field} 
                                     type="textarea"
                                     className="h-[150px]"
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="file"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Upload File:</FormLabel>
+                                <Input
+                                    {...field}
+                                    type="file"
                                 />
                                 <FormMessage />
                             </FormItem>

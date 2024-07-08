@@ -39,7 +39,7 @@ export default function FeaturedConsults ({consults}:FeaturedConsultsProps) {
                                 </div>
                                 {/* Back Side */}
                                 <div className="absolute w-full h-full bg-sky-50 p-2 rounded-lg shadow-lg flex flex-col items-center justify-center transform rotateY-180 backface-hidden border">
-                                    <p className="text-gray-700 break-words line-clamp-6 mb-1">{consult.description_EN}</p>
+                                    <p className="text-gray-700 break-words line-clamp-6 mb-3">{consult.description_EN}</p>
                                     <Link href={`/consults/${consult._id}`}>
                                         <Button className="text-blue-800 font-bold py-2 px-4 rounded bg-blue-300 hover:bg-blue-400">
                                             View Details

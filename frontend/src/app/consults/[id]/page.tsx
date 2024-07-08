@@ -9,7 +9,6 @@ import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import {Review} from "@/components/types/Review"; 
 import { sanitizeHtml } from "@/components/Security/dompurify";
 import HeaderSection from "@/components/HeaderSection";
 
@@ -17,7 +16,6 @@ import HeaderSection from "@/components/HeaderSection";
 export default function ConsultPage({params}: {params: {id: string}}) {
     let id = params.id;
     const [consultData, setConsultData] = useState<Consultation | null>(null );
-    const [reviews, setReviews] = useState<Review[]>([]);
 
     
     useEffect(() => {
@@ -52,12 +50,12 @@ export default function ConsultPage({params}: {params: {id: string}}) {
         <NavigationBar />
         <div className="flex flex-col items-center ">
         <HeaderSection pageTitle={consultData.title_EN} pageImage="contactUs.jpg" breadCrumbArr={['Consults']} breadCrumbLinkArr={['/consults']}/>
-        <div className="lg:w-[1500px] md:w-[1000px] w-[600px] flex flex-col items-start justify-around my-3 bg-gradient-to-br from-slate-50/50 to-sky-50/50 p-3 shadow-lg">
+        <div className="lg:w-[1500px] md:w-[1000px] w-[600px] flex flex-col items-start justify-around my-3 bg-gray-200/85 p-3 shadow-lg">
           <div className="flex flex-row items-start ">
               <Image src={`/imgs/${consultData.coverImage}`} alt={consultData.title_EN} width={300} height={400} className="w-[300px] h-[400px] object-cover p-2"/>
               <div className="m-2 p-3">
               <h1 className="text-3xl font-bold mb-4 text-zinc-900">What is {consultData.title_EN} ?</h1>
-              <p className="text-gray-200 font-medium text-lg break-words ">{consultData.description_EN}</p>
+              <p className="text-gray-800 font-medium text-lg break-words ">{consultData.description_EN}</p>
               </div>
               
           </div>
@@ -65,7 +63,7 @@ export default function ConsultPage({params}: {params: {id: string}}) {
             <div>
               <h3 className="text-2xl font-bold mb-4 text-zinc-900 ">What will you get ?</h3>
               <div 
-                className="text-gray-200 text-lg font-medium mb-6 w-[700px] break-words" 
+                className="text-gray-800 text-lg font-medium mb-6 w-[700px] break-words" 
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(consultData.body_EN) }}
               /> 
               <h3 className="text-xl font-bold mb-4 text-zinc-900 ">Available Consults</h3>

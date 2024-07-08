@@ -9,18 +9,18 @@ import { Newspaper, Package, Handshake, Contact, Star } from "lucide-react";
 import axios from "axios";
 
 interface Analysis {
-  servicesCount: number;
+  consultsCount: number;
   usersCount: number;
-  blogPostsCount: number;
+  blogsCount: number;
   productsCount: number;
   reviewsCount: number;
 }
 export default function Dashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis>({
-    servicesCount: 0,
+    consultsCount: 0,
     usersCount: 0,
-    blogPostsCount: 0,
+    blogsCount: 0,
     productsCount: 0,
     reviewsCount: 0,
   });
@@ -76,7 +76,7 @@ export default function Dashboard() {
       <div className="flex flex-row justify-between gap-5 m-2">
         <DashboardCard
           title={"Blogs"}
-          value={analysis.blogPostsCount}
+          value={analysis.blogsCount}
           icon={<Newspaper size="48" className="text-gray-700" />}
         />
         <DashboardCard
@@ -85,8 +85,8 @@ export default function Dashboard() {
           icon={<Package size="48" className="text-gray-700" />}
         />
         <DashboardCard
-          title={"Services"}
-          value={analysis.servicesCount}
+          title={"Consults"}
+          value={analysis.consultsCount}
           icon={<Handshake size="48" className="text-gray-700" />}
         />
         <DashboardCard

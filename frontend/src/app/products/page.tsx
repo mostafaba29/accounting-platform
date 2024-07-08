@@ -37,7 +37,7 @@ export default function ProductsPage(){
         <NavigationBar />
         <div className='flex flex-col items-center'>
             <HeaderSection pageTitle="Products" pageImage='contactUs.jpg' breadCrumbArr={[]} breadCrumbLinkArr={[]}/>
-            <div className="lg:w-[1500px] md:w-[1000px] w-[600px] p-4 m-2 shadow-lg">
+            <div className="lg:w-[1500px] md:w-[1000px] w-[600px] p-4 m-2 shadow-lg bg-gray-200/75 ">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center">
                  {currentProducts.map((product,id) => (
                     <ProductCard key={id} product={product} />

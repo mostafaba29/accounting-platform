@@ -183,6 +183,7 @@ export default function NavigationBar(){
     const [userLoggedIn,setUserLoggedIn] = React.useState(false);
     const [profileIconActive,setProfileIconActive] = React.useState(false);
     const [consults,setConsults] = React.useState([]);
+    const [isScrolled, setIsScrolled] = React.useState(false);
     const checkUser = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
@@ -218,10 +219,22 @@ export default function NavigationBar(){
     React.useEffect(() => {
       checkUser();
       fetchConsults();
-    }, []);
+      const handleScroll = () => {
+        if (window.scrollY > 0) {
+          setIsScrolled(true);
+        } else {
+          setIsScrolled(false);
+        }
+      };
+    
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, [isScrolled]);
     return(
     <>
-      <div className="h-32 bg-sky-800 sticky top-0 flex flex-col z-50">
+      <div className={clsx("h-32 sticky top-0 flex flex-col z-50 transition-colors duration-300 shadow-md",
+                      { "bg-gradient-to-b from-blue-500 to-blue-300/75": isScrolled, "bg-transparent": !isScrolled }
+                    )}>
           <div className="flex flex-row items-center justify-between px-4">
             <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>
             <div className="flex flex-row items-center ml-4 ">
@@ -275,8 +288,8 @@ export default function NavigationBar(){
                   <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
                     <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
                     <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
-                    <Link href='/careers'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
-                    <Link href='/clients'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/join-us'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/partners'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
                     <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
                     <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
                   </ul>

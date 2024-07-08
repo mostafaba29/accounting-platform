@@ -1,5 +1,4 @@
-
-  import {
+import {
     FileBarChart,
     Book,
     Users,
@@ -12,13 +11,13 @@
     HelpCircle,
   } from "lucide-react";
   import Link from "next/link";
-  import axios from 'axios';
+  import Image from "next/image";
 
 export default function CommandSidebar (){
 
     return (
         <div className="bg-sky-700 min-h-screen md:w-[200px] w-[50px] rounded-none shadow-lg sticky">
-            <h1 className="text-sky-700 font-bold text-base text-center w-full bg-white ">Command Sidebar</h1>
+            <Image src={'/unitedLogo.png'} width={200} height={200} alt="logo" className="p-1" />
             <div className="flex flex-col items-start my-2">
                 <div className= 'flex flex-row my-1 w-full'>
                     <Link className='flex flex-row items-center w-full p-1 hover:bg-sky-600' href="/admin/dashboard">

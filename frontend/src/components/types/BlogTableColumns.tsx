@@ -2,8 +2,9 @@
 import axios from 'axios';
 import { ColumnDef } from "@tanstack/react-table";
 import {Eye,Pencil,Trash,Ban} from "lucide-react";
+import {ArrowUpDown} from "lucide-react";
 import Link from 'next/link';
-
+import {Button} from "@/components/ui/button";
 export interface Blog {
     _id: string;
     title_AR:string;
@@ -21,7 +22,16 @@ export interface Blog {
 export const columns: ColumnDef<Blog>[] = [
     {
         accessorKey: 'title_EN',
-        header: 'English Title',
+        header: ({column}) => {
+            return(
+                <div className='w-[150px]'>
+                    <Button variant="ghost" className="hover:bg-transparent " onClick={() => column.toggleSorting(column.getIsSorted()==="asc")}>
+                    <ArrowUpDown className=" h-4 w-4" />
+                    </Button>
+                    English Title
+                </div>
+            )
+        }
     },
     {
         accessorKey: 'descripiton_EN',

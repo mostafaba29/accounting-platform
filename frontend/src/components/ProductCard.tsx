@@ -1,33 +1,28 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card";
 import Image from "next/image";
-import {Button} from "./ui/button";
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link";
-import { Product } from "./types/ProductTableColumns"
+import { Product } from "./types/ProductTableColumns";
 
 interface ProductCardProps {
     product: Product;
 }
-export default function ProductCard({product}: ProductCardProps) {
-    return(
-        <div className="w-[350px] h-[450px] flex flex-col items-center justify-between rounded-xl  bg-gradient-to-br from-sky-50/75 to-slate-100 ">
-            <div>
-                <div className="w-full h-[75px] text-center text-black text-xl font-semibold py-1 px-2">{product.title_EN}</div>
+
+export default function ProductCard({ product }: ProductCardProps) {
+    return (
+        <Link href={`/products/${product._id}`}>
+            <div className="w-[350px] h-[350px] flex flex-col items-center justify-between rounded-xl bg-gradient-to-br from-sky-50/75 to-slate-100 cursor-pointer relative group overflow-hidden shadow-lg">
+                <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(/imgs/${product.coverImage})` }}></div>
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-75 transition-opacity duration-300 flex items-center justify-center z-20">
+                    <p className="text-white text-sm break-words p-2 h-full flex items-center justify-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        {product.description_EN}
+                    </p>
+                </div>
+                <div className="relative z-10 w-full h-full flex flex-col justify-end">
+                    <div className="bg-blue-500 bg-opacity-95 w-[90%] h-[90px] mx-auto p-2 rounded-t-lg text-start">
+                        <h2 className="text-large font-semibold text-white">{product.title_EN}</h2>
+                        <p className="text-blue-900">{product.category}</p>
+                    </div>
+                </div>
             </div>
-            <div className='w-full flex flex-col items-center px-1'>
-                <Image src={`/imgs/${product.coverImage}`} alt={product.title_EN} width={200} height={200} className="w-[200px] h-[200px] object-cover"/> 
-                <p className="text-black line-clamp-5">{product.description_EN}</p>
-            </div>
-            <div className='p-1'>
-            <Link href={`/products/${product._id}`}><Button className="text-zinc-800  bg-transparent hover:bg-sky-200">View Details</Button></Link>
-            </div>
-        </div>
-        );
-};
+        </Link>
+    );
+}
