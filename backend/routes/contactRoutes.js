@@ -1,10 +1,13 @@
 const express = require("express");
+const multer = require("multer");
 const contactHandlers = require("../controllers/contactControllers");
 const authControllers = require("../controllers/authControllers");
 
+const upload = multer();
+
 const router = express.Router();
 
-router.post("/contact_us", contactHandlers.inquiryEmail);
+router.post("/contact_us", upload.single("file"), contactHandlers.inquiryEmail);
 
 router
   .route("/")

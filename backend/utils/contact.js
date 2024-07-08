@@ -1,12 +1,13 @@
 const nodemailer = require("nodemailer");
 
 module.exports = class Contact {
-  constructor(user, subject, message) {
+  constructor(user, subject, message, file) {
     this.to = process.env.EMAIL_FROM; // Admin's email
     this.from = user.email;
     this.replyTo = user.email; // Customer's email for replies
     this.subject = subject;
     this.message = message;
+    this.file = file;
     this.userDetails = user;
   }
 
@@ -33,7 +34,10 @@ module.exports = class Contact {
         <p><strong>Subject:</strong> ${this.subject}</p>
         <p><strong>Message:</strong> ${this.message}</p>
       `,
-      replyTo: this.replyTo
+      replyTo: this.replyTo,
+      attachments: this.file
+        ? [{ filename: this.file.originalname, content: this.file.buffer }]
+        : []
     };
 
     await this.newTransport().sendMail(mailOptions);

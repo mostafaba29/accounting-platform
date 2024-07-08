@@ -52,11 +52,15 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false
   },
-  purchases: [{ type: mongoose.Schema.ObjectId, ref: "Product" }],
-  cart: [
+  purchases: [
     {
       product: { type: mongoose.Schema.ObjectId, ref: "Product" },
-      quantity: { type: Number, required: true, default: 1 }
+      version: { type: String, required: true }
+    }
+  ],
+  cart: [
+    {
+      product: { type: mongoose.Schema.ObjectId, ref: "Product" }
     }
   ],
   createdAt: {

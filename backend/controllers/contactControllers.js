@@ -5,15 +5,16 @@ const Contact = require("../models/contactModel");
 
 exports.inquiryEmail = catchAsync(async (req, res) => {
   const { email, phone, subject, message } = req.body;
+  const { file } = req;
 
-  // Validate the input
+  //Validate the input
   if (!email || !phone || !subject || !message) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
   // Send the email
   const user = { email, phone };
-  const emailInstance = new Email(user, subject, message);
+  const emailInstance = new Email(user, subject, message, file);
 
   await emailInstance.send();
 

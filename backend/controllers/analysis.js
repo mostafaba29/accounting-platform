@@ -25,37 +25,38 @@ exports.websiteAnalysis = catchAsync(async (req, res) => {
   });
 });
 
-// getting the latest 4 blogs, 4 featured services, most successfully purchased products
+// landing page content
 exports.landingPageContent = catchAsync(async (req, res) => {
   //latest 4 blogs
   const latestBlogs = await Blog.find()
     .sort({ createdAt: -1 })
-    .limit(4);
+    .limit(4)
+    .select("-body_AR -body_EN");
 
-  //latest 4 products
-  let topRatedProducts = await Product.find()
-    .sort({ rating: -1 })
-    .limit(4);
-  if (topRatedProducts.length === 0) {
-    topRatedProducts = await Product.find()
+  //latest 6 bestselling products
+  let bestSellingProducts = await Product.find()
+    .sort({ Sucessful_Purchases: -1 })
+    .limit(6)
+    .select("-body_AR -body_EN -basic_version -open_version -editable_version");
+  if (bestSellingProducts.length === 0) {
+    bestSellingProducts = await Product.find()
       .sort({ createdAt: -1 })
-      .limit(4);
+      .limit(6)
+      .select(
+        "-body_AR -body_EN -basic_version -open_version -editable_version"
+      );
   }
 
-  // latest 4 consults
-  let bestConsults = await Consultation.find({
-    Sucessful_Purchases: -1
-  }).limit(6);
-  if (bestConsults.length === 0) {
-    bestConsults = await Product.find()
-      .sort({ createdAt: -1 })
-      .limit(6);
-  }
+  //4 consults
+  const consults = await Consultation.find()
+    .sort({ createdAt: -1 })
+    .limit(4)
+    .select("-body_AR -body_EN");
 
   // Return all data as a single JSON response
   res.status(200).json({
     latestBlogs,
-    topRatedProducts,
-    bestConsults
+    bestSellingProducts,
+    consults
   });
 });

@@ -32,7 +32,6 @@ router
   .delete(
     authControllers.protect,
     authControllers.restrictTo("admin"),
-
     productControllers.deleteProduct
   );
 

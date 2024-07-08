@@ -11,16 +11,18 @@ const cookieSession = require("cookie-session");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorConrollers");
-const userRoutes = require("./routes/userRoutes");
-const blogRoutes = require("./routes/blogRoutes");
+const userRouter = require("./routes/userRoutes");
+const blogRouter = require("./routes/blogRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
-const productRoutes = require("./routes/productRoutes");
-const googleAuthRoutes = require("./routes/googleAuthRoutes");
-const consultationRoutes = require("./routes/consultationRoutes");
-const analysisRoutes = require("./routes/analysisRoutes");
-const contactRoutes = require("./routes/contactRoutes");
-const aboutRoutes = require("./routes/membersRoutes");
-const packageRoutes = require("./routes/packageRoutes");
+const productRouter = require("./routes/productRoutes");
+const googleAuthRouter = require("./routes/googleAuthRoutes");
+const consultationRouter = require("./routes/consultationRoutes");
+const analysisRouter = require("./routes/analysisRoutes");
+const contactRouter = require("./routes/contactRoutes");
+const aboutRouter = require("./routes/membersRoutes");
+const packageRouter = require("./routes/packageRoutes");
+const paymentRouter = require("./routes/paymentRoutes");
+const clientRouter = require("./routes/clientRoutes");
 
 const app = express();
 
@@ -38,12 +40,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Limit requests from same API
-const limiter = rateLimit({
-  max: 100,
-  windowMs: 60 * 60 * 1000,
+const apiLimiter = rateLimit({
+  max: 200,
+  windowMs: 60 * 60 * 1000, // 1 hour
   message: "Too many requests from this IP, please try again in an hour!"
 });
-app.use("/api", limiter);
+
+app.use("/api", apiLimiter);
 
 //security middlewares
 app.use(helmet()); //Set security HTTP headers
@@ -52,24 +55,26 @@ app.use(xss()); // Data sanitization against XSS
 app.use(hpp()); // prevent parameter pollution
 
 //Initialize Passport and session middleware
-app.use(
-  cookieSession({
-    secret: process.env.SESSION_SECRET || "random-session-secret",
-    resave: false,
-    saveUninitialized: false
-  })
-);
+// app.use(
+//   cookieSession({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false
+//   })
+// );
 
-app.use("/auth", googleAuthRoutes);
-app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/blogs", blogRoutes);
+app.use("/auth", googleAuthRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/blogs", blogRouter);
 app.use("/api/v1/reviews", reviewRouter);
-app.use("/api/v1/products", productRoutes);
-app.use("/api/v1/content", analysisRoutes);
-app.use("/api/v1/contact", contactRoutes);
-app.use("/api/v1/consults", consultationRoutes);
-app.use("/api/v1/about", aboutRoutes);
-app.use("/api/v1/packages", packageRoutes);
+app.use("/api/v1/consults", consultationRouter);
+app.use("/api/v1/products", productRouter);
+app.use("/api/v1/content", analysisRouter);
+app.use("/api/v1/contact", contactRouter);
+app.use("/api/v1/about", aboutRouter);
+app.use("/api/v1/packages", packageRouter);
+app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1/clients", clientRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
