@@ -36,7 +36,10 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
+import { Quill } from 'react-quill';
+import {ImageResize} from 'quill-image-resize-module-ts';
 
+Quill.register('modules/imageResize', ImageResize);
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const formSchema = z.object({
@@ -77,6 +80,9 @@ export default function EditBlog({ params }:{params:{id:string}}) {
       ['link', 'image', 'video'],
       ['clean'],
     ],
+    imageResize: {
+      modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+    },
     clipboard: {
       matchVisual: false,
     },
@@ -260,7 +266,7 @@ export default function EditBlog({ params }:{params:{id:string}}) {
                     <FormLabel className='font-semibold'>English Body</FormLabel>
                     <FormControl>
                       <Controller control={form.control} name="body_EN" render={({ field }) => (
-                        <ReactQuill value={field.value} onChange={field.onChange} modules={modules} className='h-[150px]'/>
+                        <ReactQuill value={field.value} onChange={field.onChange} modules={modules}  className='h-[150px]' />
                       )} />
                     </FormControl>
                     <FormMessage />

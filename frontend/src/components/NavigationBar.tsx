@@ -181,14 +181,18 @@ const HrServices:{title:string; href:string}[] =[
 ]
 export default function NavigationBar(){
     const [userLoggedIn,setUserLoggedIn] = React.useState(false);
+    const [userData,setUserData] = React.useState({});
     const [profileIconActive,setProfileIconActive] = React.useState(false);
     const [consults,setConsults] = React.useState([]);
     const [isScrolled, setIsScrolled] = React.useState(false);
     const checkUser = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
-        if (response.data.status === "success" && response.data.data.user.role !== "admin") {
+        console.log(response.data.status);
+        console.log(response.data.data.data.role);
+        if (response.data.status === "success" && response.data.data.data.role !== "admin") {
           setUserLoggedIn(true);
+          setUserData(response.data.data.data);
         }
       }catch (error) {
         console.log(error);
@@ -254,14 +258,14 @@ export default function NavigationBar(){
                   <DropdownMenuContent className="w-28 ml-1 flex flex-col items-center">
                   <DropdownMenuLabel>User</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link href="/profile">Profile</Link>
+                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white">
+                    <Link href={`/user/${userData._id}/cart`}>Cart</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="/orders">Orders</Link>
+                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white">
+                    <Link href={`/user/${userData._id}/orders`}>Orders</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <p className="w-full hover:cursor-pointer" onClick={logout}>Logout</p>
+                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white">
+                    <p className="hover:cursor-pointer" onClick={logout}>Logout</p>
                   </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

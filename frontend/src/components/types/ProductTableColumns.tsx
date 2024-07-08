@@ -80,11 +80,17 @@ export const columns: ColumnDef<Product>[] = [
             
 
             const handleDelete = async () => {
-                try {
-                    await axios.delete(`http://localhost:8000/api/v1/products/${product._id}`, {withCredentials: true});
-                    window.location.reload();
-                } catch (error) {
-                    console.error('Error deleting product:', error);
+                const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+
+                if (confirmDelete) {
+                    try {
+                        const response = await axios.delete(`http://localhost:8000/api/v1/consults/${product._id}`, { withCredentials: true });
+                        if (response.data.status === "success") {
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        console.log('Error deleting this product', error);
+                    }
                 }
             };
 

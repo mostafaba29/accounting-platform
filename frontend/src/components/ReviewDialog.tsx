@@ -49,10 +49,11 @@ export default function ReviewDialog({ Id, type, isOpen, onClose }: ReviewDialog
             formData.append("review", data.review);
         }
         formData.append("rating", data.rating.toString());
+        formData.append("productId", Id);
         try {
             const response = await axios.post(
                 `http://localhost:8000/api/v1/reviews`,
-                formData,
+                
                 {
                     withCredentials: true,
                 }

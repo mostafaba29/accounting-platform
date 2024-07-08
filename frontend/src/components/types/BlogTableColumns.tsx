@@ -59,13 +59,17 @@ export const columns: ColumnDef<Blog>[] = [
             }
 
             const handleDelete = async ()=>{
-                try{
-                    const response = await axios.delete(`http://localhost:8000/api/v1/blogs/${blog._id}`,{withCredentials:true});
-                    if(response.data.status === "success"){
-                        window.location.reload();
-                    }    
-                }catch(error){
-                    console.log('error deleting this blog', error);
+                const confirmDelete = window.confirm('Are you sure you want to delete this blog?');
+
+                if (confirmDelete) {
+                    try {
+                        const response = await axios.delete(`http://localhost:8000/api/v1/consults/${blog._id}`, { withCredentials: true });
+                        if (response.data.status === "success") {
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        console.log('Error deleting this blog', error);
+                    }
                 }
             }
 

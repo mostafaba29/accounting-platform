@@ -215,6 +215,12 @@ export default function AddProduct() {
         if (openDocumentRef.current) openDocumentRef.current.value = "";
         if (editableDocumentRef.current) editableDocumentRef.current.value = "";
         if (imagesRef.current) imagesRef.current.value = "";
+        setVideoName("");
+        setCoverImageName("");
+        setDocumentName("");
+        setOpenDocumentName("");
+        setEditableDocumentName("");
+        setImages([]);
         setSaveDialogOpen(true);
       }
     } catch (error) {

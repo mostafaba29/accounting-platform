@@ -139,6 +139,8 @@ export default function AddConsultation() {
         );
         if (coverImageRef.current) coverImageRef.current.value = "";
         if (imagesRef.current) imagesRef.current.value = "";
+        setCoverImageName("");
+        setImages([]);
         setSaveDialogOpen(true);
       }
     } catch (error) {

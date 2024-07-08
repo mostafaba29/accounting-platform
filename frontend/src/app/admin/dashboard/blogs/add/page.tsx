@@ -36,8 +36,11 @@ import { Input } from "@/components/ui/input";
 import BackButton from "@/components/BackButton";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { Quill } from 'react-quill';
+import {ImageResize} from 'quill-image-resize-module-ts';
 
- const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+Quill.register('modules/imageResize', ImageResize);
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const formSchema = z.object({
   title_AR: z.string().min(1, "blog title is required").max(100),
@@ -90,6 +93,9 @@ export default function AddBlog() {
       ['link', 'image', 'video'],
       ['clean'],
     ],
+    imageResize: {
+      modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+    },
     clipboard: {
       matchVisual: false,
     },
@@ -156,6 +162,8 @@ export default function AddBlog() {
         });
         if (coverImageRef.current) coverImageRef.current.value = "";
         if (imagesRef.current) imagesRef.current.value = "";
+        setCoverImageName("");
+        setImages([]);
         setSaveDialogOpen(true);
       }
     } catch (error) {
