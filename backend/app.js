@@ -23,6 +23,7 @@ const aboutRouter = require("./routes/membersRoutes");
 const packageRouter = require("./routes/packageRoutes");
 const paymentRouter = require("./routes/paymentRoutes");
 const clientRouter = require("./routes/clientRoutes");
+const cartRouter = require("./routes/cartRoutes");
 
 const app = express();
 
@@ -75,6 +76,7 @@ app.use("/api/v1/about", aboutRouter);
 app.use("/api/v1/packages", packageRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/clients", clientRouter);
+app.use("/api/v1/cart", cartRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

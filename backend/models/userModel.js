@@ -55,12 +55,14 @@ const userSchema = new mongoose.Schema({
   purchases: [
     {
       product: { type: mongoose.Schema.ObjectId, ref: "Product" },
-      version: { type: String, required: true }
+      version: { type: String, required: true },
+      file: { type: String, required: true }
     }
   ],
   cart: [
     {
-      product: { type: mongoose.Schema.ObjectId, ref: "Product" }
+      product: { type: mongoose.Schema.ObjectId, ref: "Product" },
+      version: { type: String, required: true }
     }
   ],
   createdAt: {

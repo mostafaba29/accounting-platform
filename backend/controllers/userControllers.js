@@ -54,6 +54,30 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getPurchases = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).populate({
+    path: "purchases.product",
+    select:
+      "title_AR title_EN description_AR description_EN basic_version open_version editable_version"
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      purchases: user.purchases.map(item => ({
+        product: {
+          _id: item.product._id,
+          title_AR: item.product.title_AR,
+          title_EN: item.product.title_EN,
+          description_AR: item.product.description_AR,
+          description_EN: item.product.description_EN,
+          [item.version]: item.product[item.version]
+        }
+      }))
+    }
+  });
+});
+
 exports.getUser = factory.getOne(User);
 exports.getAllUsers = factory.getAll(User);
 exports.createUser = factory.createOne(User);

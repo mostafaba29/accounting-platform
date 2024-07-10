@@ -1,7 +1,6 @@
 const express = require("express");
 const userController = require("../controllers/userControllers");
 const authController = require("../controllers/authControllers");
-const cartController = require("../controllers/cartControllers");
 
 const router = express.Router();
 
@@ -19,15 +18,7 @@ router.patch("/updateMyPassword", authController.updatePassword);
 router.get("/me", userController.getMe, userController.getUser);
 router.delete("/deleteMe", userController.deleteMe);
 
-//CART OPERATIONS
-router.post("/:userId/checkout", cartController.clearCart);
-router.delete("/:userId/cart/:productId", cartController.removeFromCart);
-router.get("/:userId/purchases", cartController.getPurchases);
-
-router
-  .route("/:userId/cart")
-  .post(cartController.addToCart)
-  .get(cartController.showCart);
+router.get("/purchases", userController.getPurchases);
 
 //ADMIN OPERATIONS FOR USERS
 router.use(authController.restrictTo("admin"));
