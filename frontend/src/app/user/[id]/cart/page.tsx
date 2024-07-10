@@ -1,5 +1,4 @@
 "use client";
-
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -10,13 +9,17 @@ export default function Cart () {
   const { id } = useParams();
   const [cartItems, setCartItems] = useState([]);
 
+  
   useEffect(() => {
-    if (id) {
-      // Fetch the cart items for the user
-      axios.get(`/api/cart/${id}`).then(response => {
+    const fetchCartItems = async () => {
+      try{
+        const response = await axios.get(`http://localhost:8000/api/v1/users/${id}/cart`);
         setCartItems(response.data);
-      });
+      }catch(error){
+        console.error("Error fetching cart items:", error);
+      }
     }
+      fetchCartItems();
   }, [id]);
 
   return (

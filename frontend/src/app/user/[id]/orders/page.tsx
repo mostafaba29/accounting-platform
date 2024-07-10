@@ -11,11 +11,13 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    if (id) {
-      // Fetch the orders for the user
-      axios.get(`/api/orders/${id}`).then(response => {
+    const fetchOrders = async () => {
+      try{
+        const response = await axios.get(`http://localhost:8000/api/v1/${id}/purchases`);
         setOrders(response.data);
-      });
+      }catch(error){
+        console.error("Error fetching orders:", error);
+      }
     }
   }, [id]);
 

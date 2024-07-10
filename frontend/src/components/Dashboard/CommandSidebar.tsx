@@ -7,8 +7,6 @@ import {
     Package,
     LineChart,
     Wrench,
-    CircleHelp,
-    HelpCircle,
   } from "lucide-react";
   import Link from "next/link";
   import Image from "next/image";
@@ -41,12 +39,6 @@ export default function CommandSidebar (){
                     <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/blogs">
                         <Book className="mx-2 h-5 w-5 text-white" /> 
                         <span className="font-semibold text-white hidden md:block ">Blogs</span>
-                    </Link>
-                </div>
-                <div className="flex flex-row my-1 w-full">
-                    <Link className="flex flex-row items-center w-full p-1 hover:bg-sky-600" href="/admin/dashboard/inquries">
-                        <CircleHelp className="mx-2 h-5 w-5 text-white" /> 
-                        <span className="font-semibold text-white hidden md:block ">Inquries</span>
                     </Link>
                 </div>
                 <div className="flex flex-row my-1 w-full">

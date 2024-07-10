@@ -17,6 +17,12 @@ export default function ConsultPage({params}: {params: {id: string}}) {
     let id = params.id;
     const [consultData, setConsultData] = useState<Consultation | null>(null );
 
+    const sendWhatsButton = () => {
+      const phoneNumber = '+201551450735'; // Your phone number in international format
+      const message = 'Hello! This is a test message from our service.';
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
     
     useEffect(() => {
 
@@ -68,26 +74,22 @@ export default function ConsultPage({params}: {params: {id: string}}) {
               /> 
               <h3 className="text-xl font-bold mb-4 text-zinc-900 ">Available Consults</h3>
               <div className="grid grid-cols-2 gap-1 w-[500px]">
-                <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700"
+                    onClick={sendWhatsButton}>
                       15 min consult
                   </Button>
-                </Link>
-                <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700"
+                    onClick={sendWhatsButton}>
                       1 Hr Consult
                   </Button>
-                </Link>
-                <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700"
+                    onClick={sendWhatsButton}>
                       Personal visit to us 
                   </Button>
-                </Link>
-                <Link href={`/consults/${consultData._id}/whatsContact`}>
-                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700">
+                  <Button className="bg-slate-800 text-white w-[175px] py-2 px-4 rounded font-semibold hover:bg-slate-700"
+                    onClick={sendWhatsButton}>
                       Personal visit to you 
                   </Button>
-                </Link>
               </div> 
             </div>
             <div >

@@ -16,11 +16,18 @@ export default function ProductLayout({ children ,params }: { children: React.Re
     const id = params.id;
     const [productData, setProductData] = useState<Product | null>(null );
     const [reviews, setReviews] = useState<Review[]>([]);
-
+    const handlePurchaseClick = async (type:string) => {
+        try{
+            const response = await axios.post(`http://localhost:8000/api/v1/users/${id}/cart`,{type});
+            console.log(response);
+        }catch(error){
+            console.error(error);
+        }
+    }
     useEffect(() => {
         const fetchReviews = async () => {
           try {
-            const response = await axios.get(`http://localhost:8000/api/v1/reviews/${id}`);
+            const response = await axios.get(`http://localhost:8000/api/v1/products/${id}/reviews`);
             setReviews(response.data.data.data);
           } catch (error) {
             console.error("Error fetching reviews:", error);

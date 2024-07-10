@@ -26,8 +26,8 @@ export default function Home() {
 
       console.log(response.data);
       setRecentBlogs(response.data.latestBlogs);
-      setFeaturedConsults(response.data.bestConsults);
-      setPopularProducts(response.data.topRatedProducts);
+      setFeaturedConsults(response.data.consults);
+      setPopularProducts(response.data.bestSellingProducts);
     } catch (error) {
       console.log(error);
     }

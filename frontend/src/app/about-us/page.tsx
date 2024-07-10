@@ -8,16 +8,13 @@ import MemberCard from '@/components/about-us/MemberCard';
 import axios from 'axios';
 
 export default function AboutUs() {
-    const [founders, setFounders] = useState([]);
     const [members, setMembers] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/v1/about-us');
-                const { founders, members } = response.data; 
-                setFounders(founders);
-                setMembers(members);
+                const response = await axios.get('http://localhost:8000/api/v1/about');
+                setMembers(response.data.data.data);
             } catch (error) {
                 console.error('Error fetching about us data:', error);
             }
@@ -25,6 +22,9 @@ export default function AboutUs() {
 
         fetchData();
     }, []);
+
+    const founders = members.filter(member => member.isFounder);
+    const teamMembers = members.filter(member => !member.isFounder);
 
     return (
         <>
@@ -52,30 +52,34 @@ export default function AboutUs() {
                             {founders.map((founder, index) => (
                                 <div key={index} className="flex flex-col items-center text-center">
                                     <Image
-                                        src={founder.image}
+                                        src={`/imgs/${founder.images[0]}`}
                                         alt={founder.name}
-                                        className="rounded-full"
+                                        className="rounded-full w-[150px] h-[150px] object-cover"
                                         width={150}
                                         height={150}
                                     />
                                     <h2 className="text-2xl font-semibold mt-4">{founder.name}</h2>
-                                    <p className="text-gray-600 mt-2">{founder.jobTitle}</p>
-                                    <p className="mt-2 text-gray-700">{founder.description}</p>
+                                    <p className="text-gray-500 mt-2">{founder.position}</p>
+                                    <p className="mt-2 text-gray-700">{founder.brief}</p>
                                 </div>
                             ))}
                         </div>
                     </section>
-                    <section className="flex flex-col items-center text-center justify-center">
+                    <section className="flex flex-col items-center text-center justify-center mt-[100px]">
                         <h1 className="text-2xl font-bold my-6">Team members</h1>
-                        {members.map((member, index) => (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full justify-items-end">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="flex flex-col items-center text-center">
                             <MemberCard
                                 key={index}
                                 name={member.name}
-                                image={member.image}
-                                jobTitle={member.jobTitle}
-                                description={member.description}
+                                image={`/imgs/${member.images[0]}`}
+                                jobTitle={member.position}
+                                description={member.brief}
                             />
+                            </div>
                         ))}
+                        </div>
                     </section>
                 </div>
             </div>

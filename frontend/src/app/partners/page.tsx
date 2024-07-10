@@ -6,19 +6,7 @@ import Footer from '@/components/Footer';
 import HeaderSection from '@/components/HeaderSection';
 import ClientCard from '@/components/ClientCard';
 
-const clients = [
-    {
-        name: 'Client 1',
-        image: '/images/client1.jpg',
-        description: 'Description of Client 1...',
-    },
-    {
-        name: 'Client 2',
-        image: '/images/client2.jpg',
-        description: 'Description of Client 2...',
-    },
-    // Add more clients as needed
-];
+
 
 export default function ClientList() {
     const [clientsData, setClientsData] = useState([]);
@@ -26,11 +14,13 @@ export default function ClientList() {
         const fetchClients = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/api/v1/clients');
-                setClientsData(response.data.data);
+                setClientsData(response.data.data.data);
             } catch (error) {
                 console.log(error);
             }
         }
+
+        fetchClients();
     }, []);
     return (
         <>
@@ -41,11 +31,11 @@ export default function ClientList() {
                     <div className="w-full flex flex-col items-center text-center  justify-center">
                         <h1 className="text-4xl font-bold mb-6">Our Clients and Partners</h1>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center w-full">
-                            {clients.map((client, index) => (
+                            {clientsData.map((client, index) => (
                                 <ClientCard
                                     key={index}
                                     name={client.name}
-                                    image={client.image}
+                                    image={`/imgs/${client.images[0]}`}
                                     description={client.description}
                                 />
                             ))}
