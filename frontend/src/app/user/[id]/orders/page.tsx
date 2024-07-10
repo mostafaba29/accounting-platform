@@ -14,7 +14,7 @@ export default function Orders() {
     const fetchOrders = async () => {
       try{
         const response = await axios.get(`http://localhost:8000/api/v1/${id}/purchases`);
-        setOrders(response.data);
+        setOrders(response.data.purchases);
       }catch(error){
         console.error("Error fetching orders:", error);
       }
@@ -34,7 +34,7 @@ export default function Orders() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr>
-                <th className="border-b-2 p-2">Order ID</th>
+                <th className="border-b-2 p-2">Name</th>
                 <th className="border-b-2 p-2">Items</th>
                 <th className="border-b-2 p-2">Price</th>
               </tr>

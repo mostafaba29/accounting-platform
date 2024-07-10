@@ -14,7 +14,7 @@ export default function Cart () {
     const fetchCartItems = async () => {
       try{
         const response = await axios.get(`http://localhost:8000/api/v1/users/${id}/cart`);
-        setCartItems(response.data);
+        setCartItems(response.data.cart);
       }catch(error){
         console.error("Error fetching cart items:", error);
       }
@@ -33,12 +33,11 @@ export default function Cart () {
           <p>Your cart is empty.</p>
         ) : (
           cartItems.map(item => (
-            <div key={item.id} className="flex items-center mb-4">
-              <img src={item.image} alt={item.name} className="w-20 h-20 object-cover mr-4" />
+            <div key={item._id} className="flex items-center mb-4">
               <div>
-                <h2 className="text-xl font-semibold">{item.name}</h2>
-                <p className="text-gray-600">Price: ${item.price}</p>
-                <p className="text-gray-600">Quantity: {item.quantity}</p>
+                <h2 className="text-xl font-semibold">{item.title_EN}</h2>
+                {/* <p className="text-gray-600">Price: ${item.price}</p> */}
+                {/* <p className="text-gray-600">Quantity: {item.quantity}</p> */}
               </div>
             </div>
           ))

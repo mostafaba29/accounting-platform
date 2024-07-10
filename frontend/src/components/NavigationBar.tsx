@@ -236,8 +236,9 @@ export default function NavigationBar(){
     }, [isScrolled]);
     return(
     <>
-      <div className={clsx("h-32 sticky top-0 flex flex-col z-50 transition-colors duration-300 shadow-md",
-                      { "bg-gradient-to-b from-blue-500 to-blue-300/75": isScrolled, "bg-transparent": !isScrolled }
+      <div className={clsx("h-32 sticky top-0 flex flex-col z-50 transition-colors duration-300 ",
+                      { "bg-gradient-to-b from-blue-500/75 to-blue-300/50 shadow-md": isScrolled, 
+                        "bg-gradient-to-b from-blue-800/85 to-blue-500/85": !isScrolled }
                     )}>
           <div className="flex flex-row items-center justify-between px-4">
             <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>

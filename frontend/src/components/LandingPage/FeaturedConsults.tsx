@@ -2,27 +2,16 @@ import Image from "next/image"
 import {Button} from "@/components/ui/button"
 import {Consultation} from "../types/ConsultationTableColumns"
 import { motion } from 'framer-motion';
-import Slider from "react-slick";
 import Link from 'next/link';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 interface FeaturedConsultsProps {
     consults:Consultation[];
 }
 export default function FeaturedConsults ({consults}:FeaturedConsultsProps) {
-    const settings = {
-        autoplay: true,
-        autoplaySpeed:4500,
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-    };
+
     return (
-        <div className="container my-4 px-4 py-4  bg-gradient-to-br from-sky-50/25 to-slate-100/25 rounded-lg  shadow-lg"> 
-            <h2 className="text-3xl font-bold mb-4 w-full text-center text-white">Featured Consults</h2>
-            <Slider {...settings} className="w-full p-1">
+        <div className=" px-4 py-4 bg-blue-500/85 w-full "> 
+            <h2 className="text-3xl font-bold mb-4 w-full text-center text-white">Available Consults</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {consults.map(consult => (
                     <div key={consult._id} className="p-4">
                         <motion.div
@@ -51,7 +40,7 @@ export default function FeaturedConsults ({consults}:FeaturedConsultsProps) {
                         </motion.div>
                     </div>
                 ))}
-            </Slider>
+                </div>
         </div>
     )
 }

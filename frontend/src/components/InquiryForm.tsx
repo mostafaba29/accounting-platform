@@ -58,7 +58,7 @@ export default function InquiryForm() {
     return (
         <>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-[50%] flex flex-col gap-4 border border-slate-600 p-6 rounded-md shadow-md">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-[90%] flex flex-col gap-4 border border-slate-600 p-6 rounded-md shadow-md">
                     <FormField
                         control={form.control}
                         name="subject"
