@@ -12,13 +12,21 @@ import ReviewSection from "@/components/ReviewSection";
 import {Review} from "@/components/types/Review"; 
 import {sanitizeHtml} from "@/components/Security/dompurify";
 import HeaderSection from "@/components/HeaderSection";
+import { version } from "os";
 export default function ProductLayout({ children ,params }: { children: React.ReactNode,params: {id: string} }) {
     const id = params.id;
     const [productData, setProductData] = useState<Product | null>(null );
     const [reviews, setReviews] = useState<Review[]>([]);
     const handlePurchaseClick = async (type:string) => {
         try{
-            const response = await axios.post(`http://localhost:8000/api/v1/users/${id}/cart`,{type});
+            const response = await axios.post(`http://localhost:8000/api/v1/cart`,{
+                productId: id,
+                version: type,
+            },
+            {
+                withCredentials: true,
+            }
+            );
             console.log(response);
         }catch(error){
             console.error(error);
@@ -78,11 +86,10 @@ export default function ProductLayout({ children ,params }: { children: React.Re
                                 <h1 className="text-2xl font-bold mb-6">Available Versions</h1>
                             <div className="grid gird-cols-1 lg:grid-cols-3 gap-5 ">
                                 <div>
-                                    <Link href={`/products/${productData._id}/checkout`}>
-                                    <Button className="bg-sky-600 text-medium text-white py-2 px-4 rounded font-semibold  w-[225px] hover:bg-sky-500 ">
+                                    <Button onClick={()=>handlePurchaseClick('basic_version')}
+                                    className="bg-sky-600 text-medium text-white py-2 px-4 rounded font-semibold  w-[225px] hover:bg-sky-500 ">
                                     Buy Basic Version for  $ {productData.basic_version.price}
                                     </Button>
-                                    </Link>
                                 </div>
                                 <div>
                                     <Link href={`/products/${productData._id}/checkout`}>

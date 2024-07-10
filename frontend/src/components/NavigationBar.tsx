@@ -210,7 +210,7 @@ export default function NavigationBar(){
 
     const logout = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/v1/users/logout',{withCredentials: true });
+        const response = await axios.post('http://localhost:8000/api/v1/users/logout',{withCredentials: true });
         if (response.data.status === "success") {
           setUserLoggedIn(false);
           window.location.href = '/auth/login';

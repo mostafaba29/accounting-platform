@@ -9,18 +9,22 @@ export default function Cart () {
   const { id } = useParams();
   const [cartItems, setCartItems] = useState([]);
 
-  
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try{
-        const response = await axios.get(`http://localhost:8000/api/v1/users/${id}/cart`);
-        setCartItems(response.data.cart);
-      }catch(error){
-        console.error("Error fetching cart items:", error);
+  const fetchCartItems = async () => {
+    try{
+      const response = await axios.get(`http://localhost:8000/api/v1/cart`,
+      {
+        withCredentials: true,
       }
+      );
+      setCartItems(response.data.data.cart);
+      console.log(response.data.data.cart);
+    }catch(error){
+      console.error("Error fetching cart items:", error);
     }
+  }
+  useEffect(() => {
       fetchCartItems();
-  }, [id]);
+  }, []);
 
   return (
     <div>
@@ -32,8 +36,8 @@ export default function Cart () {
         {cartItems.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
-          cartItems.map(item => (
-            <div key={item._id} className="flex items-center mb-4">
+          cartItems.map((item,index ) => (
+            <div key={index} className="flex items-center mb-4">
               <div>
                 <h2 className="text-xl font-semibold">{item.title_EN}</h2>
                 {/* <p className="text-gray-600">Price: ${item.price}</p> */}

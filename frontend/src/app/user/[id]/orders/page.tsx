@@ -10,16 +10,22 @@ export default function Orders() {
   const { id } = useParams();
   const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try{
-        const response = await axios.get(`http://localhost:8000/api/v1/${id}/purchases`);
-        setOrders(response.data.purchases);
-      }catch(error){
-        console.error("Error fetching orders:", error);
+  const fetchOrders = async () => {
+    try{
+      const response = await axios.get(`http://localhost:8000/api/v1/users/purchases`,
+      {
+        withCredentials: true,
       }
+      );
+      setOrders(response.data.data.purchases);
+    }catch(error){
+      console.error("Error fetching orders:", error);
     }
-  }, [id]);
+  }
+  useEffect(() => {
+
+    fetchOrders();
+  }, []);
 
   return (
     <div>
@@ -44,7 +50,7 @@ export default function Orders() {
                 <tr key={order.id}>
                   <td className="border-b p-2">{order.id}</td>
                   <td className="border-b p-2">
-                    {order.items.map(item => (
+                    {order.products.map(item => (
                       <div key={item.id} className="flex items-center mb-2">
                         <img src={item.image} alt={item.name} className="w-10 h-10 object-cover mr-2" />
                         <span>{item.name}</span>
