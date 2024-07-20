@@ -21,7 +21,7 @@ const createSendToken = (user, statusCode, req, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    sameSite: "Lax",
+    sameSite: "Strict",
     secure: false //req.secure || req.headers["x-forwarded-proto"] === "https"
   });
 
@@ -68,9 +68,10 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res) => {
-  res.cookie("jwt", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: false, // Ensure to match this option if it was set during login
+    sameSite: "Strict"
   });
   res.status(200).json({ status: "success" });
 };
@@ -209,4 +210,31 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // 4) Log user in, send JWT
   createSendToken(user, 200, req, res);
+});
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return next(); // Proceed to the next middleware or route handler without setting req.user
+  }
+
+  const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+  const currentUser = await User.findById(decoded.id);
+
+  if (!currentUser) {
+    return next(
+      new AppError("The user belonging to this token no longer exists.", 401)
+    );
+  }
+
+  req.user = currentUser;
+  next();
 });

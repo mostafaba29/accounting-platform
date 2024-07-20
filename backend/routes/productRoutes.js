@@ -22,7 +22,7 @@ router
 
 router
   .route("/:id")
-  .get(productControllers.getOneProduct)
+  .get(authControllers.isLoggedIn, productControllers.getOneProduct)
   .patch(
     authControllers.protect,
     authControllers.restrictTo("admin"),

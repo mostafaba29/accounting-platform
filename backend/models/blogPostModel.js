@@ -61,6 +61,11 @@ blogSchema.pre("save", function(next) {
   next();
 });
 
+blogSchema.methods.incrementViews = async function() {
+  this.views += 1;
+  await this.save();
+};
+
 const Blog = mongoose.model("Blog", blogSchema);
 
 module.exports = Blog;
