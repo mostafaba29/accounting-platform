@@ -319,7 +319,7 @@ export default function NavigationBar(){
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <NavigationMenu>
+          {/* <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent text-white  ">Financial consultants</NavigationMenuTrigger>
@@ -350,7 +350,7 @@ export default function NavigationBar(){
                 </NavigationMenuContent>
               </NavigationMenuItem>
             </NavigationMenuList>
-          </NavigationMenu>  
+          </NavigationMenu>   */}
           </div>
       </div>
     </>

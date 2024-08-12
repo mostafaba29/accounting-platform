@@ -69,11 +69,11 @@ export default function Dashboard() {
 
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center h-full">
       <h1 className="text-3xl font-bold text-center m-2 w-full">
         Admin Dashboard
       </h1>
-      <div className="flex flex-row justify-between gap-5 m-2">
+      <div className="flex flex-row justify-around gap-4 m-2">
         <DashboardCard
           title={"Blogs"}
           value={analysis.blogsCount}
@@ -100,8 +100,8 @@ export default function Dashboard() {
           icon={<Star size="48" className="text-gray-700" />}
         />
       </div>
-      <AnalyticsChart />
+      {/* <AnalyticsChart /> */}
       {/* <PostsTable title={"posts"} /> */}
-    </>
+    </div>
   );
 }

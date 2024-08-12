@@ -13,8 +13,8 @@ export default function ImageGallery({ coverImage, images }: ImageGalleryProps) 
     const [activeImage, setActiveImage] = useState(coverImage);
 
     return (
-        <div className='flex flex-row items-center bg-slate-200/50 p-4 rounded-lg'>
-            <div className="flex flex-col items-center justify-around mx-3 gap-2">
+        <div className='flex flex-col justify-center items-center bg-slate-200/50 p-4 rounded-lg w-[600px] h-[520px]'>
+            {/* <div className="flex flex-col items-center justify-around mx-3 gap-2">
                 <Image
                     src={`/imgs/${coverImage}`}
                     alt="cover image"
@@ -47,7 +47,8 @@ export default function ImageGallery({ coverImage, images }: ImageGalleryProps) 
                 width={400}
                 height={520}
                 className='object-fit w-[400px] h-[520px] rounded-lg hover:opacity-80'
-            />
+            /> */}
+            <h1 className="text-3xl font-bold text-center w-full">Video Placeholder</h1>
         </div>
     );
 }

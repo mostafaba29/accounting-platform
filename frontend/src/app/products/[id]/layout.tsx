@@ -110,7 +110,7 @@ export default function ProductLayout({ children ,params }: { children: React.Re
                         </div> 
                         <div className="w-[650px]">
                             <ImageGallery coverImage={productData.coverImage} images={productData.images} /> 
-                            <h1 className="text-2xl text-center font-bold mb-4 break-words">{productData.title_EN}</h1>
+                            
                         </div>
                     </div>
                 </div>  

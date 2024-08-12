@@ -18,8 +18,8 @@ export default function ConsultPage({params}: {params: {id: string}}) {
     const [consultData, setConsultData] = useState<Consultation | null>(null );
 
     const sendWhatsButton = () => {
-      const phoneNumber = '+201551450735'; // Your phone number in international format
-      const message = 'Hello! This is a test message from our service.';
+      const phoneNumber = '+966506049133'; // Your phone number in international format
+      const message = `I want a consult on ${consultData?.title_EN}`;
       const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
     }
