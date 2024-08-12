@@ -151,6 +151,10 @@ productSchema.virtual("reviews", {
   localField: "_id"
 });
 
+productSchema.methods.incrementViews = async function() {
+  this.views += 1;
+  await this.save();
+};
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;

@@ -9,7 +9,6 @@ router
   .get(reviewController.getAllReviews)
   .post(
     authController.protect,
-    authController.restrictTo("user"),
     reviewController.setItemUserIds,
     reviewController.createReview
   );
