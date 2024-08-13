@@ -2,7 +2,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios from "axios";
 import {
     Form,
     FormControl,
@@ -14,17 +13,24 @@ import {
   } from "./ui/form";
   import { Input } from "./ui/input";
   import {Button} from "./ui/button";
+  import { useQueryClient,useMutation } from "@tanstack/react-query";
+  import { postInquiry } from "@/lib/api/generalRequests";
+  import { useToast } from "@/components/ui/use-toast";
 
-const fromSchema = z.object({
+const formSchema = z.object({
     subject: z.string().min(1, { message: "Please enter your name" }),
     email: z.string().min(1, { message: "Please enter your email" }),
     phone: z.string().min(1, { message: "Please enter your number" }),
     message: z.string().min(1, { message: "Please enter your message" }),
-    file: z.instanceof(File).refine((file) => file.size > 0, {}).optional(),
+    file: z.custom<FileList>()
+    .refine((files) => files?.length === 0 || files?.length === 1, "Please upload one file")
+    .transform(files => files?.[0])
+    .optional(),
 })
 export default function InquiryForm() {
-    const form=useForm<z.infer<typeof fromSchema>>({
-        resolver:zodResolver(fromSchema),
+    const { toast } = useToast();
+    const form=useForm<z.infer<typeof formSchema>>({
+        resolver:zodResolver(formSchema),
         defaultValues: {
             subject: "",
             email: "",
@@ -34,23 +40,32 @@ export default function InquiryForm() {
         },
     })
 
-    
-    const onSubmit = async( data: z.infer<typeof fromSchema> )=>{
-        try {
-            const response = await axios.post(
-                "http://localhost:8000/api/v1/contact/contact_us",
-                data,
-                {
-                    withCredentials: true,
-                }
-            );
-            console.log(response.data);
-            if (response.status === 200) {
-                alert("message sent successfully");
-                form.reset();
-            } else {
-                alert("something went wrong");
+    const {mutateAsync,isPending,isError} = useMutation({
+        mutationFn:postInquiry,
+        onSuccess:()=>{
+            toast({
+                description: "inquiry sent successfully",
+              });
+              form.reset();
+        },
+        onError:()=>{
+            toast({
+                description: "something went wrong",
+                variant: "destructive",
+              });
         }
+    });
+    const onSubmit = async( data: z.infer<typeof formSchema> )=>{
+        try {
+            const formData = new FormData();
+            Object.entries(data).forEach(([key, value]) => {
+                if (key === 'file' && value instanceof File) {
+                  formData.append(key, value);
+                } else if (value !== undefined && value !== null) {
+                  formData.append(key, value as string);
+                }
+              });
+            await mutateAsync(data);
         } catch (error) {
             console.log(error);
         }
@@ -66,7 +81,7 @@ export default function InquiryForm() {
                             <FormItem>
                                 <FormLabel>Subject:</FormLabel>
                                 <Input
-                                    placeholder="Name"
+                                    placeholder="type the subject of your inquiry..."
                                     {...field}
                                 />
                                 <FormMessage />
@@ -80,7 +95,7 @@ export default function InquiryForm() {
                             <FormItem>
                                 <FormLabel>Email:</FormLabel>
                                 <Input
-                                    placeholder="Email"
+                                    placeholder="type your email here"
                                     {...field}
                                 />
                                 <FormMessage />
@@ -94,7 +109,7 @@ export default function InquiryForm() {
                             <FormItem>
                                 <FormLabel>Phone Number:</FormLabel>
                                 <Input
-                                    placeholder="Phone Number"
+                                    placeholder="type your phone number here"
                                     {...field}
                                 />
                                 <FormMessage />
@@ -120,14 +135,19 @@ export default function InquiryForm() {
                     <FormField
                         control={form.control}
                         name="file"
-                        render={({ field }) => (
+                        render={({ field: { onChange, value, ...rest } }) => (
                             <FormItem>
-                                <FormLabel>Upload File:</FormLabel>
+                            <FormLabel>Upload File:</FormLabel>
+                            <FormControl>
                                 <Input
-                                    {...field}
-                                    type="file"
+                                type="file"
+                                onChange={(e) => {
+                                    onChange(e.target.files);
+                                }}
+                                {...rest}
                                 />
-                                <FormMessage />
+                            </FormControl>
+                            <FormMessage />
                             </FormItem>
                         )}
                     />

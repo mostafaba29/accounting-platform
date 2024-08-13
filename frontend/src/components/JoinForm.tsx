@@ -14,17 +14,24 @@ import {
   } from "./ui/form";
   import { Input } from "./ui/input";
   import { Button } from "./ui/button";
+  import { useQueryClient,useMutation } from "@tanstack/react-query";
+  import { postInquiry } from "@/lib/api/generalRequests";
+  import { useToast } from "@/components/ui/use-toast";
+
 
 const formSchema = z.object({
+    subject: z.string().min(1, { message: "Please enter the job title" }),
     email: z.string().min(1, { message: "Please enter your email" }),
     phone: z.string().min(1, { message: "Please enter your number" }),
     message: z.string().min(1, { message: "Please enter your message" }),
-    file: z.instanceof(File).refine((file) => file.size > 0, {
-        message: "Please upload a file",
-    }),
+    file: z.custom<FileList>()
+    .refine((files) => files?.length === 0 || files?.length === 1, "Please upload one file")
+    .transform(files => files?.[0]),
 });
 
 export default function JoinForm() {
+    const {toast} = useToast();
+
     const form=useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema),
         defaultValues: {
@@ -36,38 +43,51 @@ export default function JoinForm() {
         },
     })
 
+    const {mutateAsync,isPending,isError} = useMutation({
+        mutationFn:postInquiry,
+        onSuccess:()=>{
+            toast({
+                description: "your application has been submitted",
+              });
+              form.reset();
+        },
+        onError:()=>{
+            toast({
+                description: "something went wrong",
+                variant: "destructive",
+              });
+        }
+    });
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
-            const formData = {
-                subject: "job application",
-                message: "application for a job",
-                ...data,
-            };
-
-            const response = await axios.post(
-                "http://localhost:8000/api/v1/contact/contact_us",
-                formData,
-                {
-                    withCredentials: true,
+            const formData = new FormData();
+            Object.entries(data).forEach(([key, value]) => {
+                if (key === 'file' && value instanceof File) {
+                  formData.append(key, value);
+                } else if (value !== undefined && value !== null) {
+                  formData.append(key, value as string);
                 }
-            );
-            console.log(response.data);
-            if (response.status === 200) {
-                alert("Message sent successfully");
-                form.reset(); // Reset form after successful submission
-            } else {
-                alert("Something went wrong");
-            }
+              });
+            await mutateAsync(formData);
         } catch (error) {
             console.error("Error submitting form:", error);
-            alert("Something went wrong");
         }
     };
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-[50%] flex flex-col gap-4 border border-slate-600 p-6 rounded-md shadow-md">
-                {/* Email */}
+                <FormField
+                    control={form.control}
+                    name="subject"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Job Title:</FormLabel>
+                            <Input placeholder="type the job title you are applying for ..." {...field} />
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
                 <FormField
                     control={form.control}
                     name="email"
@@ -79,7 +99,6 @@ export default function JoinForm() {
                         </FormItem>
                     )}
                 />
-                {/* Phone Number */}
                 <FormField
                     control={form.control}
                     name="phone"
@@ -91,19 +110,41 @@ export default function JoinForm() {
                         </FormItem>
                     )}
                 />
-                {/* File Upload */}
                 <FormField
-                    control={form.control}
-                    name="file"
-                    render={({ field }) => (
-                        <FormItem>
+                        control={form.control}
+                        name="message"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Inquiry:</FormLabel>
+                                <Input
+                                    placeholder="type your past experience here..."
+                                    {...field} 
+                                    type="textarea"
+                                    className="h-[150px]"
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                <FormField
+                        control={form.control}
+                        name="file"
+                        render={({ field: { onChange, value, ...rest } }) => (
+                            <FormItem>
                             <FormLabel>Upload File:</FormLabel>
-                            <Input {...field} type="file" />
+                            <FormControl>
+                                <Input
+                                type="file"
+                                onChange={(e) => {
+                                    onChange(e.target.files);
+                                }}
+                                {...rest}
+                                />
+                            </FormControl>
                             <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                {/* Submit Button */}
+                            </FormItem>
+                        )}
+                    />
                 <Button type="submit">Send</Button>
             </form>
         </Form>

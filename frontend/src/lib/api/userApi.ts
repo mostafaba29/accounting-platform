@@ -2,6 +2,8 @@
 import axios from 'axios';
 
 const userUrl = 'http://localhost:8000/api/v1/users';
+
+//queries 
 export const fetchUser = async () =>{
     try {
         const response = await axios.get(`${userUrl}/me`,
@@ -23,3 +25,5 @@ export const userLogout = async ()=>{
         throw new Error('failed to logout',error)
     }
 }
+
+//mutations
