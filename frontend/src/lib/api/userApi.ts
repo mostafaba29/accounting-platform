@@ -27,3 +27,34 @@ export const userLogout = async ()=>{
 }
 
 //mutations
+
+export const userLogin = async({email,password}:{email:string,password:string})=>{
+    try{
+        const response = axios.post(`${userUrl}/login`,{
+            email,
+            password
+        },{withCredentials: true})
+        return response
+    }catch(error){
+        throw new Error('failed to login',error);
+    }
+}
+
+interface signupData{
+    name:string;
+    email:string;
+    phone:string;
+    password:string;
+    passwordConfirm:string;
+}
+export const userSignup = async(data:signupData)=>{
+    try{
+        const response = await axios.post(`${userUrl}/signup`,
+            data,
+            {withCredentials: true}
+        )
+        return response 
+    }catch(error){
+        throw new Error('failed to signup',error)
+    }
+}
