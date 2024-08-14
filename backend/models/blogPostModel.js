@@ -22,11 +22,11 @@ const blogSchema = new mongoose.Schema(
       required: [true, "a post must have an english description"]
     },
     body_AR: {
-      type: String,
+      type: [String],
       required: [true, "an blog must have an arabic body"]
     },
     body_EN: {
-      type: String,
+      type: [String],
       required: [true, "an blog must have an english body"]
     },
     views: { type: Number, default: 0 },

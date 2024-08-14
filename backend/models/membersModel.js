@@ -1,17 +1,30 @@
 const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema({
-  name: {
+  name_AR: {
     type: String,
     required: true,
     trim: true
   },
-  position: {
+  name_EN: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  position_AR: {
+    type: String,
+    required: true
+  },
+  position_EN: {
     type: String,
     required: true
   },
   images: [String],
-  brief: {
+  brief_AR: {
+    type: String,
+    trim: true
+  },
+  brief_EN: {
     type: String,
     trim: true
   },
