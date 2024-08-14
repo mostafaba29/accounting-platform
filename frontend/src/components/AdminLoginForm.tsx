@@ -29,11 +29,9 @@ const fromSchema = z.object({
 
 interface AdminLoginFormProps {
   isLoggedIn: boolean;
-  onLoginSuccess: () => void;
 }
 export default function AdminLoginForm({
-  isLoggedIn,
-  onLoginSuccess,
+  isLoggedIn
 }: AdminLoginFormProps) {
   const form = useForm<z.infer<typeof fromSchema>>({
     resolver: zodResolver(fromSchema),
@@ -53,7 +51,6 @@ export default function AdminLoginForm({
       console.log(response.data.data.user);
       if (response.status === 200 && response.data.data.user.role == "admin") {
         console.log("response", response.data);
-        onLoginSuccess();
       } else {
         alert("Invalid username or password");
       }

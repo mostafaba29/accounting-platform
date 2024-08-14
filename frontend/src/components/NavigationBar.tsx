@@ -5,6 +5,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import {Button} from "./ui/button";
 import Image from "next/image";
+import { useUserContext } from "@/lib/Providers/UserProvider";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -26,6 +27,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ShoppingBasket,Phone,User,Search,LogIn} from 'lucide-react';
 import axios from 'axios';
+import {useQueryClient,useMutation,useQuery} from '@tanstack/react-query';
+import { userLogout } from "@/lib/api/userApi";
+import { fetchConsults } from "@/lib/api/consultsApi";
 
 const accAndFinancialServices:{title:string; href:string}[] =[
   {
@@ -180,49 +184,38 @@ const HrServices:{title:string; href:string}[] =[
   }
 ]
 export default function NavigationBar(){
-    const [userLoggedIn,setUserLoggedIn] = React.useState(false);
-    const [userData,setUserData] = React.useState({});
-    const [profileIconActive,setProfileIconActive] = React.useState(false);
-    const [consults,setConsults] = React.useState([]);
     const [isScrolled, setIsScrolled] = React.useState(false);
-    const checkUser = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/v1/users/me',{withCredentials: true });
-        console.log(response.data.status);
-        console.log(response.data.data.data.role);
-        if (response.data.status === "success" && response.data.data.data.role !== "admin") {
-          setUserLoggedIn(true);
-          setUserData(response.data.data.data);
-        }
-      }catch (error) {
-        console.log(error);
-      }
-    }
+    const queryClient = useQueryClient();
+    // user context hook for the user data query
+    const { data: user } = useUserContext();
 
-    const fetchConsults = async ()=> {
-      try {
-        const response = await axios.get('http://localhost:8000/api/v1/consults');
-        setConsults(response.data.data.data);
-      }catch (error) {
-        console.log(error);
+    //mutations on the navigation bar
+    const {mutateAsync:mutateUserLogout}=useMutation({
+      mutationFn:userLogout,
+      onSuccess:()=>{
+        queryClient.invalidateQueries({queryKey:['user']})
+        window.location.href='/';     
       }
-    }
-
+    })
     const logout = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/api/v1/users/logout',{withCredentials: true });
-        if (response.data.status === "success") {
-          setUserLoggedIn(false);
-          window.location.href = '/auth/login';
-        }
+        mutateUserLogout();
       }catch (error) {
         console.log(error);
       }
     }
 
+
+    //queries for the navigation bar
+    const {data:consults}=useQuery({
+      queryKey:['consults'],
+      queryFn:fetchConsults,
+      staleTime:1000*60*60,
+      gcTime:1000*60*60*24,
+    })
+
+    
     React.useEffect(() => {
-      checkUser();
-      fetchConsults();
       const handleScroll = () => {
         if (window.scrollY > 0) {
           setIsScrolled(true);
@@ -230,20 +223,24 @@ export default function NavigationBar(){
           setIsScrolled(false);
         }
       };
-    
+
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
     }, [isScrolled]);
+
+    
     return(
-    <>
-      <div className={clsx("h-32 sticky top-0 flex flex-col z-50 transition-colors duration-300 ",
-                      { "bg-gradient-to-b from-blue-500/75 to-blue-300/50 shadow-md": isScrolled, 
-                        "bg-gradient-to-b from-blue-800/85 to-blue-500/85": !isScrolled }
-                    )}>
+    <nav className={clsx("h-32 sticky top-0 flex flex-col z-50 transition-colors duration-300 ",
+      { "bg-gradient-to-b from-blue-500/75 to-blue-300/50 shadow-md": isScrolled, 
+        "bg-gradient-to-b from-blue-800/85 to-blue-500/85": !isScrolled }
+    )}>
           <div className="flex flex-row items-center justify-between px-4">
             <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>
             <div className="flex flex-row items-center ml-4 ">
-              {!userLoggedIn ? 
+              <Link href="/search">
+              <Search size={36} className=" text-white ml-4 p-1 hover:rounded-full hover:text-black hover:bg-white  "/>
+              </Link>
+              {!user || user.role === "admin" ? 
               (
                 <Link href='auth/login'>
                   <LogIn size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
@@ -252,36 +249,28 @@ export default function NavigationBar(){
               : (
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <User size={36} className={clsx("text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white ",{
-                      "bg-white text-black":profileIconActive,"text-white": !profileIconActive}
-                    )} onClick={() => setProfileIconActive(true)}/>
+                    <User size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white " />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-28 ml-1 flex flex-col items-center">
-                  <DropdownMenuLabel>User</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white">
-                    <Link href={`/user/${userData._id}/cart`}>Cart</Link>
+                  <DropdownMenuContent className="w-36 ml-1 flex flex-col items-center">
+                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white font-semibold text-base ">
+                    <Link href={`/user/${user.data.data._id}/cart`}>Cart</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white">
-                    <Link href={`/user/${userData._id}/orders`}>Orders</Link>
+                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white font-semibold text-base">
+                    <Link href={`/user/${user.data.data._id}/orders`}>Orders</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white">
+                  <DropdownMenuItem className="w-full flex flex-col items-center hover:bg-blue-500 hover:text-white font-semibold text-base">
                     <p className="hover:cursor-pointer" onClick={logout}>Logout</p>
                   </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-          
               )}
-              <Link href="/products">
+              {/* <Link href={`/user/${user.data.data._id}/cart`}>
               <ShoppingBasket size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
-              </Link>
-              <Link href="/contact-us">
+              </Link> */}
+              {/* <Link href="/contact-us">
               <Phone size={36} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
-              </Link>
-              <Link href="/search">
-              <Search size={36} className=" text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white  "/>
-              </Link>
-              <Button variant="ghost" className="text-black bg-white font-bold rounded-full ml-4  hover:text-white hover:bg-sky-500  ">ع</Button>
+              </Link> */}
+              <Button variant="ghost" className="text-white p-1 font-bold rounded-full ml-4 w-[36px] h-[36px]  hover:text-black hover:bg-white  "><p className='text-lg'>ع</p></Button>
             </div>
           </div>
           <div className="flex flex-row w-full items-start gap-4 ml-1">
@@ -308,7 +297,7 @@ export default function NavigationBar(){
                 <NavigationMenuTrigger className="bg-transparent text-white ">Consults</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
-                    {(consults.map((item) => (
+                    {consults && (consults.map((item) => (
                       <Link href={`/consults/${item._id}`} key={item.title_EN}>
                         <ListItem key={item._id} title={item.title_EN} className="hover:text-white hover:bg-sky-800"/>
                       </Link>
@@ -352,8 +341,7 @@ export default function NavigationBar(){
             </NavigationMenuList>
           </NavigationMenu>   */}
           </div>
-      </div>
-    </>
+    </nav>
   );
 }
 

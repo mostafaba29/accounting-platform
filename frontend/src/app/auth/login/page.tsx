@@ -1,92 +1,98 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import {useQueryClient,useMutation} from "@tanstack/react-query";
+import { userLogin } from "@/lib/api/userApi";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
 
+const loginFormSchema = z.object({
+  email: z.string().min(1, { message: "Please enter your email" }),
+  password: z.string().min(1, { message: "Please enter your password" }),
+})
+
+type loginFormData=z.infer< typeof loginFormSchema>
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const router = useRouter();
-  const [error, setError] = useState(null);
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setError(null);
+  const {toast}=useToast();
+  const form=useForm<loginFormData>({
+    resolver:zodResolver(loginFormSchema),
+  })
+  const {mutateAsync,isPending,isError} = useMutation({
+    mutationFn:userLogin,
+    onSuccess:()=>{
+      window.location.href='/';
+    },
+    onError:()=>{
+      toast({
+        description: "something went wrong",
+        variant: "destructive",
+      });
+    }
+  })
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
-      if (response.status === 200) {
-        console.log("response", response.data);
-        router.push("/");
-      } else {
-        setError(response.data.message);
-        console.log(response.data);
-      }
-    } catch (error) {
+  const onSubmit= async (data:loginFormData) => {
+    try{
+      mutateAsync(data);
+    }catch(error){
       console.log(error);
     }
-  };
-
+  }
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
-          <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Login</h1>
+    <>
+    <main className="w-full h-screen grid grid-cols-2 justify-items-center items-center">
+      <div className="flex flex-col items-center justify-center p-6 gap-3 md:gap-6 bg-amber-700/15 h-[55%] w-[45%] rounded-3xl shadow-md">
+            <h1 className="text-3xl font-bold">Login to your account</h1>
             <p className="text-balance text-muted-foreground">
               Enter your email below to login to your account
             </p>
-          </div>
-          <form onSubmit={handleLogin} className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="/auth/login/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && <p className="text-red-500">{error}</p>}
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
-            </Button>
-          </form>
+            <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full grid grid-cols-1 gap-3" >
+              <FormField 
+                control={form.control}
+                name='email'
+                render={({ field }) =>(
+                  <FormItem className="w-full">
+                    <FormLabel>Email:</FormLabel>
+                      <Input
+                        placeholder="type your registered email..."
+                        {...field}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <FormField 
+                control={form.control}
+                name='password'
+                render={({ field }) =>(
+                  <FormItem>
+                    <FormLabel>Password:</FormLabel>
+                      <Input
+                        placeholder="type your account password..."
+                        {...field}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <Button type='submit'>Login</Button>
+            </form>
+            </Form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href="#" className="underline">
@@ -94,16 +100,16 @@ export default function Login() {
             </Link>
           </div>
         </div>
-      </div>
-      <div className="hidden bg-muted lg:block">
+      <div className="hidden bg-muted lg:block lg:h-full lg:w-full">
         <Image
-          src="/placeholder.svg"
+          src="/imgs/auth/credImage.jpeg"
           alt="Image"
           width="1920"
           height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="h-full w-full object-fit"
         />
       </div>
-    </div>
+    </main>
+    </>
   );
 }
