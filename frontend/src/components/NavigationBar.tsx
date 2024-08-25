@@ -31,158 +31,6 @@ import {useQueryClient,useMutation,useQuery} from '@tanstack/react-query';
 import { userLogout } from "@/lib/api/userApi";
 import { fetchConsults } from "@/lib/api/consultsApi";
 
-const accAndFinancialServices:{title:string; href:string}[] =[
-  {
-    title:"Holding ledgers and accounts",
-    href:'/'
-  },
-  {
-    title:"Inner financial lists",
-    href:'/'
-  },
-  {
-    title:"Daily and monthely work reports",
-    href:'/'
-  },
-  {
-    title:"Tax and zakat disclousres",
-    href:'/'
-  }
-]
-
-const FinancialConsultants:{title:string; href:string}[] =[
-  {
-    title:"Structuring and preparation of financial managment department",
-    href:'/'
-  },
-  {
-    title:"Selection and recommendation of suitable ERP systems",
-    href:'/'
-  },
-  {
-    title:"Preparation of banking facilitaion files",
-    href:'/'
-  },
-  {
-    title:"Preparation of Internal Implementing Regulations Manual",
-    href:'/'
-  },
-  {
-    title:"Preparation of internal monitoing system manual",
-    href:'/'
-  },
-  {
-    title:"Quarterly follow-up",
-    href:'/'
-  },
-  {
-    title:"Structring and Restructuring of companys and enterprises",
-    href:'/' 
-  },
-  {
-    title:"Application of ERP systems",
-    href:'/'
-  },
-  {
-    title:"Certified financial lists",
-    href:'/'
-  },
-  {
-    title:"Preparation of of judgmental manual and commities",
-    href:'/'
-  },
-  {
-    title:"Economic Feasibility Studies",
-    href:'/'
-  }
-]
-
-const HrServices:{title:string; href:string}[] =[
-  {
-    title:"full revision of human resources and the gurantee of commitment to rules and regulations",
-    href:'/'
-  },
-  {
-    title:"Preparation and design of the companys human resource plan",
-    href:'/'
-  },
-  {
-    title:"Job analysis and job description",
-    href:'/'
-  },
-  {
-    title:"Polices, procedures and guidelines manual",
-    href:'/'
-  },
-  {
-    title:"Preparation, management and overseeing governmental platforms",
-    href:'/'
-  },
-  {
-    title:"Revision of contracts and desining suitable clauses for activitys",
-    href:'/'
-  },
-  {
-    title:"Prparing array of permissions for human resources",
-    href:'/'
-  },
-  {
-    title:"Medical insurance",
-    href:'/'
-  },
-  {
-    title:"Training plans",
-    href:'/'
-  },
-  {
-    title:"Human resources consultants",
-    href:'/'
-  },
-  {
-    title:"Workload analysis",
-    href:'/'
-  },
-  {
-    title:"Internal regulations preparaion",
-    href:'/'
-  },
-  {
-    title:"Performance evaluation systems",
-    href:'/'
-  },
-  {
-    title:"Salary managment and salary protection system",
-    href:'/'
-  },
-  {
-    title:"Time and attendence managment",
-    href:'/'
-  },
-  {
-    title:"Evaluation and overseeing general or specific housing plans",
-    href:'/'
-  },
-  {
-    title:"Full excel databases for employees including a dynamic dashobard",
-    href:'/'
-  },
-  {
-    title:"dynamic salary and overtime databases",
-    href:'/'
-  },
-  {
-    title:"Annual holidays and holiday plans databases",
-    href:'/'
-  },
-  {
-    title:"Sick leave,sanctions and Irregularities databases",
-    href:'/'
-  },
-  {
-    title:"Total employee costs databases",
-    href:'/'
-  }
-]
 export default function NavigationBar(){
     const [isScrolled, setIsScrolled] = React.useState(false);
     const queryClient = useQueryClient();
@@ -283,7 +131,7 @@ export default function NavigationBar(){
                     <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
                     <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
                     <Link href='/join-us'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
-                    <Link href='/partners'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/client-list'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
                     <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
                     <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
                   </ul>
@@ -308,38 +156,6 @@ export default function NavigationBar(){
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          {/* <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-white  ">Financial consultants</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
-                    {FinancialConsultants.map((item) => (
-                      <Link href={item.href} key={item.title}>
-                        <ListItem key={item.title} title={item.title} />
-                      </Link>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-          <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-white  ">Hr services</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid gap-3 p-4 md:w-[300px] lg:w-[450px] sm:w-[300] grid-cols-2 ">
-                    {HrServices.map((item) => (
-                      <Link href={item.href} key={item.title}>
-                        <ListItem key={item.title} title={item.title} />
-                      </Link>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>   */}
           </div>
     </nav>
   );

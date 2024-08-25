@@ -58,3 +58,39 @@ export const userSignup = async(data:signupData)=>{
         throw new Error('failed to signup',error)
     }
 }
+
+//cart requests
+export const fetchUserCart = async()=>{
+    try{
+        const response = await axios.get('http://localhost:8000/api/v1/cart',{
+            withCredentials: true
+        });
+        return response.data.data.cart;
+   }catch(error){
+       throw new Error('failed to fetch cart',error)
+   }
+}
+
+export const removeFromCart = async(id:string)=>{
+    try{
+        const response = await axios.delete(`http://localhost:8000/api/v1/cart/${id}`,{
+            withCredentials: true
+        });
+        return response.data
+   }catch(error){
+       throw new Error('failed to remove from cart',error)
+   }
+}
+
+//orders requests 
+
+export const fetchUserOrders = async()=>{
+    try{
+        const response = await axios.get('http://localhost:8000/api/v1/users/purchases',{
+            withCredentials: true
+        });
+        return response.data.data.purchases
+   }catch(error){
+       throw new Error('failed to fetch orders',error)
+   }
+}

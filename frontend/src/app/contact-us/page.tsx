@@ -1,18 +1,14 @@
 "use client";
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Mail, Facebook, Phone, MessageCircle } from 'lucide-react';
 import HeaderSection from '@/components/HeaderSection';
 import NavigationBar from '@/components/NavigationBar';
 import InquiryForm from '@/components/InquiryForm';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { useQueryClient,useQuery,useMutation } from '@tanstack/react-query';
+import { useQuery} from '@tanstack/react-query';
 import { fetchContactUsInfo } from '@/lib/api/generalRequests';
 
 export default function ContactUs() {
-  // const [data, setData] = useState(null); 
-  // const [loading, setLoading] = useState(true); 
 
   const{data:contactInfo,isLoading,isError,isFetched}=useQuery({
     queryKey: ['contactUsInfo'],
@@ -21,20 +17,6 @@ export default function ContactUs() {
     gcTime: 1000*60*60*24
   })
 
-  // const fetchContactUs = async () => {
-  //   try {
-  //     const response = await axios.get('http://localhost:8000/api/v1/contact');
-  //     setData(response.data.data.data[0]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(false); 
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchContactUs();
-  // }, []);
 
   if (isLoading) {
     return <div>
@@ -52,12 +34,10 @@ export default function ContactUs() {
 
   return (
     <>
-      <NavigationBar />
-      <main className="flex flex-col items-center">
         <HeaderSection pageTitle={'Contact Us'} pageImage={'contactUs.jpg'} breadCrumbArr={[]} breadCrumbLinkArr={[]} />
         <div className="my-4 px-4 py-8 lg:w-[1500px] md:w-[1000px] w-[600px] shadow-lg bg-gray-200/85">
           <div className="mb-12 w-full">
-            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 bg-white py-2 rounded-xl shadow-md">Reach us on our social media platforms</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 ">Reach us on our social media platforms</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
               <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-lg">
                   <Link href={`mailto:${contactInfo.email}`}>
@@ -103,8 +83,6 @@ export default function ContactUs() {
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
     </>
   );
 }

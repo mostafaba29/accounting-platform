@@ -1,9 +1,9 @@
 import Image from "next/image"
 export default function OurServices() {
     return (
-        <section className="h-[500px] p-4 bg-transparent rounded-lg shadow-md flex flex-col items-center w-full ">
-           <h1 className="text-3xl font-semibold mb-4 text-black w-full text-center ml-3 ">Our Services</h1>
-           <div className="grid grid-cols-3 gap-[300px] mt-10">
+        <section className="p-4 bg-transparent rounded-lg shadow-md flex flex-col items-center w-full">
+            <h1 className="text-3xl font-semibold mb-4 text-black w-full text-center">Our Services</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
             <div className="flex flex-col items-center">
                 <Image src="/imgs/landingPage/money.png" alt="money" width={200} height={200} className="object-cover w-[150px] h-[150px]" />
                 <h1 className="text-xl font-semibold  text-black w-full text-center ">Wealth Managment</h1>

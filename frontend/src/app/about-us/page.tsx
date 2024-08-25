@@ -1,11 +1,11 @@
 'use client';
 import Image from 'next/image';
-import NavigationBar from '@/components/NavigationBar';
-import Footer from '@/components/Footer';
 import HeaderSection from '@/components/HeaderSection';
 import MemberCard from '@/components/about-us/MemberCard';
 import { useQueryClient,useQuery } from '@tanstack/react-query';
 import {fetchAboutUsInfo} from '@/lib/api/generalRequests';
+
+
 export default function AboutUs() {
     const {data:members,isLoading,isError,error,isFetched:membersFetched} = useQuery({
         queryKey: ['members'],
@@ -15,8 +15,6 @@ export default function AboutUs() {
     })
     return (
         <>
-            <NavigationBar />
-            <main className="flex flex-col items-center">
                 <HeaderSection pageTitle={'About us'} pageImage={'contactUs.jpg'} breadCrumbArr={[]} breadCrumbLinkArr={[]} />
                 <div className="my-3 px-4 py-8 lg:w-[1500px] md:w-[1000px] w-[600px] shadow-lg bg-gray-200/85 ">
                     <section className="mb-12 flex flex-col items-center text-center justify-center">
@@ -69,8 +67,6 @@ export default function AboutUs() {
                         </div>
                     </section>
                 </div>
-            </main>
-            <Footer />
         </>
     );
 }
