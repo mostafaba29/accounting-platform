@@ -2,6 +2,17 @@
 
 import axios from 'axios';
 import { Inquiry } from '../types/inquiry';
+
+//landing page content 
+export const fetchLandingPageData = async () => {
+    try {
+        const response = await axios.get('http://localhost:8000/api/v1/content/landingPage');
+        return response.data;
+    } catch (error) {
+        throw new Error('Error fetching landing page data:', error);
+    }
+}
+
 //about-us 
 export const fetchAboutUsInfo = async () => {
     try {

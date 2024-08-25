@@ -13,46 +13,35 @@ import axios from "axios";
 import { Blog } from "@/components/types/BlogTableColumns";
 import { Consultation } from "@/components/types/ConsultationTableColumns";
 import {Product} from "@/components/types/ProductTableColumns";
+import { useQueryClient,useQuery } from "@tanstack/react-query";
+import { fetchLandingPageData } from "@/lib/api/generalRequests";
 
-interface Client {
-  name: string;
-  images: string[];
-}
+
 
 export default function Home() {
-  const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
-  const [featuredConsults, setFeaturedConsults] = useState<Consultation[]>([]);
-  const [popularProducts, setPopularProducts] = useState<Product[]>([]);
-  const [clients, setClients] = useState<Client[]>([]);
-
-  const fetchLandingPageData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/content/landingPage"
-      );
-      setRecentBlogs(response.data.latestBlogs);
-      setFeaturedConsults(response.data.consults);
-      setPopularProducts(response.data.bestSellingProducts);
-      setClients(response.data.clients);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchLandingPageData();
-  }, []);
+  const {data:data,isLoading,isError,isFetched} = useQuery({
+    queryKey:['landingPage'],
+    queryFn:fetchLandingPageData,
+    staleTime: 1000*60*60,
+    gcTime: 1000*60*60*24,
+  })
   
   return (
-    <main >
+    <>
       <NavigationBar />
+      <main >
       <Introduction />
       <OurServices />
-      <FeaturedConsults consults={featuredConsults} /> 
-      <RecentBlogs blogs={recentBlogs}/>
-      <ClientsSection clients={clients} /> 
-      <FeaturedProducts products={popularProducts} />
+      {isFetched && (
+        <>
+          <FeaturedConsults consults={data.consults} /> 
+          <RecentBlogs blogs={data.recentBlogs}/>
+          <ClientsSection clients={data.clients} /> 
+          <FeaturedProducts products={data.bestSellingProducts} />
+        </>
+      )}
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import Image from "next/image"
 export default function OurServices() {
     return (
-        <div className="h-[500px] p-4 bg-transparent rounded-lg shadow-md flex flex-col items-center w-full ">
+        <section className="h-[500px] p-4 bg-transparent rounded-lg shadow-md flex flex-col items-center w-full ">
            <h1 className="text-3xl font-semibold mb-4 text-black w-full text-center ml-3 ">Our Services</h1>
            <div className="grid grid-cols-3 gap-[300px] mt-10">
             <div className="flex flex-col items-center">
@@ -20,6 +20,6 @@ export default function OurServices() {
                 <p className="text-wrap w-[275px] mt-1 text-center text-gray-500">We deliver on demand business solutions. </p>
             </div>
            </div>
-        </div>
+        </section>
     )
 }
