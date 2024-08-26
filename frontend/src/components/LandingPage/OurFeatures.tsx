@@ -1,5 +1,5 @@
 import Image from "next/image"
-export default function OurServices() {
+export default function OurFeatures() {
     return (
         <section className="p-4 bg-transparent rounded-lg shadow-md flex flex-col items-center w-full">
             <h1 className="text-3xl font-semibold mb-4 text-black w-full text-center">Our Services</h1>

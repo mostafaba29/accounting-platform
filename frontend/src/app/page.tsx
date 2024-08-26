@@ -7,7 +7,7 @@ import Introduction from "@/components/LandingPage/Introduction";
 import RecentBlogs from "@/components/LandingPage/RecentBlogs";
 import FeaturedConsults from "@/components/LandingPage/FeaturedConsults";
 import FeaturedProducts from "@/components/LandingPage/FeaturedProducts";
-import OurServices from "@/components/LandingPage/OurServices";
+import OurFeatures from "@/components/LandingPage/OurFeatures";
 import ClientsSection from "@/components/LandingPage/ClientsSection";
 import axios from "axios";
 import { Blog } from "@/components/types/BlogTableColumns";
@@ -31,13 +31,12 @@ export default function Home() {
       <NavigationBar />
       <main >
       <Introduction />
-      <OurServices />
+      <OurFeatures />
       {isFetched && (
         <>
           <FeaturedConsults consults={data.consults} /> 
-          <RecentBlogs blogs={data.recentBlogs}/>
-          <ClientsSection clients={data.clients} /> 
           <FeaturedProducts products={data.bestSellingProducts} />
+          <RecentBlogs blogs={data.recentBlogs}/>
         </>
       )}
       </main>

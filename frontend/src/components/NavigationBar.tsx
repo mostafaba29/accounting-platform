@@ -25,8 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ShoppingBasket,Phone,User,Search,LogIn} from 'lucide-react';
-import axios from 'axios';
+import { ShoppingCart,User,Search,LogIn} from 'lucide-react';
 import {useQueryClient,useMutation,useQuery} from '@tanstack/react-query';
 import { userLogout } from "@/lib/api/userApi";
 import { fetchConsults } from "@/lib/api/consultsApi";
@@ -79,8 +78,8 @@ export default function NavigationBar(){
     
     return(
     <nav className={clsx("h-32 sticky top-0 flex flex-col z-50 transition-colors duration-300 ",
-      { "bg-gradient-to-b from-blue-500/75 to-blue-300/50 shadow-md": isScrolled, 
-        "bg-gradient-to-b from-blue-800/85 to-blue-500/85": !isScrolled }
+      { "bg-gradient-to-b from-unitedPrimary/75 to-unitedPrimary/50 shadow-md": isScrolled, 
+        "bg-gradient-to-b from-unitedPrimary/95 to-unitedPrimary/85": !isScrolled }
     )}>
           <div className="flex flex-row items-center justify-between px-4">
             <Link href="/"><Image src="/UnitedLogo.png" alt="logo" width={240} height={80}/></Link>
@@ -125,7 +124,7 @@ export default function NavigationBar(){
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-white ">Platform</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="bg-transparent text-white ">A3mali services</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
                     <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
@@ -142,6 +141,94 @@ export default function NavigationBar(){
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white ">Accounting services</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/join-us'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/client-list'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white ">Reviewing services</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/join-us'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/client-list'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white ">Financial consults</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/join-us'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/client-list'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white ">HR consults</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    <Link href='/about-us'><ListItem title="About us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/join-us'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/client-list'><ListItem title="Client List" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white ">Help</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
+                    <Link href='/contact-us'><ListItem title="Contact us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/join-us'><ListItem title="join Us" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/faq'><ListItem title="faq" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/terms-and-conditions'><ListItem title="Terms and conditions" className="hover:text-white hover:bg-sky-800"/></Link>
+                    <Link href='/privacy-policy'><ListItem title="Privacy policy" className="hover:text-white hover:bg-sky-800"/></Link>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <Button variant="ghost" className="text-white hover:bg-slate-100/50">Our Clients</Button>
+          <Button variant="ghost" className="text-white hover:bg-slate-100/50">Articles</Button>
+          <Button variant="ghost" className="text-white hover:bg-slate-100/50"><ShoppingCart className="h-6 w-6 mx-1" /> Financial Store</Button>
+          <Button variant="ghost" className="text-white hover:bg-slate-100/50"><ShoppingCart className="h-6 w-6 mx-1" /> HR Store</Button>
+          {/* <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent text-white ">Consults</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[275px] sm:w-[100] ">
@@ -155,7 +242,7 @@ export default function NavigationBar(){
                 </NavigationMenuContent>
               </NavigationMenuItem>
             </NavigationMenuList>
-          </NavigationMenu>
+          </NavigationMenu> */}
           </div>
     </nav>
   );

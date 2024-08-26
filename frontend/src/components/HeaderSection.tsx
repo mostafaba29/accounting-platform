@@ -22,7 +22,7 @@ export default function HeaderSection({pageTitle,pageImage,breadCrumbArr,breadCr
         backgroundSize: 'cover',
     }
     return (
-        <div className="lg:w-[1500px] md:w-[1000px] w-[600px] h-[125px] shadow-md flex flex-col items-start m-2 " style={bgImageStyle}>
+        <div className="w-full h-[75px] md:h-[125px] lg:h-[250px] shadow-md  m-2 text-center flex flex-col justify-between " style={bgImageStyle}>
             <div className="w-full h-[50px] flex flex-row items-center">
                 <Link href="/"><Home size={48} className="text-white p-3 hover:text-sky-300"/></Link>
                 <p className="text-white font-bold text-md ">|</p>
@@ -40,9 +40,8 @@ export default function HeaderSection({pageTitle,pageImage,breadCrumbArr,breadCr
                     </Breadcrumb>
                 </div>
             </div>
-            <div className=" w-full flex flex-row items-center justify-between ">
-                <h1 className="text-white font-bold text-3xl p-4">{pageTitle}</h1>
-                <div className="flex flex-row mr-4 mt-9">
+            <h1 className="font-bold text-6xl p-4 text-unitedSecondary/85">{pageTitle}</h1>
+            <div className="flex flex-row mb-3 pr-2  w-full justify-end">
                 <Link href="">
                 <Mail size={28} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
                 </Link>
@@ -55,9 +54,7 @@ export default function HeaderSection({pageTitle,pageImage,breadCrumbArr,breadCr
                 <Link href="">
                 <Twitter size={28} className="text-white ml-4 p-1 rounded-full hover:text-black hover:bg-white "/>
                 </Link>
-            </div>
-            </div>
-            
+                </div>
         </div>
     );
 }
