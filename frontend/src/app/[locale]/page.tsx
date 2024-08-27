@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import {useState,useEffect} from "react";
-import NavigationBar from "@/components/NavigationBar";
-import Footer from "@/components/Footer";
+import NavigtionWrapper from "@/components/shared/NavigationWrapper";
+import Footer from "@/components/shared/Footer";
 import Introduction from "@/components/LandingPage/Introduction";
 import RecentBlogs from "@/components/LandingPage/RecentBlogs";
 import FeaturedConsults from "@/components/LandingPage/FeaturedConsults";
@@ -28,7 +28,7 @@ export default function Home() {
   
   return (
     <>
-      <NavigationBar />
+      <NavigtionWrapper />
       <main >
       <Introduction />
       <OurFeatures />

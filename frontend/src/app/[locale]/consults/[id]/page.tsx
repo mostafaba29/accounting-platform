@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Consultation } from "@/components/types/ConsultationTableColumns";
 import BackButton from "@/components/Dashboard/BackButton";
 import NavigationBar from "@/components/NavigationBar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/shared/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import { sanitizeHtml } from "@/components/Security/dompurify";

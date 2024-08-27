@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {Button} from '@/components/ui/button'
 export default function Introduction () {
   return (
-    <section className=" bg-unitedPrimary/85 py-12 px-4  flex flex-row items-center justify-center gap-10 h-[100vh]">
+    <section className=" bg-unitedPrimary py-12 px-4  flex flex-row items-center justify-center gap-10 h-[100vh]">
       <Image src={`/imgs/landingPage/calcMan.jpg` } alt="Introduction" height={600} width={800} 
       className='object-cover w-[800px] h-[600px] shadow-md rounded-lg opacity-90' />
       <div className='flex flex-col text-start items-start justify-around h-[450px]'>

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Blog } from "@/components/types/BlogTableColumns";
 import NavigationBar from "@/components/NavigationBar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/shared/Footer";
 import BlogCard from "@/components/BlogCard";
 import axios from "axios";
 import HeaderSection from "@/components/shared/HeaderSection";
@@ -31,7 +31,7 @@ export default function Blogs() {
     <div className="w-full">
       <NavigationBar />
       <div className='flex flex-col items-center'>
-          <HeaderSection pageTitle="Blogs" pageImage='contactUs.jpg' breadCrumbArr={[]} breadCrumbLinkArr={[]}/>
+          <HeaderSection pageTitle={{en:'Blogs',ar:'المدونة'}} pageImage='contactUs.jpg' breadCrumbArr={{en:[],ar:[]}} breadCrumbLinkArr={[]}/>
             <div className="lg:w-[1500px] md:w-[1000px] w-[600px] p-4 m-2 shadow-lg bg-gray-200">
               <div className="flex flex-col items-center gap-5">
               {blogs.map((blog, id) => (

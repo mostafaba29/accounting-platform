@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavigationBar from '@/components/NavigationBar';
-import Footer from '@/components/Footer';
+import Footer from '@/components/shared/Footer';
 import { useQueryClient,useQuery } from '@tanstack/react-query';
 import {fetchUserCart} from '@/lib/api/userApi'
 import CartItemList from '@/components/Cart/CartItemsList';

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import NavigationBar from '@/components/NavigationBar';
-import Footer from '@/components/Footer';
+import Footer from '@/components/shared/Footer';
 export const metadata: Metadata = {
     title: 'Founders | United for F&A Consultants',
     description: 'View our team at United for F&A Teams.',
