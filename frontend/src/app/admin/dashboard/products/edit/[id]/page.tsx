@@ -31,7 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { categories } from "@/components/types/Categories";
 import { useToast } from "@/components/ui/use-toast";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 import { FileDown } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";

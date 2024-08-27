@@ -31,7 +31,7 @@ import {
 import { categories } from "@/components/types/Categories";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from 'next/dynamic';

@@ -33,7 +33,7 @@ import Link from 'next/link';
 import {categories} from '@/components/types/Categories';
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 import { Plus, X } from "lucide-react";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';

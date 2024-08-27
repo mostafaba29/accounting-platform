@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
-import BackButton from '@/components/BackButton';
+import BackButton from '@/components/Dashboard/BackButton';
 import {
     Form,
     FormControl,

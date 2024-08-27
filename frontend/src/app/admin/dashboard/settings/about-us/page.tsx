@@ -3,7 +3,7 @@ import {useState,useEffect} from 'react';
 import axios from 'axios';
 import { DataTable } from '@/components/Dashboard/DataTable';
 import {Member,columns as MemberCoulmns} from '@/components/types/MembersTableColumns';
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 import {Button} from "@/components/ui/button";
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';

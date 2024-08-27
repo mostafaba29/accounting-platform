@@ -25,7 +25,7 @@ import Link from 'next/link';
 import { X ,Plus} from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 
 
 

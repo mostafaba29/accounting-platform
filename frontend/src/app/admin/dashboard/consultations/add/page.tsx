@@ -33,7 +33,7 @@ import { X ,Plus} from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {categories} from '@/components/types/Categories';
 import { Input } from "@/components/ui/input";
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 

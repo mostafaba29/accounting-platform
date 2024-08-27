@@ -6,7 +6,7 @@ import {Blog,columns as BlogCoulmns} from '@/components/types/BlogTableColumns';
 import { Button } from '@/components/ui/button';
 import {Plus} from "lucide-react";
 import { useRouter } from 'next/navigation';
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 
 export default function AdminBlogsView (){
     const [Blogs,setBlogs]= useState<Blog[]>([]);

@@ -6,7 +6,7 @@ import {Package,columns as PackageCoulmns} from '@/components/types/PackagesTabl
 import { Button } from '@/components/ui/button';
 import {Plus} from "lucide-react";
 import { useRouter } from 'next/navigation';
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 
 export default function AdminPackageView () {
     const [packageData,setPackageData]= useState<Package[]>([]);

@@ -1,7 +1,7 @@
 "use client";
 import { useUserContext } from "@/lib/Providers/UserProvider";
 import {useQueryClient,useQuery} from '@tanstack/react-query';
-import AdminLoginForm from "@/components/AdminLoginForm";
+import AdminLoginForm from "@/components/Dashboard/AdminLoginForm";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
 import PostsTable from "@/components/posts/PostsTable";
 import AnalyticsChart from "@/components/Dashboard/AnalyticsChart";

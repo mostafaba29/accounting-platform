@@ -6,7 +6,7 @@ import {User,columns as UserCoulmns} from '@/components/types/UserTableColumns';
 import { Button } from '@/components/ui/button';
 import {Plus} from "lucide-react";
 import { useRouter } from 'next/navigation';
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/Dashboard/BackButton";
 
 export default function AdminUsersView (){
     const [users,setUsers]= useState<User[]>([]);
