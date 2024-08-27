@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema({
+  coverImage: {
+    type: String,
+    required: true
+  },
   name_AR: {
     type: String,
     required: true,

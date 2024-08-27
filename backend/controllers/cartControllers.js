@@ -41,7 +41,7 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
 
   const userCart = await user.populate({
     path: "cart.product",
-    select: `title_AR title_EN description_AR description_EN ${version}`
+    select: "title_AR title_EN description_AR description_EN"
   });
 
   res.status(200).json({
@@ -56,24 +56,32 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
 exports.showCart = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate({
     path: "cart.product",
-    select:
-      "title_AR title_EN description_AR description_EN basic_version open_version editable_version"
+    select: "title_AR title_EN description_AR description_EN"
   });
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      cart: user.cart.map(item => ({
+  const cartItems = await Promise.all(
+    user.cart.map(async item => {
+      const versionData = await Product.findById(item.product._id)
+        .select(`${item.version}`)
+        .lean();
+
+      return {
         product: {
           _id: item.product._id,
           title_AR: item.product.title_AR,
           title_EN: item.product.title_EN,
           description_AR: item.product.description_AR,
           description_EN: item.product.description_EN,
-          [item.version]: item.product[item.version]
-        }
-      }))
-    }
+          [item.version]: versionData[item.version]
+        },
+        version: item.version
+      };
+    })
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: { cart: cartItems }
   });
 });
 

@@ -1,5 +1,5 @@
 const express = require("express");
-const clientController = require("./../controllers/clientControllers");
+const landingPageContentControllers = require("./../controllers/landingPageContentControllers");
 const authController = require("./../controllers/authControllers");
 
 const router = express.Router();
@@ -9,22 +9,21 @@ router
   .post(
     authController.protect,
     authController.restrictTo("admin"),
-    clientController.createClient
+    landingPageContentControllers.createLandingPage
   )
-  .get(clientController.getAllClients);
+  .get(landingPageContentControllers.getLandingPage);
 
 router
   .route("/:id")
-  .get(clientController.getOneClient)
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
-    clientController.updateClient
+    landingPageContentControllers.updateLandingPage
   )
   .delete(
     authController.protect,
     authController.restrictTo("admin"),
-    clientController.deleteClient
+    landingPageContentControllers.deleteLandingPage
   );
 
 module.exports = router;

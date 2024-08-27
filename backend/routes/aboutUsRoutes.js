@@ -1,6 +1,7 @@
 const express = require("express");
-const clientController = require("./../controllers/clientControllers");
+const aboutUsPageControllers = require("./../controllers/aboutUspageContentControllers");
 const authController = require("./../controllers/authControllers");
+const uploadMiddleware = require("../controllers/FactoryHandlers");
 
 const router = express.Router();
 
@@ -9,22 +10,22 @@ router
   .post(
     authController.protect,
     authController.restrictTo("admin"),
-    clientController.createClient
+    uploadMiddleware.uploadFiles,
+    aboutUsPageControllers.createAboutUsPage
   )
-  .get(clientController.getAllClients);
+  .get(aboutUsPageControllers.getAboutUsPage);
 
 router
   .route("/:id")
-  .get(clientController.getOneClient)
   .patch(
     authController.protect,
     authController.restrictTo("admin"),
-    clientController.updateClient
+    aboutUsPageControllers.updateAboutUsPage
   )
   .delete(
     authController.protect,
     authController.restrictTo("admin"),
-    clientController.deleteClient
+    aboutUsPageControllers.deleteAboutUsPage
   );
 
 module.exports = router;

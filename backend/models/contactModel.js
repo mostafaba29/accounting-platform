@@ -30,7 +30,10 @@ const contactSchema = new mongoose.Schema({
       validator: v => validator.isEmail(v),
       message: "Invalid email"
     }
-  }
+  },
+  location: String,
+  opendingHours: String,
+  zipCode: String
 });
 
 const Contact = mongoose.model("Contact", contactSchema);

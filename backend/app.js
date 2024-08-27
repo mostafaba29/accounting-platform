@@ -7,7 +7,6 @@ const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const morgan = require("morgan");
-const cookieSession = require("cookie-session");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorConrollers");
@@ -19,11 +18,15 @@ const googleAuthRouter = require("./routes/googleAuthRoutes");
 const consultationRouter = require("./routes/consultationRoutes");
 const analysisRouter = require("./routes/analysisRoutes");
 const contactRouter = require("./routes/contactRoutes");
-const aboutRouter = require("./routes/membersRoutes");
+const membersRouter = require("./routes/membersRoutes");
 const packageRouter = require("./routes/packageRoutes");
 const paymentRouter = require("./routes/paymentRoutes");
 const clientRouter = require("./routes/clientRoutes");
 const cartRouter = require("./routes/cartRoutes");
+const termsAndConditionsRouter = require("./routes/termsAndConditionsRoutes");
+const privacyPolicyRouter = require("./routes/privacyPolicyRoutes");
+const aboutUsRouter = require("./routes/aboutUsRoutes");
+const landingContentRouter = require("./routes/landingPageContentRoutes");
 
 const app = express();
 
@@ -55,15 +58,6 @@ app.use(mongoSanitize()); //Data sanitization against NoSQL query injection
 app.use(xss()); // Data sanitization against XSS
 app.use(hpp()); // prevent parameter pollution
 
-//Initialize Passport and session middleware
-// app.use(
-//   cookieSession({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false
-//   })
-// );
-
 app.use("/auth", googleAuthRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/blogs", blogRouter);
@@ -72,11 +66,15 @@ app.use("/api/v1/consults", consultationRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/content", analysisRouter);
 app.use("/api/v1/contact", contactRouter);
-app.use("/api/v1/about", aboutRouter);
+app.use("/api/v1/members", membersRouter);
 app.use("/api/v1/packages", packageRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/clients", clientRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/termsAndConditions", termsAndConditionsRouter);
+app.use("/api/v1/privacyPolicy", privacyPolicyRouter);
+app.use("/api/v1/aboutUs", aboutUsRouter);
+app.use("/api/v1/landingContent", landingContentRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
