@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {Product} from '@/components/types/ProductTableColumns';
 import NavigationBar from "@/components/NavigationBar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/shared/Footer";
 import Image from "next/image";
 import ImageGallery from "@/components/ImageGallery";
 import Link from "next/link";

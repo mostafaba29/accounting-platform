@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import NavigationBar from '@/components/NavigationBar';
-import Footer from '@/components/Footer';
+import Footer from '@/components/shared/Footer';
 import OrdersList from '@/components/orders/OrderList';
 import { fetchUserOrders } from '@/lib/api/userApi';
 

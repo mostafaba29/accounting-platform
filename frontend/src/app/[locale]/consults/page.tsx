@@ -3,7 +3,7 @@ import { Consultation } from '@/components/types/ConsultationTableColumns';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import NavigationBar from '@/components/NavigationBar';
-import Footer from '@/components/Footer';
+import Footer from '@/components/shared/Footer';
 import ConsultCard from '@/components/ConsultCard';
 import HeaderSection from '@/components/shared/HeaderSection';
 

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import {Blog} from '@/components/types/BlogTableColumns';
 import BackButton from "@/components/Dashboard/BackButton";
 import NavigationBar from "@/components/NavigationBar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/shared/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import MoreLikeThis from "@/components/MoreLikeThis";

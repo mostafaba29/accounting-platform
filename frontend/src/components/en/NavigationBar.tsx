@@ -2,7 +2,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import Link from "next/link";
-import {Button} from "./ui/button";
+import {Button} from "@/components/ui/button";
 import Image from "next/image";
 import { useUserContext } from "@/lib/Providers/UserProvider";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu"
@@ -12,6 +12,8 @@ import { ShoppingCart, User, Menu, LogIn } from 'lucide-react';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { userLogout } from "@/lib/api/userApi";
 import { fetchConsults } from "@/lib/api/consultsApi";
+import { usePathname, useRouter } from 'next/navigation';
+
 
 interface UserMenuProps {
   user: any;
@@ -93,6 +95,26 @@ export default function NavigationBar(){
     const { data: user } = useUserContext();
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
+    const pathname = usePathname();
+    const router = useRouter();
+    const isRTL = pathname.startsWith('/ar');
+    const lang = isRTL ? 'ar' : 'en';
+
+    const toggleLocale = () => {
+        const currentPath = pathname;
+        let newPath;
+        const pathWithoutLocale = currentPath.replace(/^\/[a-z]{2}/, '');
+
+        if (isRTL) {
+            // If current language is Arabic, switch to English
+            newPath = pathWithoutLocale || '/';
+        } else {
+            // If current language is English, switch to Arabic
+            newPath = `/ar${pathWithoutLocale}`;
+        }
+        router.push(newPath);
+    }
+
     const {mutateAsync:mutateUserLogout}=useMutation({
       mutationFn:userLogout,
       onSuccess:()=>{
@@ -130,7 +152,7 @@ export default function NavigationBar(){
                 ) : (
                   <UserMenu user={user} logout={logout} />
                 )}
-                <Button variant="ghost" className="text-white p-1 font-bold rounded-full ml-4 w-[36px] h-[36px] hover:text-black hover:bg-white"><p className='text-lg'>ع</p></Button>
+                <Button onClick={toggleLocale} variant="ghost" className="text-white p-1 font-bold rounded-full ml-4 w-[36px] h-[36px] hover:text-black hover:bg-white"><p className='text-lg'>{lang === 'en' ? 'ع' : 'EN'}</p></Button>
               </div>
             </div>
             <div className="md:hidden flex items-center">
@@ -195,8 +217,8 @@ export default function NavigationBar(){
               ) : (
                 <MobileUserMenu user={user} logout={logout} />
               )}
-              <Button variant="ghost" className="w-full text-left text-white hover:bg-slate-100/50 mt-2">
-                Language: <span className='text-lg ml-2'>ع</span>
+              <Button onClick={toggleLocale} variant="ghost" className="w-full text-left text-white hover:bg-slate-100/50 mt-2">
+                Language: <span className='text-lg ml-2'>{lang === "en" ? "English" : "العربية"}</span>
               </Button>
             </div>
           </div>

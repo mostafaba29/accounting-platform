@@ -4,21 +4,25 @@ import HeaderSection from '@/components/shared/HeaderSection';
 import MemberCard from '@/components/team/MemberCard';
 import { useQueryClient,useQuery } from '@tanstack/react-query';
 import {fetchAboutUsInfo} from '@/lib/api/generalRequests';
-
+import { useTranslations } from 'next-intl';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function AboutUs() {
+    const t = useTranslations('about-us');
     const {data:members,isLoading,isError,error,isFetched:membersFetched} = useQuery({
         queryKey: ['members'],
         queryFn: fetchAboutUsInfo,
         staleTime: 1000 * 60 * 60,
         gcTime: 1000 * 60 * 60 * 24
     })
+
+    if (isLoading) return <LoadingSpinner messageEn="Loading company info" messageAr="جاري تحميل معلومات الشركة" />
     return (
         <>
-                <HeaderSection pageTitle={'About us'} pageImage={'contactUs.jpg'} breadCrumbArr={[]} breadCrumbLinkArr={[]} />
+                <HeaderSection pageTitle={{en:'About Company',ar:'عن الشركة'}} pageImage={'contactUs.jpg'} breadCrumbArr={{en:[],ar:[]}} breadCrumbLinkArr={[]} />
                 <div className="my-3 px-4 py-8 lg:w-[1500px] md:w-[1000px] w-[600px] shadow-lg bg-gray-200/85 ">
                     <section className="mb-12 flex flex-col items-center text-center justify-center">
-                        <h1 className="text-4xl font-bold mb-6">About Company</h1>
+                        <h1 className="text-4xl font-bold mb-6">{t('title')}</h1>
                         <p className="text-lg leading-relaxed text-gray-700">
                         United Consultants Office for Financial and Administrative Consulting was established to be one of the unique and specialized offices in the field of financial and administrative consulting. 
                         Unlike most consulting offices, we do not rely on external consultants or outsource our work to external assistants. 
@@ -37,7 +41,7 @@ export default function AboutUs() {
                         </p>
                     </section>
                     <section className="mb-12 flex flex-col items-center text-center justify-center">
-                        <h1 className="text-4xl font-bold mb-6">Our vision</h1>
+                        <h1 className="text-4xl font-bold mb-6">{t('vision')}</h1>
                         <p className="text-lg leading-relaxed text-gray-700">
                         At the Unified Office for Financial and Administrative Consulting, 
                         we aspire to expand to most cities across the Kingdom, 
@@ -48,7 +52,7 @@ export default function AboutUs() {
                         </p>
                     </section>
                     <section className="mb-12 flex flex-col items-center text-center justify-center">
-                        <h1 className="text-4xl font-bold mb-6">Our mission</h1>
+                        <h1 className="text-4xl font-bold mb-6">{t('mission')}</h1>
                         <p className="text-lg leading-relaxed text-gray-700">
                         At the Unified Office for Financial and Administrative Consulting, 
                         we strive to achieve the highest level of benefit for our clients by providing the most detailed and accurate financial and administrative studies. 
@@ -58,7 +62,7 @@ export default function AboutUs() {
                         </p>
                     </section>
                     <section className="mb-12 flex flex-col items-center text-center justify-center">
-                        <h1 className="text-4xl font-bold mb-6">Our goals</h1>
+                        <h1 className="text-4xl font-bold mb-6">{t('goals')}</h1>
                         <p className="text-lg leading-relaxed text-gray-700">
                         Our primary goal is to provide you with complete benefits and maximize the value of our services.
                         - Our objectives are always centered around playing an active role in helping and ensuring the success of our clients by delivering valuable consulting services, 

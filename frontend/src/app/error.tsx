@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
-import NavigationBar from '@/components/NavigationBar';
-import Footer from '@/components/Footer';
+import NavigationBar from '@/components/en/NavigationBar';
+import Footer from '@/components/shared/Footer';
 
 interface ErrorPageProps {
   error: Error;
