@@ -1,4 +1,4 @@
-const TermsAndConditionsPage = require("./../models/productModel");
+const TermsAndConditionsPage = require("./../models/termsAndConditionsPage");
 const factory = require("./FactoryHandlers");
 
 exports.getTermsAndConditionsPage = factory.getAll(TermsAndConditionsPage);

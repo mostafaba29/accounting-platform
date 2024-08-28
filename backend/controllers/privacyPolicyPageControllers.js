@@ -1,4 +1,4 @@
-const PrivacyPolicyPage = require("./../models/productModel");
+const PrivacyPolicyPage = require("./../models/privacyPolicyPage");
 const factory = require("./FactoryHandlers");
 
 exports.getPrivacyPolicyPage = factory.getAll(PrivacyPolicyPage);

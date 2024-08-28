@@ -1,40 +1,44 @@
 const mongoose = require("mongoose");
 
+const serviceSchema = new mongoose.Schema({
+  icon: {
+    type: String,
+    required: [true, "Service icon is required"]
+  },
+  title_AR: {
+    type: String,
+    required: [true, "Service title in Arabic is required"],
+    trim: true
+  },
+  title_EN: {
+    type: String,
+    required: [true, "Service title in English is required"],
+    trim: true
+  },
+  description_AR: {
+    type: String,
+    required: [true, "Service description in Arabic is required"],
+    trim: true
+  },
+  description_EN: {
+    type: String,
+    required: [true, "Service description in English is required"],
+    trim: true
+  }
+});
+
 const landingPageSchema = new mongoose.Schema({
   intro_AR: {
     type: String,
-    required: [true, "intro sentence is required"],
+    required: [true, "Intro sentence in Arabic is required"],
     trim: true
   },
   intro_EN: {
     type: String,
-    required: [true, "intro sentence is required"],
+    required: [true, "Intro sentence in English is required"],
     trim: true
   },
-  serviceOne_AR: {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true }
-  },
-  serviceOne_EN: {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true }
-  },
-  serviceTwo_AR: {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true }
-  },
-  serviceTwo_EN: {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true }
-  },
-  serviceThree_AR: {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true }
-  },
-  serviceThree_EN: {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true }
-  }
+  services: [serviceSchema]
 });
 
 const LandingPage = mongoose.model("LandingPage", landingPageSchema);

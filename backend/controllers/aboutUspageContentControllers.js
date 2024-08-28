@@ -1,4 +1,4 @@
-const AboutUsPage = require("./../models/productModel");
+const AboutUsPage = require("./../models/aboutUsPageContent");
 const factory = require("./FactoryHandlers");
 
 exports.getAboutUsPage = factory.getAll(AboutUsPage);
