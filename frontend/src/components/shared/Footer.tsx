@@ -63,7 +63,7 @@ export default function Footer() {
   const localeContent = isRTL ? content.ar : content.en;
 
   return (
-    <footer className="bg-slate-900 text-white py-8">
+    <footer className="bg-transparent text-unitedPrimary py-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
@@ -72,8 +72,8 @@ export default function Footer() {
               {localeContent.about}
             </h2>
             <ul>
-              <li><Link href="/team" className="block mb-2 hover:text-sky-300">{localeContent.team}</Link></li>
-              <li><Link href="/clients" className="block mb-2 hover:text-sky-300">{localeContent.clients}</Link></li>
+              <li><Link href="/team" className="block mb-2 hover:text-unitedSecondary/75">{localeContent.team}</Link></li>
+              <li><Link href="/clients" className="block mb-2 hover:text-unitedSecondary/75">{localeContent.clients}</Link></li>
             </ul>
           </div>
           <div>
@@ -82,8 +82,8 @@ export default function Footer() {
               {localeContent.support}
             </h2>
             <ul>
-              <li><Link href="#" className="block mb-2 hover:text-sky-300">{localeContent.terms}</Link></li>
-              <li><Link href="#" className="block mb-2 hover:text-sky-300">{localeContent.privacy}</Link></li>
+              <li><Link href="#" className="block mb-2 hover:text-unitedSecondary/75">{localeContent.terms}</Link></li>
+              <li><Link href="#" className="block mb-2 hover:text-unitedSecondary/75">{localeContent.privacy}</Link></li>
             </ul>
           </div>
           <div>
@@ -91,7 +91,7 @@ export default function Footer() {
             <ul className="flex space-x-4">
               {localeContent.socialLinks.map(({ icon: Icon, link }, index) => (
                 <li key={index}>
-                  <Link href={link} className="hover:text-sky-300">
+                  <Link href={link} className="hover:text-unitedSecondary/75">
                     <Icon size={24} />
                   </Link>
                 </li>
@@ -103,7 +103,7 @@ export default function Footer() {
             <ul>
               {localeContent.contactLinks.map(({ icon: Icon, text, link }, index) => (
                 <li key={index}>
-                  <Link href={link} className="block mb-2 hover:text-sky-300 flex items-center">
+                  <Link href={link} className="mb-2 hover:text-unitedSecondary/75 flex items-center">
                     <Icon className="mr-2" size={16} />
                     {text}
                   </Link>

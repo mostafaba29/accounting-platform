@@ -1,15 +1,19 @@
+'use client';
 import { ArrowLeftCircle } from "lucide-react";
-import Link from "next/link";
-import {Button} from "../ui/button";
-interface BackButtonProps {
-    text:string;
-    link:string;
-}
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
-export default function BackButton({text,link}:BackButtonProps) {
+export default function BackButton() {
+    const router = useRouter();
+
     return (
-        <Link href={link}>
-           <Button variant="ghost" className="font-medium flex flex-row items-center justify-between m-1"><ArrowLeftCircle size={18}/>{text}</Button> 
-        </Link>
-    )
+        <Button 
+            variant="ghost" 
+            className="font-medium flex flex-row items-center justify-between m-1"
+            onClick={() => router.back()}
+        >
+            <ArrowLeftCircle size={18} />
+            Go Back
+        </Button>
+    );
 }

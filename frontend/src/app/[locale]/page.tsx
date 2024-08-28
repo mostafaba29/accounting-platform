@@ -1,24 +1,26 @@
 "use client";
-import Image from "next/image";
-import {useState,useEffect} from "react";
 import NavigtionWrapper from "@/components/shared/NavigationWrapper";
 import Footer from "@/components/shared/Footer";
-import Introduction from "@/components/LandingPage/Introduction";
-import RecentBlogs from "@/components/LandingPage/RecentBlogs";
-import FeaturedConsults from "@/components/LandingPage/FeaturedConsults";
-import FeaturedProducts from "@/components/LandingPage/FeaturedProducts";
-import OurFeatures from "@/components/LandingPage/OurFeatures";
-import ClientsSection from "@/components/LandingPage/ClientsSection";
+import Introduction from "@/components/shared/LandingPage/Introduction";
+import RecentBlogs from "@/components/shared/LandingPage/RecentBlogs";
+import FeaturedConsults from "@/components/shared/LandingPage/FeaturedConsults";
+import FeaturedProducts from "@/components/shared/LandingPage/FeaturedProducts";
+import OurFeatures from "@/components/shared/LandingPage/OurFeatures";
+import ClientsSection from "@/components/shared/LandingPage/ClientsSection";
 import axios from "axios";
 import { Blog } from "@/components/types/BlogTableColumns";
 import { Consultation } from "@/components/types/ConsultationTableColumns";
 import {Product} from "@/components/types/ProductTableColumns";
 import { useQueryClient,useQuery } from "@tanstack/react-query";
-import { fetchLandingPageData } from "@/lib/api/generalRequests";
+import { fetchLandingPageData,fetchLandingPageContent } from "@/lib/api/generalRequests";
+import { usePathname } from "next/navigation";
 
 
 
 export default function Home() {
+  const pathname = usePathname();
+  const isRtl = pathname.startsWith('/ar');
+
   const {data:data,isLoading,isError,isFetched} = useQuery({
     queryKey:['landingPage'],
     queryFn:fetchLandingPageData,
@@ -30,13 +32,22 @@ export default function Home() {
     <>
       <NavigtionWrapper />
       <main >
-      <Introduction />
-      <OurFeatures />
       {isFetched && (
         <>
-          <FeaturedConsults consults={data.consults} /> 
-          <FeaturedProducts products={data.bestSellingProducts} />
-          <RecentBlogs blogs={data.recentBlogs}/>
+          {isRtl ? 
+          <>
+            <Introduction locale='ar' text={data.intro_AR} />
+            <OurFeatures locale='ar' />
+            <FeaturedConsults consults={data.consults} locale='ar' />
+            <FeaturedProducts products={data.bestSellingProducts}  locale='ar'/>
+          </> : 
+          <>
+            <Introduction locale='en' text={data.intro_EN} />
+            <OurFeatures locale='en' />
+            <FeaturedConsults consults={data.consults} locale='en' />
+            <FeaturedProducts products={data.bestSellingProducts}  locale='en' />
+          </>}   
+          {/* <RecentBlogs blogs={data.recentBlogs}/> */}
         </>
       )}
       </main>

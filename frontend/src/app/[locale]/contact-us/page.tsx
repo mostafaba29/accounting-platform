@@ -1,7 +1,7 @@
 "use client";
 import { Mail, Facebook, Phone, MessageCircle } from 'lucide-react';
 import HeaderSection from '@/components/shared/HeaderSection';
-import NavigationBar from '@/components/NavigationBar';
+import NavigationWrapper from '@/components/shared/NavigationWrapper';
 import InquiryForm from '@/components/InquiryForm';
 import Footer from '@/components/shared/Footer';
 import Link from 'next/link';
@@ -30,6 +30,7 @@ export default function ContactUs() {
 
   return (
     <>
+      <NavigationWrapper />
         <HeaderSection pageTitle={{en:'Contact us', ar:'اتصل بنا'}} pageImage={'contactUs.jpg'} breadCrumbArr={{en:[],ar:[]}} breadCrumbLinkArr={[]} />
         <div className="my-4 px-4 py-8 lg:w-[1500px] md:w-[1000px] w-[600px] shadow-lg bg-gray-200/85">
           <div className="mb-12 w-full">

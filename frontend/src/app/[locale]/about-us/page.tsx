@@ -6,6 +6,7 @@ import { useQueryClient,useQuery } from '@tanstack/react-query';
 import {fetchAboutUsInfo} from '@/lib/api/generalRequests';
 import { useTranslations } from 'next-intl';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import NavigtionWrapper from "@/components/shared/NavigationWrapper";
 
 export default function AboutUs() {
     const t = useTranslations('about-us');
@@ -19,6 +20,7 @@ export default function AboutUs() {
     if (isLoading) return <LoadingSpinner messageEn="Loading company info" messageAr="جاري تحميل معلومات الشركة" />
     return (
         <>
+            <NavigtionWrapper />
                 <HeaderSection pageTitle={{en:'About Company',ar:'عن الشركة'}} pageImage={'contactUs.jpg'} breadCrumbArr={{en:[],ar:[]}} breadCrumbLinkArr={[]} />
                 <div className="my-3 px-4 py-8 lg:w-[1500px] md:w-[1000px] w-[600px] shadow-lg bg-gray-200/85 ">
                     <section className="mb-12 flex flex-col items-center text-center justify-center">

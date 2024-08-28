@@ -13,6 +13,14 @@ export const fetchLandingPageData = async () => {
     }
 }
 
+export const fetchLandingPageContent = async () => {
+    try{
+        const response = await axios.get('http://localhost:8000/api/v1/landingContent');
+        return response.data;
+    }catch(error){
+        throw new Error('Error fetching landing page content:', error);
+    }
+}
 //about-us 
 export const fetchAboutUsInfo = async () => {
     try {
