@@ -33,6 +33,8 @@ import { Input } from "@/components/ui/input";
 import BackButton from "@/components/Dashboard/BackButton";
 import Image from "next/image";
 import Link from "next/link";
+import { addNewTeamMember } from "@/lib/api/settingsRequests";
+import {useMutation,useQueryClient} from '@tanstack/react-query';
 
 
 const formSchema = z.object({
@@ -46,6 +48,8 @@ const formSchema = z.object({
 });
 
 export default function EditMember({ params }:{params:{id:string}}) {
+  const queryClient = useQueryClient();
+  
   let id = params.id;
   const [MemberData, setMemberData] = useState(null);
   const [imageName, setImageName] = useState('');

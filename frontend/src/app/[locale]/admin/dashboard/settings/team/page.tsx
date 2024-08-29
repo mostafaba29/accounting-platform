@@ -1,32 +1,28 @@
 "use client";
-import {useState,useEffect} from 'react';
-import axios from 'axios';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import { DataTable } from '@/components/Dashboard/DataTable';
 import {Member,columns as MemberCoulmns} from '@/components/types/MembersTableColumns';
 import BackButton from "@/components/Dashboard/BackButton";
 import {Button} from "@/components/ui/button";
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import {useQuery} from '@tanstack/react-query';
+import { fetchTeamMembers } from '@/lib/api/settingsRequests';
 
 export default function AdminMembersView () {
-    const [members, setMembers] = useState<Member[]>([]);
+    // const [members, setMembers] = useState<Member[]>([]);
+    const {data:members,isFetched,isLoading,isError,error} = useQuery({
+        queryKey: ['members'],
+        queryFn: fetchTeamMembers,
+    })
     const router = useRouter();
-    const fetchMembers = async () => {
-        try {
-            const response = await axios.get('http://localhost:8000/api/v1/about');
-            setMembers(response.data.data.data);
-        }catch(error){
-            console.error('Error fetching members:', error);
-        }
-    }
+    // 
 
     const handleAddClick = ()=>{
-        router.push('/admin/dashboard/settings/about-us/add');
+        router.push('admin/dashboard/settings/about-us/add');
     }
 
-    useEffect(() => {
-        fetchMembers();
-    }  , []);
+    if (isLoading) return <LoadingSpinner messageEn="Loading team members" messageAr="جاري تحميل العضويات" />
 
     return (
         <div>
@@ -34,7 +30,8 @@ export default function AdminMembersView () {
                 <BackButton text={'Go Back'} link={'/admin/dashboard/settings'}/>
                 <Button className='m-1 mr-[95px]' onClick={handleAddClick}><Plus/> Add Member</Button>
             </div>
-            <DataTable columns={MemberCoulmns} data={members} />
+            {isFetched && <DataTable columns={MemberCoulmns} data={members} />}
+    
         </div>
     );
 }

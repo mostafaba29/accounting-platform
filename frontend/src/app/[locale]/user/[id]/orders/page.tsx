@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from '@tanstack/react-query';
-import NavigationBar from '@/components/NavigationBar';
+import NavigtionWrapper from '@/components/shared/NavigationWrapper';
 import Footer from '@/components/shared/Footer';
 import OrdersList from '@/components/orders/OrderList';
 import { fetchUserOrders } from '@/lib/api/userApi';
@@ -16,7 +16,7 @@ export default function Orders() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <NavigationBar />
+      <NavigtionWrapper />
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Your Orders</h1>
         {isLoading ? (

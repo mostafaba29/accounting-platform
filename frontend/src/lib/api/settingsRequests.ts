@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import {Member} from '@/components/types/MembersTableColumns';
 //landing-page
 
 interface Service {
@@ -131,5 +131,29 @@ export const updateTermsAndConditionsInfo = async(data:termsAndConditionsData)=>
         return response.data;
     }catch(error){
         throw new Error("Error updating privacy policy data:", error);
+    }
+}
+
+//team requests 
+
+export const fetchTeamMembers = async () => {
+    try {
+        const response = await axios.get("http://localhost:8000/api/v1/members",{
+            withCredentials: true
+        });
+        return response.data.data.data;
+    } catch (error) {
+        throw new Error("Error fetching team members:", error);
+    }
+}
+
+export const addNewTeamMember = async(data:Member)=>{
+    try {
+        const response = await axios.post("http://localhost:8000/api/v1/members",data,{
+            withCredentials: true
+        });
+        return response.data;
+    }catch(error){
+        throw new Error("Error adding new team member:", error);
     }
 }

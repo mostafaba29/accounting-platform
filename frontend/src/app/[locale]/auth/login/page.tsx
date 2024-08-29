@@ -19,6 +19,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
 
 const loginFormSchema = z.object({
   email: z.string().min(1, { message: "Please enter your email" }),
@@ -29,17 +30,18 @@ type loginFormData=z.infer< typeof loginFormSchema>
 export default function Login() {
 
   const {toast}=useToast();
+  const router = useRouter();
   const form=useForm<loginFormData>({
     resolver:zodResolver(loginFormSchema),
   })
   const {mutateAsync,isPending,isError} = useMutation({
     mutationFn:userLogin,
     onSuccess:()=>{
-      window.location.href='/';
+      router.push('/');
     },
     onError:()=>{
       toast({
-        description: "something went wrong",
+        description: "Invalid email or password",
         variant: "destructive",
       });
     }

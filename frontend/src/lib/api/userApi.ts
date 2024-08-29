@@ -9,9 +9,12 @@ export const fetchUser = async () =>{
         const response = await axios.get(`${userUrl}/me`,
             {withCredentials: true}
         );
-        return response.data;
+        return response.data.data.data;
     }catch(error){
-        throw new Error('failed to fetch user data',error)
+        if(axios.isAxiosError(error) && error.response?.status === 401){
+            return null;
+        }
+        throw error;
     }
 }
 

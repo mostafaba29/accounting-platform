@@ -63,7 +63,7 @@ export const columns: ColumnDef<Member>[] = [
 
                 if (confirmDelete) {
                     try {
-                        const response = await axios.delete(`http://localhost:8000/api/v1/about/${member._id}`, { withCredentials: true });
+                        const response = await axios.delete(`http://localhost:8000/api/v1/members/${member._id}`, { withCredentials: true });
                         if (response.data.status === "success") {
                             window.location.reload();
                         }

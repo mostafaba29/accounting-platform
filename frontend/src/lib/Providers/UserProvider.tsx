@@ -1,22 +1,61 @@
 'use client';
-import { ReactNode, createContext, useContext } from 'react';
-import { useUser } from '../hooks/useUser';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUser, userLogout } from '@/lib/api/userApi';
 
-
-type UserProviderProps = {
-    children: ReactNode;
-};
-
-export function UserProvider({ children }: UserProviderProps) {
-    const user = useUser();
-
-    return (
-        <UserContext.Provider value={user}>
-            {children}
-        </UserContext.Provider>
-    );
+interface User {
+  name: string;
+  email: string;
+  role: string;
 }
 
-const UserContext = createContext<any>(null);
+interface UserContextType {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  logout: () => Promise<void>;
+  isLoading: boolean;
+}
 
-export const useUserContext = () => useContext(UserContext);
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['user'],
+    queryFn: fetchUser,
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (data) {
+      setUser(data);
+    }
+  }, [data]);
+
+  const logout = async () => {
+    try {
+      await userLogout();
+      setUser(null);
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  return (
+    <UserContext.Provider value={{ user, setUser, logout, isLoading }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+export const useUserContext = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error('useUserContext must be used within a UserProvider');
+  }
+  return context;
+};

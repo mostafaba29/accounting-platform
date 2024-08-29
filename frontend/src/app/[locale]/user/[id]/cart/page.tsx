@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import NavigationBar from '@/components/NavigationBar';
+import NavigtionWrapper from '@/components/shared/NavigationWrapper';
 import Footer from '@/components/shared/Footer';
 import { useQueryClient,useQuery } from '@tanstack/react-query';
 import {fetchUserCart} from '@/lib/api/userApi'
@@ -39,7 +39,7 @@ export default function Cart() {
   return (
     // <div className="flex flex-col min-h-screen bg-gray-100">
     <>
-      <NavigationBar />
+      <NavigtionWrapper />
       <main className="flex-grow container mx-auto px-4 py-8 min-h-[60vh]">
         <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
         {isLoading ? (

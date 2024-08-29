@@ -3,10 +3,10 @@ import { Product } from '../types/ProductTableColumns';
 
 
 interface Order {
-  id: string;
-  products: Product[];
-  totalPrice: number;
-  orderDate: string;
+  // id: string;
+  product: Product;
+  // totalPrice: number;
+  // orderDate: string;
 }
 
 interface OrderItemProps {
@@ -17,7 +17,7 @@ export default function OrderItem({ order }: OrderItemProps) {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="p-4 bg-gray-50 border-b">
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
           <div>
             <p className="text-sm text-gray-600">ORDER PLACED</p>
             <p className="font-semibold">{new Date(order.orderDate).toLocaleDateString()}</p>
@@ -29,10 +29,10 @@ export default function OrderItem({ order }: OrderItemProps) {
           <div>
             <p className="text-sm text-gray-600">ORDER # {order.id}</p>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="p-4">
-        {order.products.map((product) => (
+        {order.product.map((product) => (
           <div key={product._id} className="flex items-center py-4 border-b last:border-b-0">
             <div className="flex-shrink-0 w-20 h-20 mr-4">
               <Image src={product.coverImage} alt={product.title_EN} width={80} height={80} className="object-cover" />

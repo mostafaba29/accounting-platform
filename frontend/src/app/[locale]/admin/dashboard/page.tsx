@@ -3,13 +3,11 @@ import { useUserContext } from "@/lib/Providers/UserProvider";
 import {useQueryClient,useQuery} from '@tanstack/react-query';
 import AdminLoginForm from "@/components/Dashboard/AdminLoginForm";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
-import PostsTable from "@/components/posts/PostsTable";
-import AnalyticsChart from "@/components/Dashboard/AnalyticsChart";
 import { Newspaper, Package, Handshake, Contact, Star } from "lucide-react";
 import axios from "axios";
 
 export default function Dashboard() {
-  const {data:user} = useUserContext();
+  // const {data:user} = useUserContext();
   const fetchAnalysis = async () => {
     try {
       const response = await axios.get(
@@ -30,11 +28,11 @@ export default function Dashboard() {
   })
 
 
-  if (!user || user.data.data.role !== "admin") {
-    return (
-      <AdminLoginForm isLoggedIn={user && user.data.data.role === "admin"} />
-    );
-  }
+  // if (!user || user.data.data.role !== "admin") {
+  //   return (
+  //     <AdminLoginForm isLoggedIn={user && user.data.data.role === "admin"} />
+  //   );
+  // }
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
