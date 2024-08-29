@@ -4,9 +4,8 @@ const User = require("../models/userModel");
 const Blog = require("../models/blogPostModel");
 const Product = require("../models/productModel");
 const Review = require("../models/reviewModel");
-const Client = require("../models/clientModel");
 
-// getting the total number of all models available
+// gets the total number of all models available
 exports.websiteAnalysis = catchAsync(async (req, res) => {
   const usersCount = await User.countDocuments();
   const blogsCount = await Blog.countDocuments();
@@ -28,27 +27,19 @@ exports.websiteAnalysis = catchAsync(async (req, res) => {
 
 // landing page content
 exports.landingPageContent = catchAsync(async (req, res) => {
-  //latest 4 blogs
-  const latestBlogs = await Blog.find()
-    .sort({ createdAt: -1 })
-    .limit(4)
-    .select("-body_AR -body_EN -__v -views -category -images -slug");
-
-  const clients = await Client.find().select("-description -_id -__v");
-
   //latest 6 bestselling products
   let bestSellingProducts = await Product.find()
     .sort({ Sucessful_Purchases: -1 })
     .limit(6)
     .select(
-      "-body_AR -body_EN -basic_version -open_version -editable_version -__v -views -category -images -slug -video"
+      "-body_AR -body_EN -basic_version -open_version -editable_version -__v -category -images -slug -video"
     );
   if (bestSellingProducts.length === 0) {
     bestSellingProducts = await Product.find()
       .sort({ createdAt: -1 })
       .limit(6)
       .select(
-        "-body_AR -body_EN -basic_version -open_version -editable_version -__v -views -category -images -slug -video"
+        "-body_AR -body_EN -basic_version -open_version -editable_version -__v -category -images -slug -video"
       );
   }
 
@@ -56,13 +47,11 @@ exports.landingPageContent = catchAsync(async (req, res) => {
   const consults = await Consultation.find()
     .sort({ createdAt: -1 })
     .limit(4)
-    .select("-body_AR -body_EN -category -__v -views -images -slug");
+    .select("-body_AR -body_EN -category -__v -images -slug");
 
   // Return all data as a single JSON response
   res.status(200).json({
-    latestBlogs,
     bestSellingProducts,
-    consults,
-    clients
+    consults
   });
 });
