@@ -28,11 +28,6 @@ export default function Dashboard() {
   })
 
 
-  // if (!user || user.data.data.role !== "admin") {
-  //   return (
-  //     <AdminLoginForm isLoggedIn={user && user.data.data.role === "admin"} />
-  //   );
-  // }
 
   return (
     <div className="flex flex-col items-center justify-center h-full">

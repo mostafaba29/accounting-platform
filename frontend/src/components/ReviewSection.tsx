@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { Button } from './ui/button';
 import ReviewDialog from './ReviewDialog';
-import axios from 'axios';
 import { Review } from '@/components/types/Review';
 
 

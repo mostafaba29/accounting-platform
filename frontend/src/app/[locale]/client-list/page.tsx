@@ -4,6 +4,7 @@ import { fetchClientList } from '@/lib/api/generalRequests';
 import {useQuery} from '@tanstack/react-query';
 import {useTranslations} from 'next-intl';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import NavigtionWrapper from '@/components/shared/NavigationWrapper';
 
 
 export default function ClientList() {
@@ -18,6 +19,7 @@ export default function ClientList() {
     // if(isError) return <p>Error</p>
     return (
         <>
+            <NavigtionWrapper />
                 <section className="flex flex-col items-center px-4 py-8 lg:w-[1500px] md:w-[1000px] w-[600px] bg-gray-200/85 shadow-lg my-3">
                     <div className="w-full flex flex-col items-center text-center  justify-center">
                         <h1 className="text-4xl font-bold mb-6">{t('title')}</h1>

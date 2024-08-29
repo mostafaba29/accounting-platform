@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {Product} from '@/components/types/ProductTableColumns';
-import NavigationBar from "@/components/NavigationBar";
+import NavigationWrapper from "@/components/shared/NavigationWrapper";
 import Footer from "@/components/shared/Footer";
 import Image from "next/image";
 import ImageGallery from "@/components/ImageGallery";
@@ -59,7 +59,7 @@ export default function ProductLayout({ children ,params }: { children: React.Re
     if(!id || !productData) {
         return (
             <div>
-                <NavigationBar />
+                <NavigationWrapper />
                 <div className="container mx-auto py-8">
                     <h1>can't find this product</h1>
                 </div>
@@ -71,7 +71,7 @@ export default function ProductLayout({ children ,params }: { children: React.Re
         <html lang="en">
             <body className="bg-slate-100">
             <div>
-            <NavigationBar />
+            <NavigationWrapper />
             <div className='w-full flex flex-col items-center'>
                 <HeaderSection pageTitle={productData.title_EN} pageImage={'contactUs.jpg'} breadCrumbArr={['Products']} breadCrumbLinkArr={['/products']} />
                 <div className='flex flex-col items-center lg:w-[1500px] md:w-[1000px] w-[600px] bg-slate-100/85 shadow-lg'>

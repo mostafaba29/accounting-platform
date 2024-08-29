@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/shared/Footer';
 export const metadata: Metadata = {
     title: 'Founders | United for F&A Consultants',
@@ -13,7 +12,6 @@ export default function RootLayout({
 }>) {
   return (
   <>
-    <NavigationBar />
     <main className="flex flex-col items-center">
       {children}
     </main> 

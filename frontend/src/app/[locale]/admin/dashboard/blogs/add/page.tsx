@@ -28,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import Link from "next/link";
+import Link from "next-intl";
 import { categories } from "@/components/types/Categories";
 import {X,Plus} from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";

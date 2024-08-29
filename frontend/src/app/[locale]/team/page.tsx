@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import NavigtionWrapper from '@/components/shared/NavigationWrapper';
 import HeaderSection from '@/components/shared/HeaderSection';
 import MemberCard from '@/components/team/MemberCard';
 import FounderCard from '@/components/team/FounderCard';
@@ -20,6 +21,7 @@ export default function Team() {
     // if (isError) return <p>Error</p>
     return (
         <>
+            <NavigtionWrapper />
             <HeaderSection pageTitle={{en:'Team members', ar:'فريق العمل'}} pageImage={'contactUs.jpg'} breadCrumbArr={{en:[],ar:[]}} breadCrumbLinkArr={[]} />
             <section className="flex flex-col items-center text-center justify-center">
                         <h1 className="text-4xl font-bold mb-6">{t('title')}</h1>

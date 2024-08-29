@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { userLogin } from "@/lib/api/userApi";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -24,6 +24,7 @@ const formSchema = z.object({
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -38,7 +39,8 @@ export default function AdminLoginPage() {
     mutationFn: userLogin,
     onSuccess: (data) => {
       if (data.data.data.user.role === 'admin') {
-        router.push('/admin/dashboard');
+        const locale = pathname.split('/')[1]; // Extract locale from current path
+        router.replace(`/${locale}/admin/dashboard`);
       } else {
         toast({
           title: "Error",

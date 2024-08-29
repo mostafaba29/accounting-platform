@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import Link from "next/link"
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { Globe, Users, Briefcase, FileText, Phone, Mail, Facebook, Twitter, Instagram, PhoneCall, } from 'lucide-react'; // Icons from lucide-react

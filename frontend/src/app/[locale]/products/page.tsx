@@ -2,7 +2,7 @@
 import { Product } from '@/components/types/ProductTableColumns';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
-import NavigationBar from '@/components/NavigationBar';
+import NavigationWrapper from '@/components/shared/NavigationWrapper';
 import Footer from '@/components/shared/Footer';
 import ProductCard from '@/components/ProductCard';
 import HeaderSection from '@/components/shared/HeaderSection';
@@ -34,7 +34,7 @@ export default function ProductsPage(){
 
     return (
         <div className='w-full'>
-        <NavigationBar />
+        <NavigationWrapper />
         <div className='flex flex-col items-center'>
             <HeaderSection pageTitle={{en:'Products',ar:'المنتجات'}} pageImage='contactUs.jpg' breadCrumbArr={{en:[],ar:[]}} breadCrumbLinkArr={[]}/>
             <div className="lg:w-[1500px] md:w-[1000px] w-[600px] p-4 m-2 shadow-lg bg-gray-200/75 ">
