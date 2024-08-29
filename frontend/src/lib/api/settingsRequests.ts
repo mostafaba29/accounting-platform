@@ -41,7 +41,6 @@ export const updateLandingPageData = async(data:LandingPageData)=>{
 //about us 
 
 interface aboutUsData {
-    _id:string;
     aboutUs_AR:string;
     aboutUs_EN:string;
     ourVision_AR:string;
@@ -50,7 +49,12 @@ interface aboutUsData {
     messege_EN:string;
     goals_AR:string;
     goals_EN:string;
-    coverImage:string;
+    coverImage:File;
+}
+
+interface updateAboutUsData {
+    id:string;
+    data:aboutUsData
 }
 export const fetchAboutUsInfo = async () => {
     try {
@@ -63,9 +67,12 @@ export const fetchAboutUsInfo = async () => {
     }
 }
 
-export const updateAboutUsInfo = async(data:aboutUsData)=>{
+export const updateAboutUsInfo = async({id,data}:updateAboutUsData)=>{
     try {
-        const response = await axios.patch(`http://localhost:8000/api/v1/aboutUs/${data._id}`,data,{
+        const response = await axios.patch(`http://localhost:8000/api/v1/aboutUs/${id}`,data,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
             withCredentials: true
         });
         return response.data;
@@ -77,9 +84,14 @@ export const updateAboutUsInfo = async(data:aboutUsData)=>{
 //privacy policy
 
 interface privacyPolicyData {
-    _id:string;
     description_AR:string;
     description_EN:string;
+    coverImage:File;
+}
+
+interface updatePrivacyPolicyData{
+    id:string;
+    data:privacyPolicyData
 }
 
 export const fetchPrivacyPolicyInfo = async () => {
@@ -93,9 +105,12 @@ export const fetchPrivacyPolicyInfo = async () => {
     }
 }
 
-export const updatePrivacyPolicyInfo = async(data:privacyPolicyData)=>{
+export const updatePrivacyPolicyInfo = async({id,data}:updatePrivacyPolicyData)=>{
     try {
-        const response = await axios.patch(`http://localhost:8000/api/v1/privacyPolicy/${data._id}`,data,{
+        const response = await axios.patch(`http://localhost:8000/api/v1/privacyPolicy/${id}`,data,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
             withCredentials: true
         });
         return response.data;
@@ -107,9 +122,14 @@ export const updatePrivacyPolicyInfo = async(data:privacyPolicyData)=>{
 //terms and conditions
 
 interface termsAndConditionsData {
-    _id:string;
     description_AR:string;
     description_EN:string;
+    coverImage:File;
+}
+
+interface upadateTermsAndConditionsData {
+    id:string;
+    data:termsAndConditionsData
 }
 
 export const fetchTermsAndConditionsInfo = async () => {
@@ -123,10 +143,13 @@ export const fetchTermsAndConditionsInfo = async () => {
     }
 }
 
-export const updateTermsAndConditionsInfo = async(data:termsAndConditionsData)=>{
+export const updateTermsAndConditionsInfo = async({id,data}:upadateTermsAndConditionsData)=>{
     try {
-        const response = await axios.patch(`http://localhost:8000/api/v1/termsAndConditions/${data._id}`,data,{
-            withCredentials: true
+        const response = await axios.patch(`http://localhost:8000/api/v1/termsAndConditions/${id}`,data,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
         });
         return response.data;
     }catch(error){
@@ -155,5 +178,61 @@ export const addNewTeamMember = async(data:Member)=>{
         return response.data;
     }catch(error){
         throw new Error("Error adding new team member:", error);
+    }
+}
+
+//clients
+interface Client {
+    name_AR:string;
+    name_EN:string;
+}
+
+interface updateClientsData {
+    id:string;
+    data:Client
+}
+export const fetchClients = async () => {
+    try {
+        const response = await axios.get("http://localhost:8000/api/v1/clients",{
+            withCredentials: true
+        });
+        return response.data.data.data;
+    } catch (error) {
+        throw new Error("Error fetching clients:", error);
+    }
+}
+
+export const fetchOneClient = async (id:string) => {
+    try {
+        const response = await axios.get(`http://localhost:8000/api/v1/clients/${id}`,{
+            withCredentials: true
+        });
+        return response.data.data.data;
+    } catch (error) {
+        throw new Error("Error fetching one client:", error);
+    }
+}
+
+export const updateClients = async({id,data}:updateClientsData)=>{
+    try{
+        const response = await axios.patch(`http://localhost:8000/api/v1/clients/${id}`,data,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true
+        });
+    }catch(error){
+        throw new Error("Error updating clients:", error);
+    }
+}
+
+export const AddClients = async(data:Client)=>{
+    try {
+        const response = await axios.post("http://localhost:8000/api/v1/clients",data,{
+            withCredentials: true
+        });
+        return response.data;
+    }catch(error){
+        throw new Error("Error adding new client:", error);
     }
 }

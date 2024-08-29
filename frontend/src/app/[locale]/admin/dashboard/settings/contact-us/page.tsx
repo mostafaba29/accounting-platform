@@ -57,7 +57,9 @@ export default function ContactUs () {
     
     async function onSubmit(values: z.infer<typeof fromSchema>) {
         try {
-            const response = await axios.patch('http://localhost:8000/api/v1/contact', values);
+            const response = await axios.patch('http://localhost:8000/api/v1/contact', values,
+                {withCredentials: true}
+            );
             if (response.status === 200) {
                 toast({
                     title: "Saved successfully",
@@ -70,7 +72,7 @@ export default function ContactUs () {
     }
     return (
         <div>
-            <BackButton text={'Go back'} link={'/admin/dashboard/settings'} />
+            <BackButton />
             <div className="flex flex-col items-center justify-center h-screen">
             <h1 className="text-4xl font-bold mb-6 text-center text-gray-800  py-2 rounded-2xl">Contact Us page info</h1>
             <Form {...form}>

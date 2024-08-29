@@ -81,7 +81,7 @@ export default function AddMember() {
     try {
       console.log(formData);
       const response = await axios.post(
-        "http://localhost:8000/api/v1/about",
+        "http://localhost:8000/api/v1/members",
         formData,
         {
           withCredentials: true,
@@ -118,7 +118,7 @@ export default function AddMember() {
 
   return (
     <div>
-      <BackButton text={"Go Back"} link={"/admin/dashboard/settings/about-us"} />
+      <BackButton />
       <div className="w-full h-full flex flex-col items-center justify-center">
         <h1 className="text-3xl font-bold mb-4">Add a new member</h1>
         <p className="text-gray-500 text-xs mb-2">Elements marked with * are <b>required</b></p>

@@ -107,7 +107,7 @@ export default function EditMember({ params }:{params:{id:string}}) {
     if(values.image) formData.append("images", values.image);
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/v1/about/${id}`,
+        `http://localhost:8000/api/v1/members/${id}`,
         formData,
         {
           withCredentials: true,
@@ -134,7 +134,7 @@ export default function EditMember({ params }:{params:{id:string}}) {
 
   return (
     <div>
-      <BackButton text={'Go Back'} link={'/admin/dashboard/settings/about-us'} />
+      <BackButton />
       <div className="w-full flex flex-col items-center justify-center">
         <h1 className="text-3xl font-bold mb-3">Edit {MemberData?.name}</h1>
         <div>

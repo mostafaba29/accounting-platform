@@ -7,31 +7,27 @@ import BackButton from "@/components/Dashboard/BackButton";
 import {Button} from "@/components/ui/button";
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import {useQuery,useQueryClient} from '@tanstack/react-query';
+import { fetchClients } from '@/lib/api/settingsRequests';
 
 export default function ClientListView () {
-    const [clients, setClients] = useState<Client[]>([]);
+    
     const router = useRouter();
-    const fetchClients = async () => {
-        try {
-            const response = await axios.get('http://localhost:8000/api/v1/clients');
-            setClients(response.data.data.data);
-        }catch(error){
-            console.error('Error fetching clients:', error);
-        }
-    }
+    const {data:clients,isLoading,isError}=useQuery({
+        queryKey: ['clients'],
+        queryFn: fetchClients,
+        staleTime: 1000*60*60,
+        gcTime: 1000*60*60*24
+    })
 
     const handleAddClick = ()=>{
-        router.push('/admin/dashboard/settings/client-list/add');
+        router.push('/add');
     }
-
-    useEffect(() => {
-        fetchClients();
-    }  , []);
 
     return (
         <div>
             <div className='flex flex-row justify-between items-center'>
-                <BackButton text={'Go Back'} link={'/admin/dashboard/settings'}/>
+                <BackButton />
                 <Button className='m-1 mr-[95px]' onClick={handleAddClick}><Plus/> Add Client</Button>
             </div>
             <DataTable columns={ClientCoulmns} data={clients} />

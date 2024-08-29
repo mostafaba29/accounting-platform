@@ -102,7 +102,19 @@ export default function AboutUsSettings() {
 
     const onSubmit = async (data: aboutUsData) => {
        try{
-        await mutateAsync(data);
+        const formData = new FormData();
+        formData.append("aboutUs_AR", data.aboutUs_AR);
+        formData.append("aboutUs_EN", data.aboutUs_EN);
+        formData.append("ourVision_AR", data.ourVision_AR);
+        formData.append("ourVision_EN", data.ourVision_EN);
+        formData.append("messege_AR", data.messege_AR);
+        formData.append("messege_EN", data.messege_EN);
+        formData.append("goals_AR", data.goals_AR);
+        formData.append("goals_EN", data.goals_EN);
+        if(data.coverImage instanceof File){
+            formData.append("coverImage", data.coverImage);
+        }
+        await mutateAsync({data:formData,id:aboutUsData._id});
        }catch(error){
         console.log(error);
        }

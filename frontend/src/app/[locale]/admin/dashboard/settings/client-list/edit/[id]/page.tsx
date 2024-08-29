@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState ,useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,105 +32,66 @@ import { Input } from "@/components/ui/input";
 import BackButton from "@/components/Dashboard/BackButton";
 import Image from "next/image";
 import Link from "next/link";
-
+import {useQuery,useMutation,useQueryClient} from '@tanstack/react-query';
+import { fetchOneClient ,updateClients} from '@/lib/api/settingsRequests';
+import { useState } from "react";
 
 const formSchema = z.object({
-    name:z.string().min(1, { message: "Please enter client name" }),
-    description:z.string().min(1, { message: "Please enter client description" }),
-    image: z
-    .instanceof(File)
-    .refine((file) => file.size > 0, { message: "Please upload an image of the client" }),
+  name_AR:z.string().min(1, { message: "Please enter client name in arabic" }),
+  name_EN:z.string().min(1, { message: "Please enter client name in english" }),
 });
 
 export default function EditClient({ params }:{params:{id:string}}) {
   let id = params.id;
-  const [ClientData, setClientData] = useState(null);
-  const [imageName, setImageName] = useState('');
-  const [showImageInput, setShowImageInput] = useState(false);
+  const {data:client,isLoading,isError}=useQuery({
+    queryKey: ['client',id],
+    queryFn: () => fetchOneClient(id),
+    staleTime: 1000*60*60,
+    gcTime: 1000*60*60*24
+  })
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  const imageRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      image: null,
-      name: '',
-      description: '',
+      name_AR: client?.name_AR,
+      name_EN: client?.name_EN,
     },
   });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    setImageName(file ? file.name : '');
-    form.setValue('image', file);
-  };
 
-  const removeImage = () => {
-    form.setValue('image', null);
-  };
-
-  useEffect(() => {
-    if (id) {
-      axios.get(`http://localhost:8000/api/v1/clients/${id}`)
-        .then(response => {
-          const data = response.data.data.data;
-          setClientData(data);
-          console.log(data);
-          form.reset({
-            name: data.name,
-            description: data.description,
-            image: null
-          });
-        })
-        .catch(error => console.error("Error fetching Client data", error));
-    }
-  }, [id,form]);
+  
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const formData = new FormData();
-    if(values.name) formData.append("name", values.name);
-    if(values.description) formData.append("description", values.description);
-    if(values.image) formData.append("images", values.image);
+
+    formData.append("name_AR", values.name_AR);
+    formData.append("name_EN", values.name_EN);
+
     try {
-      const response = await axios.patch(
-        `http://localhost:8000/api/v1/clients/${id}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log(response.data);
-      if (response.data.status === "success") {
-        toast({
-          description: "Client updated successfully",
-        });
-        setSaveDialogOpen(true);
-      }
-    } catch (error) {
+      const response = await updateClients({id:id,data:formData});
       toast({
-        description: "Error updating member",
-        variant: "destructive",
-      })
-      console.log("Error updating member", error);
+        title: "Success",
+        description: "Client updated successfully",
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <div>
-      <BackButton text={'Go Back'} link={'/admin/dashboard/settings/client-list'} />
+      <BackButton />
       <div className="w-full flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold mb-3">Edit {ClientData?.name}</h1>
+        <h1 className="text-3xl font-bold mb-3">Edit {client?.name_EN}</h1>
         <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-[1500px] grid grid-cols-1 gap-5 items-center">
 
-            <FormField control={form.control} name="name" render={({ field }) => (
+            <FormField control={form.control} name="name_AR" render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold'>Client Name</FormLabel>
+                <FormLabel className='font-semibold'>Client name in arabic</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>
@@ -139,9 +99,9 @@ export default function EditClient({ params }:{params:{id:string}}) {
               </FormItem>
             )}
             />
-            <FormField control={form.control} name="description" render={({ field }) => (
+             <FormField control={form.control} name="name_EN" render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold'>Client Description</FormLabel>
+                <FormLabel className='font-semibold'>Client name in english</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>
@@ -149,49 +109,7 @@ export default function EditClient({ params }:{params:{id:string}}) {
               </FormItem>
             )}
             />
-            {showImageInput ? (
-                <FormField control={form.control} name="image" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='font-semibold'>Image</FormLabel>
-                    <FormControl>
-                      <div className="flex items-center">
-                        <Button
-                          type="button"
-                          onClick={() => imageRef.current?.click()}
-                          className="custom-file-input bg-sky-800 hover:bg-sky-700 w-[200px]"
-                        >
-                          {imageName ? 'Choose Another Image' : 'Upload Image'}
-                        </Button>
-                        <input
-                          type="file"
-                          ref={imageRef}
-                          onChange={handleImageChange}
-                          className="hidden"
-                        />
-                        {imageName && <p className="ml-2 font-medium">Selected Image: <b>{imageName}</b></p>}
-                      </div>
-                    </FormControl>
-                    <Button onClick={() => setShowImageInput(false)} className="mt-2">Cancel</Button>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                />
-              ) : (
-                ClientData && (
-                  <div className="mt-5">
-                      <h2 className="font-semibold">Image (Current)</h2>
-                      <Image 
-                        src={`/imgs/${ClientData.images[0]}`} 
-                        alt="member image" 
-                        width={550} 
-                        height={250} 
-                        className="object-cover cursor-pointer border border-sky-800 " 
-                        onClick={() => setShowImageInput(true)}
-                      />
-                    </div>
-                )
-              )}
-    
+            
             <Button type="submit" className="my-1 w-full">Save</Button>
           </form>
         </Form>

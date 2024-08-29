@@ -90,7 +90,13 @@ export default function TermsAndConditionsSettings() {
 
     const onSubmit = async (data: termsAndConditionsData) => {
        try{
-        await mutateAsync(data);
+        const formData = new FormData();
+        formData.append("description_AR", data.description_AR);
+        formData.append("description_EN", data.description_EN);
+        if(data.coverImage instanceof File){
+            formData.append("coverImage", data.coverImage);
+        }
+        await mutateAsync({id:termsAndConditionsData._id,data:formData});
        }catch(error){
         console.log(error);
        }
@@ -102,7 +108,7 @@ export default function TermsAndConditionsSettings() {
 
     return (
         <div>
-            <BackButton text={'Go back'} link={'en/admin/dashboard/settings'} />
+            <BackButton />
             <div className="flex flex-col items-center justify-center min-h-screen py-12">
                 <h1 className="text-4xl font-bold mb-6 text-center text-gray-800 py-2 rounded-2xl">Terms and Conditions Content</h1>
                 <Form {...form}>
